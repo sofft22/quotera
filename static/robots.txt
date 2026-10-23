@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://quotera.pages.dev/sitemap.xml
