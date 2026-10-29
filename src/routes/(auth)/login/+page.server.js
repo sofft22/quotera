@@ -14,6 +14,10 @@ export const actions = {
     try {
       const db = platform.env.DB;
 
+      if (!db) {
+         return fail(500, { error: 'Database binding "DB" is missing.' });
+      }
+
       // 1. Find the user by email
       const user = await db.prepare("SELECT * FROM users WHERE email = ?").bind(email).first();
 
@@ -41,8 +45,12 @@ export const actions = {
       throw redirect(303, '/');
 
     } catch (err) {
-      // This will catch database errors and show them in the red box!
-      return fail(500, { error: 'Database error: ' + err.message });
+      // If it's a redirect, let it pass through
+      if (err.status === 303) throw err;
+      
+      // Print the exact error to the screen
+      console.error("LOGIN ERROR:", err);
+      return fail(500, { error: 'Database error: ' + (err.message || JSON.stringify(err)) });
     }
   }
 };
