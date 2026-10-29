@@ -33,13 +33,17 @@ export const actions = {
       }
 
       // 3. Create a "Session Cookie" to keep them logged in
-      cookies.set('session', user.id.toString(), {
-        path: '/',
-        httpOnly: true,
-        sameSite: 'strict',
-        secure: true,
-        maxAge: 60 * 60 * 24 * 7 // Lasts for 1 week
-      });
+      try {
+        cookies.set('session', user.id.toString(), {
+          path: '/',
+          httpOnly: true,
+          sameSite: 'strict',
+          secure: true, // Requires HTTPS (your pages.dev is HTTPS, so this is fine)
+          maxAge: 60 * 60 * 24 * 7
+        });
+      } catch (cookieErr) {
+        return fail(500, { error: 'Cookie Error: ' + (cookieErr.message || JSON.stringify(cookieErr)) });
+      }
 
       // 4. Send them to the app
       throw redirect(303, '/');
@@ -48,9 +52,7 @@ export const actions = {
       // If it's a redirect, let it pass through
       if (err.status === 303) throw err;
       
-      // Print the exact error to the screen
-      console.error("LOGIN ERROR:", err);
-      return fail(500, { error: 'Database error: ' + (err.message || JSON.stringify(err)) });
+      return fail(500, { error: 'Login Error: ' + (err.message || JSON.stringify(err)) });
     }
   }
 };
