@@ -1,10 +1,10 @@
 <script>
   let pageView = $state('input'); 
   let rawText = $state("");
-  let isParsing = $state(false); // Added to show a loading state
+  let isLoading = $state(false); 
 
-  // PUT YOUR TEST API KEY HERE
-  const AI_API_KEY = "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"; 
+  // Your Groq API Key goes here for testing
+  const API_KEY = "gsk_YOUR_GROQ_API_KEY_HERE"; 
 
   let recentQuotes = $state([
     { id: "Q-1029", customer: "John Doe", amount: 825000, date: "Oct 22, 2026" },
@@ -12,11 +12,8 @@
     { id: "Q-1027", customer: "Acme Corp", amount: 1200000, date: "Oct 20, 2026" },
   ]);
 
-  let customer = $state({ name: "John Doe", contact: "0801 234 5678" });
-  let quoteItems = $state([
-    { id: 1, name: "Makita Angle Grinder 720W", price: 95000, qty: 2 },
-    { id: 2, name: "DeWalt DCD771 Cordless Drill", price: 140000, qty: 1 },
-  ]);
+  let customer = $state({ name: "New Customer", contact: "" });
+  let quoteItems = $state([]);
 
   let includeDiscount = $state(false);
   let discountType = $state("percentage");
@@ -69,59 +66,65 @@
     window.print();
   }
 
-  // UPDATED: AI Parsing Function
   async function generateQuote() {
-    if (!rawText.trim()) return;
+    if (!rawText.trim() || isLoading) return;
     
-    isParsing = true;
+    isLoading = true;
 
     try {
-      // Example using OpenAI API (you can swap this URL if using another provider)
-      const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      // 1. Send text to AI
+      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${AI_API_KEY}`
+          "Authorization": `Bearer ${API_KEY}`
         },
         body: JSON.stringify({
-          model: "gpt-3.5-turbo", // or gpt-4o
+          model: "openai/gpt-oss-120b",
           messages: [
             {
               role: "system",
-              content: "You are an AI assistant. Extract the items and quantities from the user's text. Return ONLY a valid JSON array of objects with the exact keys 'name' and 'qty'. Do not include any other text or markdown formatting. Example: [{\"name\": \"Hammer\", \"qty\": 2}]"
+              content: "You are a backend data extraction tool. Extract the requested items and their quantities from the user text. Return ONLY a raw JSON array. Do not use markdown blocks. Example format: [{\"name\": \"Hammer\", \"qty\": 2}]. If no items are found, return []."
             },
             {
               role: "user",
               content: rawText
             }
-          ]
+          ],
+          temperature: 0.1 // Keep it strict and factual
         })
       });
 
-      const data = await response.json();
-      const parsedText = data.choices[0].message.content;
-      
-      // Convert the AI text response into actual JSON
-      const extractedItems = JSON.parse(parsedText);
+      if (!response.ok) throw new Error("Network response was not ok");
 
-      // Map the extracted items into your app's format
-      // We set a temporary price of 0 because the AI doesn't calculate prices
-      let newId = Date.now();
+      const data = await response.json();
+      let responseText = data.choices[0].message.content.trim();
+      
+      // Clean up in case the AI accidentally includes markdown formatting
+      if (responseText.startsWith("```json")) {
+        responseText = responseText.replace(/```json/g, "").replace(/```/g, "").trim();
+      }
+
+      const extractedItems = JSON.parse(responseText);
+
+      // 2. Map the AI results to your app's state
+      // Note: We are setting price to 0 because the AI only extracts names/qty.
+      // The user will fill in the prices in the builder UI.
+      let nextId = 1;
       quoteItems = extractedItems.map(item => ({
-        id: newId++,
+        id: nextId++,
         name: item.name,
-        price: 0, // User will input the price in the builder view
-        qty: item.qty
+        price: 0, 
+        qty: item.qty || 1
       }));
 
-      // Optionally try to extract a name if the AI caught it (simple fallback)
-      customer.name = "New Customer";
-
     } catch (error) {
-      console.error("AI Parsing Error:", error);
-      alert("Failed to parse text. Check console.");
+      console.error("Backend error:", error);
+      // Fallback: If AI fails, create a blank item so the user isn't stuck
+      quoteItems = [{ id: 1, name: "Custom Item (Please edit)", price: 0, qty: 1 }];
     } finally {
-      isParsing = false;
+      // 3. Switch to builder screen
+      isLoading = false;
       pageView = 'builder';
     }
   }
@@ -177,13 +180,21 @@
         <textarea 
           bind:value={rawText}
           placeholder="Paste that messy message here..."
+          disabled={isLoading}
           style="width: 100%; min-height: 120px; padding: 16px; border: none; font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.5; color: #303B38; background: transparent; resize: vertical; outline: none; box-sizing: border-box;"
         ></textarea>
         
         <div style="padding: 10px 12px; background-color: #F9FAFB; border-top: 1px solid #F3F4F6; display: flex;">
-          <!-- Added loading state to the button -->
-          <button onclick={generateQuote} disabled={isParsing} style="background-color: #24503C; color: white; padding: 12px; border-radius: 8px; border: none; font-weight: 600; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 100%; opacity: {isParsing ? 0.7 : 1};">
-            {isParsing ? 'Parsing with AI...' : 'Generate Quote'}
+          <!-- Loading UI: Replaces the standard button text while working -->
+          <button onclick={generateQuote} disabled={isLoading} style="background-color: #24503C; color: white; padding: 12px; border-radius: 8px; border: none; font-weight: 600; font-size: 15px; cursor: {isLoading ? 'not-allowed' : 'pointer'}; display: flex; align-items: center; justify-content: center; width: 100%; opacity: {isLoading ? 0.8 : 1}; transition: opacity 0.2s;">
+            {#if isLoading}
+              <svg style="width: 18px; height: 18px; margin-right: 8px; animation: spin 1s linear infinite;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+              </svg>
+              Generating Quote...
+            {:else}
+              Generate Quote
+            {/if}
           </button>
         </div>
       </div>
@@ -243,6 +254,7 @@
         {#each quoteItems as item (item.id)}
           <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #F3F4F6;">
             <div style="flex: 1; padding-right: 8px;">
+              <!-- Note: Since the AI doesn't calculate prices, you will need to manually input prices here for the total to work -->
               <div style="font-size: 12px; font-weight: 600; color: #303B38; line-height: 1.3;">{item.name}</div>
             </div>
             <div style="display: flex; align-items: center; gap: 6px;">
