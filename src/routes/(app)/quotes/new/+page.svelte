@@ -1,6 +1,10 @@
 <script>
   let pageView = $state('input'); 
   let rawText = $state("");
+  let isParsing = $state(false); // Added to show a loading state
+
+  // PUT YOUR TEST API KEY HERE
+  const AI_API_KEY = "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"; 
 
   let recentQuotes = $state([
     { id: "Q-1029", customer: "John Doe", amount: 825000, date: "Oct 22, 2026" },
@@ -65,11 +69,61 @@
     window.print();
   }
 
-  function generateQuote() {
+  // UPDATED: AI Parsing Function
+  async function generateQuote() {
     if (!rawText.trim()) return;
-    setTimeout(() => {
+    
+    isParsing = true;
+
+    try {
+      // Example using OpenAI API (you can swap this URL if using another provider)
+      const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${AI_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo", // or gpt-4o
+          messages: [
+            {
+              role: "system",
+              content: "You are an AI assistant. Extract the items and quantities from the user's text. Return ONLY a valid JSON array of objects with the exact keys 'name' and 'qty'. Do not include any other text or markdown formatting. Example: [{\"name\": \"Hammer\", \"qty\": 2}]"
+            },
+            {
+              role: "user",
+              content: rawText
+            }
+          ]
+        })
+      });
+
+      const data = await response.json();
+      const parsedText = data.choices[0].message.content;
+      
+      // Convert the AI text response into actual JSON
+      const extractedItems = JSON.parse(parsedText);
+
+      // Map the extracted items into your app's format
+      // We set a temporary price of 0 because the AI doesn't calculate prices
+      let newId = Date.now();
+      quoteItems = extractedItems.map(item => ({
+        id: newId++,
+        name: item.name,
+        price: 0, // User will input the price in the builder view
+        qty: item.qty
+      }));
+
+      // Optionally try to extract a name if the AI caught it (simple fallback)
+      customer.name = "New Customer";
+
+    } catch (error) {
+      console.error("AI Parsing Error:", error);
+      alert("Failed to parse text. Check console.");
+    } finally {
+      isParsing = false;
       pageView = 'builder';
-    }, 500);
+    }
   }
 </script>
 
@@ -127,8 +181,9 @@
         ></textarea>
         
         <div style="padding: 10px 12px; background-color: #F9FAFB; border-top: 1px solid #F3F4F6; display: flex;">
-          <button onclick={generateQuote} style="background-color: #24503C; color: white; padding: 12px; border-radius: 8px; border: none; font-weight: 600; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 100%;">
-            Generate Quote
+          <!-- Added loading state to the button -->
+          <button onclick={generateQuote} disabled={isParsing} style="background-color: #24503C; color: white; padding: 12px; border-radius: 8px; border: none; font-weight: 600; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 100%; opacity: {isParsing ? 0.7 : 1};">
+            {isParsing ? 'Parsing with AI...' : 'Generate Quote'}
           </button>
         </div>
       </div>
@@ -188,7 +243,6 @@
         {#each quoteItems as item (item.id)}
           <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #F3F4F6;">
             <div style="flex: 1; padding-right: 8px;">
-              <!-- Removed the price under the name -->
               <div style="font-size: 12px; font-weight: 600; color: #303B38; line-height: 1.3;">{item.name}</div>
             </div>
             <div style="display: flex; align-items: center; gap: 6px;">
