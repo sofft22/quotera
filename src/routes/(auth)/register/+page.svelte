@@ -1,3 +1,7 @@
+<script>
+  export let form;
+</script>
+
 <svelte:head>
   <title>Create Account | Quotera</title>
 </svelte:head>
@@ -15,6 +19,12 @@
       <h1>Create an account.</h1>
       <p>Start generating quotes in seconds.</p>
     </div>
+
+    {#if form?.error}
+      <div style="background: #FEE2E2; color: #DC2626; padding: 10px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; font-weight: 600;">
+        {form.error}
+      </div>
+    {/if}
 
     <form method="POST">
       
@@ -193,7 +203,6 @@
     box-shadow: 0 0 0 3px rgba(36, 80, 60, 0.1);
   }
 
-  /* Adjusted Terms Group */
   .terms-group {
     display: flex;
     align-items: flex-start;
@@ -201,7 +210,6 @@
     margin-top: 12px;
   }
 
-  /* The checkbox is now clearly visible and required */
   .terms-group input[type="checkbox"] {
     width: 16px;
     height: 16px;
@@ -210,7 +218,6 @@
     margin-top: 1px;
     cursor: pointer;
     flex-shrink: 0;
-    /* Adding a border so it's clearly an interactive box */
     border: 1px solid #d1d5db; 
   }
 
