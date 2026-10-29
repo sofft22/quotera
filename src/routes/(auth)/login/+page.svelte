@@ -1,3 +1,7 @@
+<script>
+  export let form;
+</script>
+
 <svelte:head>
   <title>Log in | Quotera</title>
 </svelte:head>
@@ -15,6 +19,12 @@
       <h1>Welcome back.</h1>
       <p>Log in to manage your quotes.</p>
     </div>
+
+    {#if form?.error}
+      <div style="background: #FEE2E2; color: #DC2626; padding: 10px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; font-weight: 600;">
+        {form.error}
+      </div>
+    {/if}
 
     <form method="POST">
       <div class="input-group">
@@ -112,7 +122,7 @@
     padding: 24px; 
     
     width: 100%;
-    max-width: 420px; /* Reduced max-width slightly for a tighter look */
+    max-width: 420px;
     box-sizing: border-box;
     
     box-shadow: 0 24px 48px -12px rgba(48, 59, 56, 0.15); 
@@ -146,7 +156,7 @@
   }
 
   .input-group {
-    margin-bottom: 16px; /* Tighter spacing between fields */
+    margin-bottom: 16px;
   }
 
   .input-group label {
@@ -157,13 +167,12 @@
     margin-bottom: 6px;
   }
 
-  /* REDUCED HEIGHT, SMALLER TEXT, LIGHTER PLACEHOLDER */
   .input-group input {
     width: 100%;
-    padding: 10px 14px; /* Reduced padding from 16px to 10px */
+    padding: 10px 14px;
     border: 1px solid rgba(48, 59, 56, 0.08);
     border-radius: 8px;
-    font-size: 14px; /* Smaller font size */
+    font-size: 14px;
     color: #303B38;
     background-color: #ffffff;
     box-sizing: border-box;
@@ -172,9 +181,8 @@
     box-shadow: 0 1px 2px rgba(0,0,0,0.02);
   }
 
-  /* VERY LIGHT PLACEHOLDER */
   .input-group input::placeholder {
-    color: #D1D5DB; /* Light gray */
+    color: #D1D5DB;
     font-size: 14px;
   }
 
@@ -223,12 +231,11 @@
     opacity: 0.7;
   }
 
-  /* SLIGHTLY SMALLER BUTTON */
   .submit-btn {
     width: 100%;
     background: #24503C;
     color: white;
-    padding: 12px; /* Reduced from 16px */
+    padding: 12px;
     border-radius: 8px;
     border: none;
     font-weight: 600;
