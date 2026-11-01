@@ -1,5 +1,14 @@
 <script>
   import { onMount } from 'svelte';
+  import { redirect } from '@sveltejs/kit'; // Add this
+  export let data; // Add this
+
+  // Redirect to dashboard if they are already logged in
+  if (data.isLoggedIn) {
+    throw redirect(303, '/dashboard');
+  }
+  
+  // ... rest of your code
 
   let navHidden = false;
   const WHATSAPP = "2347072789513";
