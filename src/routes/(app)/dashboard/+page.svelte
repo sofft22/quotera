@@ -160,7 +160,7 @@
     <div style="margin-bottom: 32px;">
       <!-- Smaller Title with Terracotta color -->
       <h2 style="font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 800; color: #303B38; margin: 0 0 16px 0; padding-left: 4px;">
-        Create New <span style="color: #C4513D;">Quote</span>
+        New <span style="color: #C4513D;">Quote</span>
       </h2>
       
       {#if aiError}
