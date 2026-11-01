@@ -34,10 +34,13 @@ export const actions = {
 
     try {
       const db = platform.env.DB;
-      const userId = Number(session); // Force to number
+      const userId = Number(session);
       
-      const priceListData = await db.prepare("SELECT * FROM products WHERE user_id = ?").bind(userId).all();
+      // USE THE CORRECT TABLE NAME (price_list)
+      const priceListData = await db.prepare("SELECT * FROM price_list WHERE user_id = ?").bind(userId).all();
       const products = priceListData.results || [];
+      
+      console.log("DB Items found for user:", products);
 
       const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
@@ -62,11 +65,6 @@ export const actions = {
       let nextId = 1;
       const matchedItems = extractedItems.map(aiItem => {
         const aiName = aiItem.name.toLowerCase().trim().replace(/s$/, '');
-        
-        // We are logging exactly what we are looking for and what we have
-        console.log("Looking for AI Item:", aiName);
-        console.log("Database Products available:", products.map(p => ({ name: p.name, unit: p.unit, price: p.price })));
-
         const match = products.find(p => {
           const dbName = p.name.toLowerCase().trim().replace(/s$/, '');
           if (dbName.includes(aiName) || aiName.includes(dbName)) return true;
@@ -88,7 +86,8 @@ export const actions = {
         }
       });
 
-      return { success: true, items: matchedItems };
+      // Return as stringified array to prevent SvelteKit from stripping it
+      return { success: true, items: JSON.stringify(matchedItems) };
     } catch (err) {
       console.error("Error:", err.message);
       return fail(500, { error: err.message });
