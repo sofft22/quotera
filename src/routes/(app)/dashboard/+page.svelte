@@ -4,7 +4,7 @@
 
   let { data, form } = $props();
   
-  let greeting = "Good morning";
+  let greeting = $state("Good morning");
   if (typeof window !== 'undefined') {
     const hour = new Date().getHours();
     if (hour >= 12 && hour < 17) greeting = "Good afternoon";
@@ -451,4 +451,38 @@
         <div style="display: flex; justify-content: flex-end; margin-bottom: 40px;">
           <div style="width: 320px;">
             <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: {getColors().text};">
-             
+              <span>Subtotal:</span>
+              <span>{formatCurrency(subtotal)}</span>
+            </div>
+            {#if includeDiscount}
+              <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: #DC2626; font-weight: 500;">
+                <span>Discount:</span>
+                <span>-{formatCurrency(discountAmount)}</span>
+              </div>
+            {/if}
+            {#if includeDelivery && deliveryFee > 0}
+              <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: {getColors().text};">
+                <span>Delivery:</span>
+                <span>{formatCurrency(deliveryFee)}</span>
+              </div>
+            {/if}
+            {#if includeVAT}
+              <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: {getColors().text};">
+                <span>VAT (7.5%):</span>
+                <span>{formatCurrency(vatAmount)}</span>
+              </div>
+            {/if}
+            <div style="display: flex; justify-content: space-between; padding: 20px 0 10px 0; font-size: 24px; font-weight: 800; color: {getColors().accent}; border-top: 3px solid #E5E7EB; margin-top: 10px;">
+              <span>TOTAL:</span>
+              <span>{formatCurrency(total)}</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="border-top: 1px solid #F3F4F6; padding-top: 30px; text-align: center;">
+          <p style="font-size: 13px; color: #6B7280; margin: 0;">Thank you for your business. If you have any questions, please contact us.</p
+        </div>
+      </div>
+    </div>
+  {/if}
+</div>
