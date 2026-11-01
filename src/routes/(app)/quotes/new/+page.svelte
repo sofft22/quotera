@@ -127,13 +127,20 @@
   .col-name { flex: 1; padding-right: 12px; font-weight: 500; color: #303B38; font-size: 14px; line-height: 1.4; }
   .col-date { width: 100px; text-align: center; font-size: 12px; color: #6B7280; font-weight: 500; }
   .col-amount { width: 100px; text-align: right; font-weight: 600; color: #303B38; font-size: 14px; }
-  .col-action { width: 80px; text-align: right; font-weight: 600; color: #24503C; font-size: 13px; cursor: pointer; }
+  
+  /* Icon Action Column */
+  .col-action { 
+    width: 40px; 
+    display: flex; 
+    justify-content: flex-end; 
+    align-items: center; 
+  }
 
   @media (max-width: 480px) {
     .col-date { width: 70px; font-size: 11px; }
     .col-amount { width: 90px; font-size: 13px; }
     .col-name { font-size: 13px; }
-    .col-action { width: 60px; font-size: 12px; }
+    .col-action { width: 32px; }
   }
 </style>
 
@@ -156,7 +163,7 @@
       <span class="col-name">Customer</span>
       <span class="col-date">Date</span>
       <span class="col-amount">Amount</span>
-      <span class="col-action">PDF</span>
+      <span class="col-action"></span>
     </div>
 
     {#if data.quotes.length === 0}
@@ -169,9 +176,27 @@
           <span class="col-name">{quote.customer_name}</span>
           <span class="col-date">{formatDate(quote.created_at)}</span>
           <span class="col-amount">{formatCurrency(quote.total)}</span>
+          
           <span class="col-action">
-            <button onclick={() => downloadPDF(quote)} style="background: none; border: none; padding: 0; color: inherit; font-weight: inherit; cursor: pointer; font-family: inherit; font-size: inherit;">
-              {isDownloading && pdfQuote?.id === quote.id ? '...' : 'Download'}
+            <button 
+              onclick={() => downloadPDF(quote)} 
+              disabled={isDownloading && pdfQuote?.id === quote.id}
+              style="background: none; border: none; padding: 4px; cursor: pointer; color: #24503C; display: flex; align-items: center; justify-content: center; opacity: {isDownloading && pdfQuote?.id === quote.id ? 0.5 : 1};"
+              title="Download PDF"
+            >
+              {#if isDownloading && pdfQuote?.id === quote.id}
+                <!-- Spinning Icon while loading -->
+                <svg style="width: 18px; height: 18px; animation: spin 1s linear infinite;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+                </svg>
+              {:else}
+                <!-- Standard Download Icon -->
+                <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+              {/if}
             </button>
           </span>
         </div>
