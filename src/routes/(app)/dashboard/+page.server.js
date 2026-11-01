@@ -15,72 +15,18 @@ export const actions = {
     if (!session) return fail(401, { error: 'Not logged in' });
     const data = await request.formData();
     const db = platform.env.DB;
-    try {
-      await db.prepare("INSERT INTO quotes (user_id, customer_name, customer_contact, total, items_json) VALUES (?, ?, ?, ?, ?)").bind(Number(session), data.get('customerName'), data.get('customerContact'), data.get('total'), data.get('itemsJson')).run();
-    } catch (err) { return fail(500, { error: 'Failed to save quote.' }); }
-  },
-
-  generateAI: async ({ request, cookies, platform }) => {
-    const session = cookies.get('session');
-    if (!session) return fail(401, { error: 'Not logged in' });
     
-    const data = await request.formData();
-    const rawText = data.get('rawText');
-    const API_KEY = platform.env.GROQ_API_KEY;
-
-    if (!API_KEY) return fail(500, { error: 'Groq API Key is missing in Cloudflare.' });
-    if (!rawText || !rawText.trim()) return fail(400, { error: 'No text provided.' });
-
     try {
-      const db = platform.env.DB;
-      const userId = Number(session);
-      
-      const priceListData = await db.prepare("SELECT * FROM price_list WHERE user_id = ?").bind(userId).all();
-      const products = priceListData.results || [];
-
-      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
-        body: JSON.stringify({
-          model: "openai/gpt-oss-120b",
-          messages: [
-            { role: "system", content: "Extract items and quantities. Return ONLY a JSON array: [{\"name\": \"item\", \"qty\": 1}]." },
-            { role: "user", content: rawText }
-          ],
-          temperature: 0.1
-        })
-      });
-
-      if (!response.ok) throw new Error("AI failed to extract");
-      const aiData = await response.json();
-      let responseText = aiData.choices[0].message.content.trim();
-      if (responseText.startsWith("```json")) responseText = responseText.replace(/```json/g, "").replace(/```/g, "").trim();
-      
-      const extractedItems = JSON.parse(responseText);
-
-      let nextId = 1;
-      const matchedItems = extractedItems.map(aiItem => {
-        const aiName = aiItem.name.toLowerCase().trim().replace(/s$/, '');
-        const match = products.find(p => {
-          const dbName = p.name.toLowerCase().trim().replace(/s$/, '');
-          if (dbName.includes(aiName) || aiName.includes(dbName)) return true;
-          const aiWords = aiName.split(' ');
-          const dbWords = dbName.split(' ');
-          return aiWords.some(w => dbWords.includes(w));
-        });
-
-        if (match) {
-          return { id: nextId++, name: match.name, unit: match.unit, price: Number(match.price), qty: aiItem.qty || 1 };
-        } else {
-          return { id: nextId++, name: aiItem.name, unit: "Piece", price: 0, qty: aiItem.qty || 1 };
-        }
-      });
-
-      // CRUCIAL FIX: Return the array directly, not as a string.
-      return { success: true, items: matchedItems };
-    } catch (err) {
-      console.error("Error:", err.message);
-      return fail(500, { error: err.message });
-    }
+      await db.prepare(
+        "INSERT INTO quotes (user_id, customer_name, customer_contact, total, items_json) VALUES (?, ?, ?, ?, ?)"
+      ).bind(
+        Number(session), 
+        data.get('customerName'), 
+        data.get('customerContact'), 
+        data.get('total'),
+        data.get('itemsJson')
+      ).run();
+      return { success: true };
+    } catch (err) { return fail(500, { error: 'Failed to save quote.' }); }
   }
 };
