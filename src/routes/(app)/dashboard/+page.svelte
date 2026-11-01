@@ -67,6 +67,7 @@
 
   async function generateQuote() {
     if (!rawText.trim() || isLoading) return;
+    
     isLoading = true;
     aiError = "";
 
@@ -81,7 +82,9 @@
 
       const result = await response.json();
       
-      if (result.type === 'failure') throw new Error(result.data.error);
+      if (result.type === 'failure') {
+         throw new Error(result.data.error);
+      }
 
       const extractedItems = result.data.items;
       let nextId = 1;
@@ -141,13 +144,9 @@
       <p style="color: #6B7280; font-size: 15px; margin: 0;">Here is an overview of your business.</p>
     </div>
 
-    <!-- Stats Cards -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 40px;">
-      <div style="background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%); border: 1px solid #BBF7D0; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);">
-        <p style="font-size: 12px; font-weight: 700; color: #166534; margin: 0 0 12px 0; text-transform: uppercase; letter-spacing: 0.05em;">Total Quoted Value</p>
-        <h2 style="font-family: 'Manrope', sans-serif; font-size: 32px; font-weight: 800; color: #14532D; margin: 0;">{formatCurrency(data?.totalValue)}</h2>
-      </div>
-      <div style="background: #ffffff; border: 1px solid #E5E7EB; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);">
+    <!-- Single Stat Card: Total Quotes -->
+    <div style="margin-bottom: 40px;">
+      <div style="background: #ffffff; border: 1px solid #E5E7EB; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); display: inline-block; min-width: 240px;">
         <p style="font-size: 12px; font-weight: 700; color: #6B7280; margin: 0 0 12px 0; text-transform: uppercase; letter-spacing: 0.05em;">Quotes Generated</p>
         <h2 style="font-family: 'Manrope', sans-serif; font-size: 32px; font-weight: 800; color: #303B38; margin: 0;">{data?.totalQuotes}</h2>
       </div>
