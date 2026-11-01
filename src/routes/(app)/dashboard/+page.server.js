@@ -36,11 +36,9 @@ export const actions = {
       const db = platform.env.DB;
       const userId = Number(session);
       
-      // Fetch DB items
       const priceListData = await db.prepare("SELECT * FROM price_list WHERE user_id = ?").bind(userId).all();
       const products = priceListData.results || [];
 
-      // Call AI
       const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
@@ -61,7 +59,6 @@ export const actions = {
       
       const extractedItems = JSON.parse(responseText);
 
-      // Match
       let nextId = 1;
       const matchedItems = extractedItems.map(aiItem => {
         const aiName = aiItem.name.toLowerCase().trim().replace(/s$/, '');
@@ -80,7 +77,7 @@ export const actions = {
         }
       });
 
-      // Return standard object. SvelteKit handles this natively.
+      // CRUCIAL FIX: Return the array directly, not as a string.
       return { success: true, items: matchedItems };
     } catch (err) {
       console.error("Error:", err.message);
