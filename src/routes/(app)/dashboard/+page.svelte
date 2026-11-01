@@ -109,19 +109,34 @@
 <svelte:head>
   <title>Dashboard | Quotera</title>
   <style>
-    /* Professional Grid Layout for the Builder */
+    /* Professional Grid Layout */
     .builder-grid {
       display: grid;
       grid-template-columns: 1fr;
       gap: 32px;
     }
 
-    /* On desktop, split into two columns */
     @media (min-width: 1024px) {
       .builder-grid {
         grid-template-columns: 1fr 1.2fr;
         align-items: start;
       }
+    }
+
+    /* Clean Focus Ring for Inputs */
+    .input-clean {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #E5E7EB;
+      border-radius: 8px;
+      font-size: 15px;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .input-clean:focus {
+      border-color: #24503C;
+      box-shadow: 0 0 0 3px rgba(36, 80, 60, 0.1);
     }
 
     @media print {
@@ -137,7 +152,6 @@
 <div style="max-width: 1100px; margin: 0 auto; padding: 32px 24px;">
 
   {#if pageView === 'input'}
-    <!-- Header & Stats -->
     <div style="margin-bottom: 40px;">
       <h1 style="font-family: 'Manrope', sans-serif; font-size: clamp(24px, 5vw, 36px); font-weight: 800; margin: 0 0 8px 0; color: #303B38; letter-spacing: -0.03em;">
         {greeting}, <span style="color: #C4513D;">{data?.user?.fullname || 'User'}</span>.
@@ -156,7 +170,6 @@
       </div>
     </div>
 
-    <!-- AI Extractor -->
     <div style="max-width: 800px;">
       <h2 style="font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 800; color: #303B38; margin: 0 0 16px 0;">Create New Quote</h2>
       
@@ -191,7 +204,6 @@
   {/if}
 
   {#if pageView === 'builder'}
-    <!-- Builder Header -->
     <div class="no-print" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
       <div>
         <h1 style="font-family: 'Manrope', sans-serif; font-size: 28px; font-weight: 800; margin: 0; color: #303B38; letter-spacing: -0.02em;">Review Quote</h1>
@@ -202,7 +214,6 @@
       </button>
     </div>
 
-    <!-- The Grid Layout -->
     <div class="builder-grid">
       
       <!-- LEFT COLUMN: EDIT FORM -->
@@ -212,10 +223,10 @@
         <!-- Customer Info -->
         <div style="margin-bottom: 24px;">
           <label style="display: block; font-size: 13px; font-weight: 600; color: #303B38; margin-bottom: 8px;">Customer Name</label>
-          <input type="text" bind:value={customer.name} placeholder="e.g. John Doe" style="width: 100%; padding: 12px 16px; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 15px; margin-bottom: 12px; box-sizing: border-box; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='#24503C'" onblur="this.style.borderColor='#E5E7EB'" />
+          <input type="text" bind:value={customer.name} placeholder="e.g. John Doe" class="input-clean" style="margin-bottom: 12px;" />
           
           <label style="display: block; font-size: 13px; font-weight: 600; color: #303B38; margin-bottom: 8px;">Contact (Phone or Email)</label>
-          <input type="text" bind:value={customer.contact} placeholder="e.g. 0801 234 5678" style="width: 100%; padding: 12px 16px; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 15px; box-sizing: border-box; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='#24503C'" onblur="this.style.borderColor='#E5E7EB'" />
+          <input type="text" bind:value={customer.contact} placeholder="e.g. 0801 234 5678" class="input-clean" />
         </div>
 
         <!-- Items List -->
@@ -225,7 +236,7 @@
             <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #F3F4F6;">
               <div style="flex: 1; padding-right: 12px;">
                 <div style="font-size: 14px; font-weight: 600; color: #303B38; line-height: 1.4;">{item.name}</div>
-                <input type="number" bind:value={item.price} placeholder="Price (₦)" style="margin-top: 8px; width: 120px; padding: 8px 12px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 13px; outline: none;" onfocus="this.style.borderColor='#24503C'" onblur="this.style.borderColor='#E5E7EB'" />
+                <input type="number" bind:value={item.price} placeholder="Price (₦)" class="input-clean" style="margin-top: 8px; width: 120px; padding: 8px 12px; font-size: 13px;" />
               </div>
               <div style="display: flex; align-items: center; gap: 12px;">
                 <div style="display: flex; align-items: center; background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 6px;">
@@ -248,11 +259,11 @@
             </label>
             {#if includeDiscount}
               <div style="display: flex; gap: 8px;">
-                <select bind:value={discountType} style="padding: 8px 12px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 13px; color: #303B38; outline: none; background: white;">
+                <select bind:value={discountType} class="input-clean" style="padding: 8px 12px; font-size: 13px;">
                   <option value="percentage">%</option>
                   <option value="flat">₦</option>
                 </select>
-                <input type="number" bind:value={discountValue} placeholder="0" style="width: 80px; padding: 8px 12px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 13px; outline: none;" />
+                <input type="number" bind:value={discountValue} placeholder="0" class="input-clean" style="width: 80px; padding: 8px 12px; font-size: 13px;" />
               </div>
             {/if}
           </div>
@@ -262,7 +273,7 @@
               <input type="checkbox" bind:checked={includeDelivery} style="width: 16px; height: 16px; accent-color: #24503C;" /> Delivery Fee
             </label>
             {#if includeDelivery}
-              <input type="number" bind:value={deliveryFee} placeholder="Amount (₦)" style="width: 120px; padding: 8px 12px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 13px; outline: none;" />
+              <input type="number" bind:value={deliveryFee} placeholder="Amount (₦)" class="input-clean" style="width: 120px; padding: 8px 12px; font-size: 13px;" />
             {/if}
           </div>
 
