@@ -30,7 +30,14 @@
   let vatAmount = $state(0);
   let total = $state(0);
 
+  // Safe calculation to prevent 'reduce' crash
   function calculateTotals() {
+    if (!quoteItems || !Array.isArray(quoteItems)) {
+      subtotal = 0;
+      total = 0;
+      return;
+    }
+
     subtotal = quoteItems.reduce((acc, item) => acc + (item.price * item.qty), 0);
     
     if (includeDiscount) {
@@ -70,6 +77,7 @@
     
     isLoading = true;
     aiError = "";
+    quoteItems = []; // Reset
 
     try {
       const formData = new FormData();
@@ -86,15 +94,19 @@
          throw new Error(result.data.error);
       }
 
-      quoteItems = result.data.items;
+      // Ensure we set an array before changing the view
+      quoteItems = result.data.items || [];
 
     } catch (error) {
       console.error("Backend error:", error);
       aiError = error.message;
-      quoteItems = [{ id: 1, name: "Custom Item (Please edit)", unit: "Piece", price: 0, qty: 1 }];
+      quoteItems = []; 
     } finally {
       isLoading = false;
-      pageView = 'builder';
+      // Only go to builder if we didn't have an error
+      if (!aiError) {
+        pageView = 'builder';
+      }
     }
   }
 </script>
@@ -110,7 +122,6 @@
       @page { margin: 10mm; }
     }
 
-    /* Fix the 70/30 grid stacking on mobile */
     .stats-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -128,7 +139,7 @@
 <div style="max-width: 1000px; margin: 0 auto; padding: 8px;">
 
   {#if pageView === 'input'}
-    <!-- Greeting (Bigger) -->
+    <!-- Greeting -->
     <div style="margin-bottom: 24px; padding-left: 4px; padding-top: 16px;">
       <h1 style="font-family: 'Manrope', sans-serif; font-size: clamp(28px, 8vw, 40px); font-weight: 800; margin: 0; color: #303B38; letter-spacing: -0.03em;">
         {greeting}, <span style="color: #C4513D;">{data?.user?.fullname || 'User'}</span>.
@@ -137,7 +148,6 @@
 
     <!-- Stats and Plan Cards -->
     <div class="stats-grid">
-      <!-- Green Stats Card -->
       <div style="background: linear-gradient(135deg, #24503C 0%, #1a3a2b 100%); border-radius: 16px; padding: 24px; box-shadow: 0 8px 16px -4px rgba(36, 80, 60, 0.3); display: flex; flex-direction: column; justify-content: center; width: 100%; box-sizing: border-box; position: relative; overflow: hidden;">
         <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background: rgba(255,255,255,0.05); border-radius: 50%; pointer-events: none;"></div>
         <p style="font-size: 11px; font-weight: 700; color: #A7F3D0; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 0.08em;">Total Quotes Generated</p>
@@ -146,7 +156,6 @@
         </h2>
       </div>
 
-      <!-- Plan Card -->
       <div style="background: #ffffff; border: 1px solid #E5E7EB; border-radius: 16px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: center; box-sizing: border-box;">
         <p style="font-size: 11px; font-weight: 700; color: #9CA3AF; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 0.05em;">Current Plan</p>
         <div style="display: flex; align-items: center; justify-content: space-between;">
@@ -158,7 +167,6 @@
 
     <!-- Create New Quote Title and Input -->
     <div style="margin-bottom: 32px;">
-      <!-- Smaller Title with Terracotta color -->
       <h2 style="font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 800; color: #303B38; margin: 0 0 16px 0; padding-left: 4px;">
         New <span style="color: #C4513D;">Quote</span>
       </h2>
@@ -211,19 +219,23 @@
       <!-- Items (Auto-matched) -->
       <div style="margin-bottom: 24px;">
         <h3 style="font-family: 'Manrope'; font-size: 14px; font-weight: 800; color: #303B38; margin: 0 0 12px 0;">Matched Items</h3>
-        {#each quoteItems as item (item.id)}
-          <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid #F3F4F6;">
-            <div style="flex: 1; padding-right: 12px;">
-              <div style="font-size: 14px; font-weight: 600; color: #303B38; line-height: 1.3;">{item.name}</div>
-              <div style="font-size: 12px; color: #6B7280; margin-top: 4px;">Unit: {item.unit} | Price: {formatCurrency(item.price)}</div>
+        {#if quoteItems.length === 0}
+          <p style="font-size: 13px; color: #6B7280;">No items matched.</p>
+        {:else}
+          {#each quoteItems as item (item.id)}
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid #F3F4F6;">
+              <div style="flex: 1; padding-right: 12px;">
+                <div style="font-size: 14px; font-weight: 600; color: #303B38; line-height: 1.3;">{item.name}</div>
+                <div style="font-size: 12px; color: #6B7280; margin-top: 4px;">Unit: {item.unit} | Price: {formatCurrency(item.price)}</div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <input type="number" value={item.qty} oninput={(e) => updateQty(item.id, e.target.value)} style="width: 60px; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; text-align: center; font-size: 14px; outline: none;" min="1" />
+                <div style="font-weight: 600; font-size: 14px; color: #303B38; width: 80px; text-align: right;">{formatCurrency(item.price * item.qty)}</div>
+                <button onclick={() => removeItem(item.id)} style="background: none; border: none; color: #DC2626; cursor: pointer; font-size: 14px; padding: 0;">✕</button>
+              </div>
             </div>
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <input type="number" value={item.qty} oninput={(e) => updateQty(item.id, e.target.value)} style="width: 60px; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; text-align: center; font-size: 14px; outline: none;" min="1" />
-              <div style="font-weight: 600; font-size: 14px; color: #303B38; width: 80px; text-align: right;">{formatCurrency(item.price * item.qty)}</div>
-              <button onclick={() => removeItem(item.id)} style="background: none; border: none; color: #DC2626; cursor: pointer; font-size: 14px; padding: 0;">✕</button>
-            </div>
-          </div>
-        {/each}
+          {/each}
+        {/if}
       </div>
 
       <!-- Adjustments -->
@@ -259,7 +271,6 @@
     <!-- BOTTOM: PREVIEW (The PDF Document) -->
     <div class="print-area" style="background: #ffffff; border-radius: 16px; border: 1px solid #E5E7EB; padding: 24px; font-family: 'Inter', sans-serif; color: #303B38; box-shadow: 0 4px 12px rgba(0,0,0,0.02); width: 100%; box-sizing: border-box; overflow: hidden;">
       
-      <!-- PDF Header -->
       <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; border-bottom: 2px solid #F3F4F6; padding-bottom: 20px;">
         <div style="max-width: 50%;">
           <div style="font-family: 'Manrope'; font-size: 22px; font-weight: 900; letter-spacing: -0.03em; color: #24503C;">Quotera.</div>
@@ -271,14 +282,12 @@
         </div>
       </div>
 
-      <!-- Customer Info -->
       <div style="margin-bottom: 24px;">
         <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #9CA3AF; margin-bottom: 4px;">Prepared For</div>
         <div style="font-size: 14px; font-weight: 700; color: #303B38;">{customer.name}</div>
         <div style="font-size: 12px; color: #6B7280;">{customer.contact}</div>
       </div>
 
-      <!-- Items Table -->
       <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; table-layout: fixed;">
         <thead>
           <tr style="border-bottom: 1px solid #E5E7EB;">
@@ -300,7 +309,6 @@
         </tbody>
       </table>
 
-      <!-- Totals -->
       <div style="display: flex; justify-content: flex-end; margin-bottom: 24px;">
         <div style="width: 220px;">
           <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; color: #4B5563;">
