@@ -1,5 +1,7 @@
 <script>
-  let { data } = $props();
+  import { enhance } from '$app/forms';
+
+  let { data, form } = $props();
   
   let greeting = "Good morning";
   if (typeof window !== 'undefined') {
@@ -7,40 +9,341 @@
     if (hour >= 12 && hour < 17) greeting = "Good afternoon";
     else if (hour >= 17 || hour < 5) greeting = "Good evening";
   }
+
+  let pageView = $state('input'); 
+  let rawText = $state("");
+  let isLoading = $state(false); 
+  let aiError = $state("");
+
+  let customer = $state({ name: "New Customer", contact: "" });
+  let quoteItems = $state([]);
+
+  let includeDiscount = $state(false);
+  let discountType = $state("percentage");
+  let discountValue = $state(0);
+  let includeDelivery = $state(false);
+  let deliveryFee = $state(0);
+  let includeVAT = $state(false);
+
+  let subtotal = $state(0);
+  let discountAmount = $state(0);
+  let vatAmount = $state(0);
+  let total = $state(0);
+
+  function calculateTotals() {
+    subtotal = quoteItems.reduce((acc, item) => acc + (item.price * item.qty), 0);
+    
+    if (includeDiscount) {
+      discountAmount = discountType === 'percentage' 
+        ? subtotal * (discountValue / 100) 
+        : discountValue;
+    } else {
+      discountAmount = 0;
+    }
+
+    let taxable = subtotal - discountAmount;
+    vatAmount = includeVAT ? taxable * 0.075 : 0;
+
+    total = taxable + vatAmount + (includeDelivery ? deliveryFee : 0);
+  }
+
+  $effect(() => {
+    calculateTotals();
+  });
+
+  function formatCurrency(val) {
+    if (isNaN(val) || val === null) return "₦0";
+    return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(val);
+  }
+
+  function updateQty(id, newQty) {
+    const item = quoteItems.find(i => i.id === id);
+    if (item) item.qty = Math.max(1, Number(newQty));
+  }
+
+  function removeItem(id) {
+    quoteItems = quoteItems.filter(i => i.id !== id);
+  }
+
+  async function generateQuote() {
+    if (!rawText.trim() || isLoading) return;
+    
+    isLoading = true;
+    aiError = "";
+
+    try {
+      const formData = new FormData();
+      formData.append('rawText', rawText);
+
+      const response = await fetch('?/generateAI', {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await response.json();
+      
+      if (result.type === 'failure') {
+         throw new Error(result.data.error);
+      }
+
+      const extractedItems = result.data.items;
+      let nextId = 1;
+      quoteItems = extractedItems.map(item => ({
+        id: nextId++,
+        name: item.name,
+        price: 0, 
+        qty: item.qty || 1
+      }));
+
+    } catch (error) {
+      console.error("Backend error:", error);
+      aiError = error.message;
+      quoteItems = [{ id: 1, name: "Custom Item (Please edit)", price: 0, qty: 1 }];
+    } finally {
+      isLoading = false;
+      pageView = 'builder';
+    }
+  }
 </script>
 
 <svelte:head>
   <title>Dashboard | Quotera</title>
+  <style>
+    @media print {
+      body * { visibility: hidden; }
+      .print-area, .print-area * { visibility: visible; }
+      .print-area { position: absolute; left: 0; top: 0; width: 100%; padding: 0; margin: 0; }
+      .no-print { display: none !important; }
+      @page { margin: 10mm; }
+    }
+  </style>
 </svelte:head>
 
-<div style="max-width: 1000px; margin: 0 auto; padding: 32px 16px;">
+<div style="max-width: 1000px; margin: 0 auto; padding: 8px;">
 
-  <!-- Greeting -->
-  <div style="margin-bottom: 32px; padding-left: 4px;">
-    <h1 style="font-family: 'Manrope', sans-serif; font-size: clamp(24px, 6vw, 36px); font-weight: 800; margin: 0; color: #303B38; letter-spacing: -0.03em;">
-      {greeting}, <span style="color: #C4513D;">{data?.user?.fullname || 'User'}</span>.
-    </h1>
-    <p style="color: #6B7280; font-size: 15px; margin: 8px 0 0 0;">Here is an overview of your business.</p>
-  </div>
-
-  <!-- The Green Stats Card -->
-  <div style="background: linear-gradient(135deg, #24503C 0%, #1a3a2b 100%); border-radius: 20px; padding: 32px; box-shadow: 0 12px 24px -8px rgba(36, 80, 60, 0.4); display: flex; flex-direction: column; justify-content: center; width: 100%; box-sizing: border-box; position: relative; overflow: hidden;">
-    
-    <!-- Subtle background decoration -->
-    <div style="position: absolute; top: -20px; right: -20px; width: 150px; height: 150px; background: rgba(255,255,255,0.05); border-radius: 50%; pointer-events: none;"></div>
-    <div style="position: absolute; bottom: -40px; right: 40px; width: 100px; height: 100px; background: rgba(255,255,255,0.03); border-radius: 50%; pointer-events: none;"></div>
-
-    <p style="font-size: 12px; font-weight: 700; color: #A7F3D0; margin: 0 0 12px 0; text-transform: uppercase; letter-spacing: 0.08em;">Total Quotes Generated</p>
-    <h2 style="font-family: 'Manrope', sans-serif; font-size: clamp(48px, 10vw, 64px); font-weight: 800; color: #ffffff; margin: 0; line-height: 1;">
-      {data?.totalQuotes || 0}
-    </h2>
-    
-    <div style="margin-top: 24px; display: flex; align-items: center; gap: 8px;">
-      <span style="display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.2); color: white; font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 20px; backdrop-filter: blur(4px);">
-        All time
-      </span>
+  {#if pageView === 'input'}
+    <!-- Greeting -->
+    <div style="margin-bottom: 24px; padding-left: 4px; padding-top: 16px;">
+      <h1 style="font-family: 'Manrope', sans-serif; font-size: clamp(22px, 6vw, 32px); font-weight: 800; margin: 0; color: #303B38; letter-spacing: -0.03em;">
+        {greeting}, <span style="color: #C4513D;">{data?.user?.fullname || 'User'}</span>.
+      </h1>
     </div>
 
-  </div>
+    <!-- Green Stats Card -->
+    <div style="margin-bottom: 32px;">
+      <div style="background: linear-gradient(135deg, #24503C 0%, #1a3a2b 100%); border-radius: 16px; padding: 24px; box-shadow: 0 8px 16px -4px rgba(36, 80, 60, 0.3); display: flex; flex-direction: column; justify-content: center; width: 100%; box-sizing: border-box; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background: rgba(255,255,255,0.05); border-radius: 50%; pointer-events: none;"></div>
+        <p style="font-size: 11px; font-weight: 700; color: #A7F3D0; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 0.08em;">Total Quotes Generated</p>
+        <h2 style="font-family: 'Manrope', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0; line-height: 1;">
+          {data?.totalQuotes || 0}
+        </h2>
+      </div>
+    </div>
+
+    <!-- THE BOX -->
+    <div style="margin-bottom: 32px;">
+      {#if aiError}
+        <div style="background: #FEE2E2; color: #DC2626; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-weight: 500; font-size: 14px; border: 1px solid #FCA5A5;">
+          {aiError}
+        </div>
+      {/if}
+
+      <div style="display: flex; flex-direction: column; background-color: #ffffff; border: 1px solid #E5E7EB; border-radius: 16px; box-shadow: 0 8px 24px rgba(48, 59, 56, 0.06); overflow: hidden;">
+        <textarea 
+          bind:value={rawText}
+          placeholder="Paste that messy message here..."
+          disabled={isLoading}
+          style="width: 100%; min-height: 120px; padding: 16px; border: none; font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.5; color: #303B38; background: transparent; resize: vertical; outline: none; box-sizing: border-box;"
+        ></textarea>
+        
+        <div style="padding: 10px 12px; background-color: #F9FAFB; border-top: 1px solid #F3F4F6; display: flex;">
+          <button onclick={generateQuote} disabled={isLoading} style="background-color: #24503C; color: white; padding: 12px; border-radius: 8px; border: none; font-weight: 600; font-size: 15px; cursor: {isLoading ? 'not-allowed' : 'pointer'}; display: flex; align-items: center; justify-content: center; width: 100%; opacity: {isLoading ? 0.8 : 1}; transition: opacity 0.2s;">
+            {#if isLoading}
+              <svg style="width: 18px; height: 18px; margin-right: 8px; animation: spin 1s linear infinite;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+              </svg>
+              Generating Quote...
+            {:else}
+              Generate Quote
+            {/if}
+          </button>
+        </div>
+      </div>
+    </div>
+  {/if}
+
+  {#if pageView === 'builder'}
+    <!-- TOP: EDIT BOX -->
+    <div class="no-print" style="background: #ffffff; border-radius: 12px; border: 1px solid #E5E7EB; padding: 16px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); margin-top: 16px;">
+      
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2 style="font-family: 'Manrope'; font-size: 16px; font-weight: 800; color: #303B38; margin: 0;">Edit Quote</h2>
+        <button onclick={() => pageView = 'input'} style="background: none; border: none; color: #6B7280; font-weight: 600; font-size: 13px; cursor: pointer;">← Back</button>
+      </div>
+
+      <!-- Customer Info -->
+      <div style="margin-bottom: 16px;">
+        <input type="text" bind:value={customer.name} placeholder="Customer Name" style="width: 100%; padding: 12px; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 14px; margin-bottom: 8px; box-sizing: border-box;" />
+        <input type="text" bind:value={customer.contact} placeholder="Phone or Email" style="width: 100%; padding: 12px; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 14px; box-sizing: border-box;" />
+      </div>
+
+      <!-- Items -->
+      <div style="margin-bottom: 16px;">
+        {#each quoteItems as item (item.id)}
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #F3F4F6;">
+            <div style="flex: 1; padding-right: 12px;">
+              <div style="font-size: 13px; font-weight: 600; color: #303B38; line-height: 1.3; margin-bottom: 8px;">{item.name}</div>
+              <input type="number" bind:value={item.price} placeholder="Price (₦)" style="width: 120px; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 13px; outline: none;" />
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <input type="number" value={item.qty} oninput={(e) => updateQty(item.id, e.target.value)} style="width: 50px; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; text-align: center; font-size: 13px; outline: none;" min="1" />
+              <div style="font-weight: 600; font-size: 13px; color: #303B38; width: 80px; text-align: right;">{formatCurrency(item.price * item.qty)}</div>
+              <button onclick={() => removeItem(item.id)} style="background: none; border: none; color: #DC2626; cursor: pointer; font-size: 14px; padding: 0;">✕</button>
+            </div>
+          </div>
+        {/each}
+      </div>
+
+      <!-- Adjustments -->
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #303B38; width: 100px;">
+            <input type="checkbox" bind:checked={includeDiscount} style="width: 16px; height: 16px; accent-color: #24503C;" /> Discount
+          </label>
+          <select bind:value={discountType} style="flex: 1; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 13px; color: #6B7280; outline: none;">
+            <option value="percentage">%</option>
+            <option value="flat">₦</option>
+          </select>
+          <input type="number" bind:value={discountValue} placeholder="0" style="width: 70px; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 13px; text-align: center; outline: none;" />
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #303B38; width: 100px;">
+            <input type="checkbox" bind:checked={includeDelivery} style="width: 16px; height: 16px; accent-color: #24503C;" /> Delivery
+          </label>
+          <input type="number" bind:value={deliveryFee} placeholder="Amount" style="flex: 1; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 13px; outline: none;" />
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #303B38; width: 100px;">
+            <input type="checkbox" bind:checked={includeVAT} style="width: 16px; height: 16px; accent-color: #24503C;" /> VAT
+          </label>
+          <input type="number" placeholder="7.5" value="7.5" style="width: 70px; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 13px; text-align: center; outline: none;" disabled />
+          <span style="font-size: 13px; color: #6B7280;">%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM: PREVIEW (The PDF Document) -->
+    <div class="print-area" style="background: #ffffff; border-radius: 16px; border: 1px solid #E5E7EB; padding: 24px; font-family: 'Inter', sans-serif; color: #303B38; box-shadow: 0 4px 12px rgba(0,0,0,0.02); width: 100%; box-sizing: border-box; overflow: hidden;">
+      
+      <!-- PDF Header -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; border-bottom: 2px solid #F3F4F6; padding-bottom: 20px;">
+        <div style="max-width: 50%;">
+          <div style="font-family: 'Manrope'; font-size: 22px; font-weight: 900; letter-spacing: -0.03em; color: #24503C;">Quotera.</div>
+          <div style="font-size: 12px; color: #6B7280; margin-top: 4px; line-height: 1.5;">Your Company Address<br/>your@email.com</div>
+        </div>
+        <div style="text-align: right; max-width: 50%;">
+          <h1 style="font-family: 'Manrope'; font-size: 18px; margin: 0 0 4px 0; color: #303B38; text-transform: uppercase;">Quotation</h1>
+          <div style="font-size: 12px; color: #6B7280;">Date: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
+        </div>
+      </div>
+
+      <!-- Customer Info -->
+      <div style="margin-bottom: 24px;">
+        <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #9CA3AF; margin-bottom: 4px;">Prepared For</div>
+        <div style="font-size: 14px; font-weight: 700; color: #303B38;">{customer.name}</div>
+        <div style="font-size: 12px; color: #6B7280;">{customer.contact}</div>
+      </div>
+
+      <!-- Items Table -->
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; table-layout: fixed;">
+        <thead>
+          <tr style="border-bottom: 1px solid #E5E7EB;">
+            <th style="text-align: left; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 60%;">Item</th>
+            <th style="text-align: center; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 15%;">Qty</th>
+            <th style="text-align: right; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 25%;">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {#each quoteItems as item}
+            <tr style="border-bottom: 1px solid #F3F4F6;">
+              <td style="padding: 16px 0; font-size: 14px; font-weight: 600; line-height: 1.4; word-wrap: break-word;">{item.name}</td>
+              <td style="padding: 16px 0; text-align: center; font-size: 14px;">{item.qty}</td>
+              <td style="padding: 16px 0; text-align: right; font-size: 14px; font-weight: 600;">{formatCurrency(item.price * item.qty)}</td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+
+      <!-- Totals -->
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 24px;">
+        <div style="width: 220px;">
+          <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; color: #4B5563;">
+            <span>Subtotal:</span>
+            <span>{formatCurrency(subtotal)}</span>
+          </div>
+          {#if includeDiscount}
+            <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; color: #DC2626;">
+              <span>Discount:</span>
+              <span>-{formatCurrency(discountAmount)}</span>
+            </div>
+          {/if}
+          {#if includeDelivery && deliveryFee > 0}
+            <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; color: #4B5563;">
+              <span>Delivery:</span>
+              <span>{formatCurrency(deliveryFee)}</span>
+            </div>
+          {/if}
+          {#if includeVAT}
+            <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; color: #4B5563;">
+              <span>VAT (7.5%):</span>
+              <span>{formatCurrency(vatAmount)}</span>
+            </div>
+          {/if}
+          <div style="display: flex; justify-content: space-between; padding: 12px 0; font-size: 18px; font-weight: 800; color: #24503C; border-top: 2px solid #E5E7EB; margin-top: 8px;">
+            <span>TOTAL:</span>
+            <span>{formatCurrency(total)}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM BUTTON -->
+    <div class="no-print" style="margin-top: 16px;">
+      {#if form?.success}
+        <div style="background: #DCFCE7; color: #166534; padding: 16px; border-radius: 8px; margin-bottom: 16px; font-weight: 600; text-align: center;">
+          Quote saved successfully!
+        </div>
+      {/if}
+
+      {#if form?.error}
+        <div style="background: #FEE2E2; color: #DC2626; padding: 16px; border-radius: 8px; margin-bottom: 16px; font-weight: 600; text-align: center;">
+          {form.error}
+        </div>
+      {/if}
+
+      <form 
+        method="POST" 
+        action="?/saveQuote" 
+        use:enhance={() => {
+          return async ({ result, update }) => {
+            await update(); 
+            if (result.type === 'success') {
+              window.print(); 
+            }
+          };
+        }}
+      >
+        <input type="hidden" name="customerName" value={customer.name} />
+        <input type="hidden" name="customerContact" value={customer.contact} />
+        <input type="hidden" name="total" value={total} />
+
+        <button type="submit" style="width: 100%; background: #24503C; color: white; padding: 16px; border-radius: 8px; border: none; font-weight: 600; font-size: 16px; cursor: pointer;">
+          Download PDF & Save
+        </button>
+      </form>
+    </div>
+  {/if}
 
 </div>
