@@ -34,9 +34,12 @@ export const actions = {
 
     try {
       const db = platform.env.DB;
+      
+      // 1. Get the products specifically for THIS user
       const priceListData = await db.prepare("SELECT * FROM products WHERE user_id = ?").bind(session).all();
       const products = priceListData.results || [];
 
+      // 2. Call the AI
       const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
@@ -50,30 +53,30 @@ export const actions = {
         })
       });
 
-      if (!response.ok) {
-        const errText = await response.text();
-        throw new Error(`Groq Error: ${errText}`);
-      }
-
+      if (!response.ok) throw new Error("AI failed to extract");
       const aiData = await response.json();
-      if (!aiData.choices || !aiData.choices[0]) throw new Error("AI returned empty response");
-
       let responseText = aiData.choices[0].message.content.trim();
       if (responseText.startsWith("```json")) responseText = responseText.replace(/```json/g, "").replace(/```/g, "").trim();
       
-      let extractedItems = [];
-      try {
-        extractedItems = JSON.parse(responseText);
-      } catch (e) {
-        throw new Error("AI did not return valid JSON. It said: " + responseText);
-      }
+      const extractedItems = JSON.parse(responseText);
 
+      // 3. Super Smart Matching
       let nextId = 1;
       const matchedItems = extractedItems.map(aiItem => {
-        const aiName = aiItem.name.toLowerCase().trim();
+        // Clean up the AI name (lowercase, remove 's' from the end)
+        const aiName = aiItem.name.toLowerCase().trim().replace(/s$/, '');
+        
+        // Find the best match in the database
         const match = products.find(p => {
-          const dbName = p.name.toLowerCase().trim();
-          return dbName.includes(aiName) || aiName.includes(dbName);
+          const dbName = p.name.toLowerCase().trim().replace(/s$/, '');
+          
+          // If the AI name is inside the DB name, OR the DB name is inside the AI name
+          if (dbName.includes(aiName) || aiName.includes(dbName)) return true;
+          
+          // Split into words and check if the first word matches (e.g. "soft" matches "soft tissue")
+          const aiWords = aiName.split(' ');
+          const dbWords = dbName.split(' ');
+          return aiWords.some(w => dbWords.includes(w));
         });
 
         if (match) {
