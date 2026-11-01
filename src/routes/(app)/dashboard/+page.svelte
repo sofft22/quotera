@@ -73,7 +73,7 @@
     quoteItems = quoteItems.filter(i => i.id !== id);
   }
 
-        async function generateQuote() {
+  async function generateQuote() {
     if (!rawText.trim() || isLoading) return;
     
     isLoading = true;
@@ -90,25 +90,19 @@
       });
 
       const result = await response.json();
+      console.log("Frontend received:", result);
       
       if (result.type === 'failure') {
-        throw new Error(result.data.error);
+         throw new Error(result.data.error);
       }
 
-      // THE FIX: Check if items is a string or array, then parse it safely
-      if (result.data && result.data.items) {
-        let items = result.data.items;
-        
-        if (typeof items === 'string') {
-          items = JSON.parse(items);
-        }
-
-        quoteItems = items.map(item => ({
+      // Directly use the array from the server
+      if (result.data && Array.isArray(result.data.items)) {
+        quoteItems = result.data.items.map(item => ({
           ...item,
           price: Number(item.price) || 0,
           qty: Number(item.qty) || 1
         }));
-
       } else {
         throw new Error("No valid items returned from server.");
       }
