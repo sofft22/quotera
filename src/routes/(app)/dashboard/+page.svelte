@@ -479,8 +479,8 @@
           </div>
         </div>
 
-        <div style="border-top: 1px solid #F3F4F6; padding-top: 30px; text-align: center;">
-          <p style="font-size: 13px; color: #6B7280; margin: 0;">Thank you for your business. If you have any questions, please contact us.</p
+                <div style="border-top: 1px solid #F3F4F6; padding-top: 30px; text-align: center;">
+          <p style="font-size: 13px; color: #6B7280; margin: 0;">Thank you for your business. If you have any questions, please contact us.</p>
         </div>
       </div>
     </div>
