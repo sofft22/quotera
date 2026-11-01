@@ -1,4 +1,4 @@
-<script>
+             <script>
   import { enhance } from '$app/forms';
   import { onMount } from 'svelte';
 
@@ -47,7 +47,6 @@
     const c = data.user || {};
     return {
       header: (c.header_color && c.header_color !== "") ? c.header_color : "#24503C",
-      accent: (c.accent_color && c.accent_color !== "") ? c.accent_color : "#C4513D",
       logo: c.logo_base64 || null,
       companyName: c.company_name || "Quotera.",
       companyAddress: c.company_address || "Your Company Address",
@@ -154,7 +153,8 @@
   </style>
 </svelte:head>
 
-<div style="max-width: 1000px; margin: 0 auto; padding: 8px;">
+<!-- Reduced the outer padding and set box-sizing so it never overflows -->
+<div style="max-width: 1000px; margin: 0 auto; padding: 8px; width: 100%; box-sizing: border-box; overflow-x: hidden;">
   {#if pageView === 'input'}
     <div style="margin-bottom: 24px; padding-left: 4px; padding-top: 16px;">
       <h1 style="font-family: 'Manrope', sans-serif; font-size: clamp(28px, 8vw, 40px); font-weight: 800; margin: 0; color: #303B38; letter-spacing: -0.03em;">
@@ -279,38 +279,38 @@
     </div>
 
     <!-- ON-SCREEN PREVIEW -->
-    <div class="print-area" style="background: #ffffff; border-radius: 16px; border: 1px solid #E5E7EB; padding: 24px; font-family: 'Inter', sans-serif; color: #303B38; box-shadow: 0 4px 12px rgba(0,0,0,0.02); width: 100%; box-sizing: border-box; overflow: hidden;">
+    <div class="print-area" style="background: #ffffff; border-radius: 16px; border: 1px solid #E5E7EB; padding: 20px; font-family: 'Inter', sans-serif; color: #303B38; box-shadow: 0 4px 12px rgba(0,0,0,0.02); width: 100%; box-sizing: border-box; overflow: hidden;">
       
       <!-- HEADER BANNER ON SCREEN -->
-      <div style="background-color: {getColors().header}; padding: 24px; border-radius: 8px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-start; color: white;">
+      <div style="background-color: {getColors().header}; padding: 20px; border-radius: 8px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-start; color: white;">
         <div style="max-width: 50%;">
           <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
             {#if getColors().logo}
-              <img src={getColors().logo} alt="Logo" style="height: 40px; width: auto; max-width: 120px; object-fit: contain; background: white; border-radius: 4px; padding: 4px;" />
+              <img src={getColors().logo} alt="Logo" style="height: 36px; width: auto; max-width: 100px; object-fit: contain; background: white; border-radius: 4px; padding: 4px;" />
             {/if}
-            <div style="font-family: 'Manrope'; font-size: 22px; font-weight: 900; letter-spacing: -0.03em; color: #ffffff;">{getColors().companyName}</div>
+            <div style="font-family: 'Manrope'; font-size: 18px; font-weight: 900; letter-spacing: -0.03em; color: #ffffff; line-height: 1.2;">{getColors().companyName}</div>
           </div>
-          <div style="font-size: 12px; color: rgba(255,255,255,0.8); margin-top: 4px; line-height: 1.5;">{getColors().companyAddress}<br/>{getColors().companyContact}</div>
+          <div style="font-size: 11px; color: rgba(255,255,255,0.8); margin-top: 4px; line-height: 1.5;">{getColors().companyAddress}<br/>{getColors().companyContact}</div>
         </div>
         <div style="text-align: right; max-width: 50%;">
-          <h1 style="font-family: 'Manrope'; font-size: 18px; margin: 0 0 4px 0; color: #ffffff; text-transform: uppercase;">Quotation</h1>
-          <div style="font-size: 12px; color: rgba(255,255,255,0.8);">Date: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
+          <h1 style="font-family: 'Manrope'; font-size: 16px; margin: 0 0 4px 0; color: #ffffff; text-transform: uppercase;">Quotation</h1>
+          <div style="font-size: 11px; color: rgba(255,255,255,0.8);">Date: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
         </div>
       </div>
 
       <div style="margin-bottom: 24px;">
-        <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: {getColors().accent}; margin-bottom: 4px;">Prepared For</div>
+        <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: {getColors().header}; margin-bottom: 4px;">Prepared For</div>
         <div style="font-size: 14px; font-weight: 700; color: #303B38;">{toTitleCase(customer.name)}</div>
         <div style="font-size: 12px; color: #6B7280;">{customer.contact}</div>
       </div>
 
       <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; table-layout: fixed;">
         <thead>
-          <tr style="border-bottom: 1px solid {getColors().accent};">
-            <th style="text-align: left; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: {getColors().accent}; width: 50%;">Item</th>
-            <th style="text-align: center; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: {getColors().accent}; width: 15%;">Unit</th>
-            <th style="text-align: center; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: {getColors().accent}; width: 10%;">Qty</th>
-            <th style="text-align: right; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: {getColors().accent}; width: 25%;">Total</th>
+          <tr style="border-bottom: 1px solid #E5E7EB;">
+            <th style="text-align: left; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 50%;">Item</th>
+            <th style="text-align: center; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 15%;">Unit</th>
+            <th style="text-align: center; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 10%;">Qty</th>
+            <th style="text-align: right; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 25%;">Total</th>
           </tr>
         </thead>
         <tbody>
@@ -349,7 +349,7 @@
               <span>{formatCurrency(vatAmount)}</span>
             </div>
           {/if}
-          <div style="display: flex; justify-content: space-between; padding: 12px 0; font-size: 18px; font-weight: 800; color: {getColors().accent}; border-top: 2px solid {getColors().accent}; margin-top: 8px;">
+          <div style="display: flex; justify-content: space-between; padding: 12px 0; font-size: 18px; font-weight: 800; color: #303B38; border-top: 2px solid #E5E7EB; margin-top: 8px;">
             <span>TOTAL:</span>
             <span>{formatCurrency(total)}</span>
           </div>
@@ -357,7 +357,7 @@
       </div>
       
       <div style="border-top: 1px solid #F3F4F6; padding-top: 24px; text-align: center;">
-        <p style="font-size: 12px; color: {getColors().accent}; margin: 0; opacity: 0.7;">Thank you for your business. If you have any questions, please contact us.</p>
+        <p style="font-size: 12px; color: #6B7280; margin: 0;">Thank you for your business. If you have any questions, please contact us.</p>
       </div>
     </div>
 
@@ -434,19 +434,19 @@
       <!-- BODY CONTENT -->
       <div style="padding: 40px 50px;">
         <div style="margin-bottom: 40px;">
-          <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: {getColors().accent}; margin-bottom: 6px; letter-spacing: 0.05em;">Prepared For</div>
+          <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: {getColors().header}; margin-bottom: 6px; letter-spacing: 0.05em;">Prepared For</div>
           <div style="font-size: 20px; font-weight: 800; color: #303B38;">{toTitleCase(customer.name) || "Customer"}</div>
           <div style="font-size: 15px; color: #6B7280; margin-top: 4px;">{customer.contact || "Contact Info"}</div>
         </div>
 
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 40px; table-layout: fixed;">
           <thead>
-            <tr style="border-bottom: 2px solid {getColors().accent};">
-              <th style="text-align: left; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: {getColors().accent}; width: 40%;">Item</th>
-              <th style="text-align: center; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: {getColors().accent}; width: 15%;">Unit</th>
-              <th style="text-align: center; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: {getColors().accent}; width: 10%;">Qty</th>
-              <th style="text-align: right; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: {getColors().accent}; width: 15%;">Price</th>
-              <th style="text-align: right; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: {getColors().accent}; width: 20%;">Total</th>
+            <tr style="border-bottom: 2px solid {getColors().header};">
+              <th style="text-align: left; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: {getColors().header}; width: 40%;">Item</th>
+              <th style="text-align: center; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: {getColors().header}; width: 15%;">Unit</th>
+              <th style="text-align: center; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: {getColors().header}; width: 10%;">Qty</th>
+              <th style="text-align: right; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: {getColors().header}; width: 15%;">Price</th>
+              <th style="text-align: right; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: {getColors().header}; width: 20%;">Total</th>
             </tr>
           </thead>
           <tbody>
@@ -469,7 +469,7 @@
               <span>{formatCurrency(subtotal)}</span>
             </div>
             {#if includeDiscount}
-              <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: #DC2626; font-weight: 500;">
+              <div style <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: #DC2626; font-weight: 500;">
                 <span>Discount:</span>
                 <span>-{formatCurrency(discountAmount)}</span>
               </div>
@@ -486,7 +486,7 @@
                 <span>{formatCurrency(vatAmount)}</span>
               </div>
             {/if}
-            <div style="display: flex; justify-content: space-between; padding: 20px 0 10px 0; font-size: 24px; font-weight: 800; color: {getColors().accent}; border-top: 3px solid {getColors().accent}; margin-top: 10px;">
+            <div style="display: flex; justify-content: space-between; padding: 20px 0 10px 0; font-size: 24px; font-weight: 800; color: #303B38; border-top: 3px solid #E5E7EB; margin-top: 10px;">
               <span>TOTAL:</span>
               <span>{formatCurrency(total)}</span>
             </div>
@@ -494,7 +494,7 @@
         </div>
 
         <div style="border-top: 1px solid #F3F4F6; padding-top: 30px; text-align: center;">
-          <p style="font-size: 13px; color: {getColors().accent}; opacity: 0.7; margin: 0;">Thank you for your business. If you have any questions, please contact us.</p>
+          <p style="font-size: 13px; color: #6B7280; margin: 0;">Thank you for your business. If you have any questions, please contact us.</p>
         </div>
       </div>
     </div>
