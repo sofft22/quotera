@@ -90,15 +90,25 @@
       });
 
       const result = await response.json();
-      console.log("Server Response:", result);
+      console.log("Frontend received:", result);
       
       if (result.type === 'failure') {
          throw new Error(result.data.error);
       }
 
-      // FIXED: Parse the stringified array back into an object
+      // Ensure items exist and parse them safely
       if (result.data && result.data.items) {
-        quoteItems = JSON.parse(result.data.items);
+        // If the server returned a stringified array, parse it. If it's already an array, use it.
+        let parsedItems = typeof result.data.items === 'string' 
+          ? JSON.parse(result.data.items) 
+          : result.data.items;
+
+        // Force numbers to prevent NaN
+        quoteItems = parsedItems.map(item => ({
+          ...item,
+          price: Number(item.price) || 0,
+          qty: Number(item.qty) || 1
+        }));
       } else {
         throw new Error("No valid items returned from server.");
       }
@@ -109,7 +119,7 @@
       quoteItems = []; 
     } finally {
       isLoading = false;
-      if (!aiError) {
+      if (!aiError && quoteItems.length > 0) {
         pageView = 'builder';
       }
     }
