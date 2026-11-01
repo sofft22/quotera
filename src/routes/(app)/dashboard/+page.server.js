@@ -36,12 +36,11 @@ export const actions = {
       const db = platform.env.DB;
       const userId = Number(session);
       
-      // USE THE CORRECT TABLE NAME (price_list)
+      // Fetch DB items
       const priceListData = await db.prepare("SELECT * FROM price_list WHERE user_id = ?").bind(userId).all();
       const products = priceListData.results || [];
-      
-      console.log("DB Items found for user:", products);
 
+      // Call AI
       const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
@@ -62,6 +61,7 @@ export const actions = {
       
       const extractedItems = JSON.parse(responseText);
 
+      // Match
       let nextId = 1;
       const matchedItems = extractedItems.map(aiItem => {
         const aiName = aiItem.name.toLowerCase().trim().replace(/s$/, '');
@@ -74,20 +74,14 @@ export const actions = {
         });
 
         if (match) {
-          return { 
-            id: nextId++, 
-            name: match.name, 
-            unit: match.unit, 
-            price: Number(match.price), 
-            qty: aiItem.qty || 1 
-          };
+          return { id: nextId++, name: match.name, unit: match.unit, price: Number(match.price), qty: aiItem.qty || 1 };
         } else {
           return { id: nextId++, name: aiItem.name, unit: "Piece", price: 0, qty: aiItem.qty || 1 };
         }
       });
 
-      // Return as stringified array to prevent SvelteKit from stripping it
-      return { success: true, items: JSON.stringify(matchedItems) };
+      // Return standard object. SvelteKit handles this natively.
+      return { success: true, items: matchedItems };
     } catch (err) {
       console.error("Error:", err.message);
       return fail(500, { error: err.message });
