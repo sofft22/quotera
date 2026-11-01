@@ -1,4 +1,4 @@
-import { json, redirect } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 
 export async function load({ cookies, platform }) {
   const session = cookies.get('session');
@@ -24,32 +24,39 @@ export async function load({ cookies, platform }) {
   };
 }
 
-// We are using a standard POST endpoint instead of Svelte form actions
-export async function POST({ request, cookies, platform }) {
-  const session = cookies.get('session');
-  if (!session) return json({ error: 'Not logged in' }, { status: 401 });
+export const actions = {
+  default: async ({ request, cookies, platform }) => {
+    const session = cookies.get('session');
+    if (!session) return fail(401, { error: 'Not logged in' });
 
-  const data = await request.json();
-  const db = platform.env.DB;
+    const data = await request.formData();
+    const companyName = data.get('companyName');
+    const companyAddress = data.get('companyAddress');
+    const companyContact = data.get('companyContact');
+    const headerColor = data.get('headerColor');
+    const accentColor = data.get('accentColor');
+    const logoBase64 = data.get('logoBase64');
 
-  try {
-    await db.prepare(`
-      UPDATE users 
-      SET company_name = ?, company_address = ?, company_contact = ?, header_color = ?, accent_color = ?, logo_base64 = ?
-      WHERE id = ?
-    `).bind(
-      data.companyName, 
-      data.companyAddress, 
-      data.companyContact, 
-      data.headerColor, 
-      data.accentColor, 
-      data.logoBase64 || null, 
-      Number(session)
-    ).run();
+    const db = platform.env.DB;
 
-    return json({ success: true });
-  } catch (err) {
-    console.error(err);
-    return json({ error: 'Failed to save settings' }, { status: 500 });
+    try {
+      await db.prepare(`
+        UPDATE users 
+        SET company_name = ?, company_address = ?, company_contact = ?, header_color = ?, accent_color = ?, logo_base64 = ?
+        WHERE id = ?
+      `).bind(
+        companyName, 
+        companyAddress, 
+        companyContact, 
+        headerColor, 
+        accentColor, 
+        logoBase64 || null, 
+        Number(session)
+      ).run();
+
+      return { success: true };
+    } catch (err) {
+      return fail(500, { error: 'Failed to save settings.' });
+    }
   }
-}
+};
