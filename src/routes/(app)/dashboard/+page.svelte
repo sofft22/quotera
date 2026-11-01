@@ -224,7 +224,7 @@
         <input type="text" bind:value={customer.contact} placeholder="Phone or Email" style="width: 100%; padding: 12px; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 14px; box-sizing: border-box;" />
       </div>
 
-     <div style="margin-bottom: 24px;">
+      <div style="margin-bottom: 24px;">
         <h3 style="font-family: 'Manrope'; font-size: 14px; font-weight: 800; color: #303B38; margin: 0 0 12px 0;">Matched Items</h3>
         {#if quoteItems.length === 0}
           <p style="font-size: 13px; color: #6B7280;">No items matched.</p>
@@ -401,22 +401,25 @@
   {#if pageView === 'builder'}
     <div bind:this={hiddenPdfRef} style="width: 800px; background: white; font-family: 'Inter', sans-serif; color: {getColors().text};">
       
-      <!-- HEADER BANNER -->
-      <div style="background-color: {getColors().header}; padding: 40px 50px; display: flex; justify-content: space-between; align-items: flex-start;">
-        <div>
-          {#if getColors().logo}
-            <img src={getColors().logo} alt="Logo" style="height: 50px; width: auto; max-width: 200px; object-fit: contain; margin-bottom: 12px; filter: brightness(0) invert(1);" />
-          {:else}
-            <div style="font-family: 'Manrope', sans-serif; font-size: 32px; font-weight: 900; letter-spacing: -0.03em; color: #ffffff;">{getColors().companyName}</div>
-          {/if}
-          
-          <div style="font-size: 14px; color: rgba(255,255,255,0.8); margin-top: 6px; line-height: 1.6;">
-            {getColors().companyAddress}<br/>{getColors().companyContact}
+      <!-- HEADER BANNER (Inset, professional, not clipped) -->
+      <div style="padding: 40px 50px 0 50px;">
+        <div style="background-color: {getColors().header}; padding: 40px; border-radius: 16px; display: flex; justify-content: space-between; align-items: flex-start;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
+              {#if getColors().logo}
+                <img src={getColors().logo} alt="Logo" style="height: 50px; width: auto; max-width: 150px; object-fit: contain; background: white; border-radius: 6px; padding: 6px;" />
+              {/if}
+              <div style="font-family: 'Manrope', sans-serif; font-size: 32px; font-weight: 900; letter-spacing: -0.03em; color: #ffffff;">{getColors().companyName}</div>
+            </div>
+            
+            <div style="font-size: 14px; color: rgba(255,255,255,0.9); margin-top: 6px; line-height: 1.6;">
+              {getColors().companyAddress}<br/>{getColors().companyContact}
+            </div>
           </div>
-        </div>
-        <div style="text-align: right;">
-          <h1 style="font-family: 'Manrope', sans-serif; font-size: 26px; font-weight: 800; margin: 0 0 6px 0; color: #ffffff; text-transform: uppercase;">Quotation</h1>
-          <div style="font-size: 14px; color: rgba(255,255,255,0.8);">Date: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
+          <div style="text-align: right;">
+            <h1 style="font-family: 'Manrope', sans-serif; font-size: 26px; font-weight: 800; margin: 0 0 6px 0; color: #ffffff; text-transform: uppercase;">Quotation</h1>
+            <div style="font-size: 14px; color: rgba(255,255,255,0.9);">Date: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
+          </div>
         </div>
       </div>
 
@@ -441,11 +444,11 @@
           <tbody>
             {#each quoteItems as item}
               <tr style="border-bottom: 1px solid #F3F4F6;">
-                <td style="padding: 20px 0; font-size: 16px; font-weight: 600; line-height: 1.5; word-wrap: break-word; color: {getColors().text};">{item.name}</td>
-                <td style="padding: 20px 0; text-align: center; font-size: 15px; font-weight: 500; color: {getColors().text};">{item.unit}</td>
-                <td style="padding: 20px 0; text-align: center; font-size: 15px; font-weight: 500; color: {getColors().text};">{item.qty}</td>
-                <td style="padding: 20px 0; text-align: right; font-size: 15px; color: {getColors().text};">{formatCurrency(item.price)}</td>
-                <td style="padding: 20px 0; text-align: right; font-size: 16px; font-weight: 700; color: {getColors().text};">{formatCurrency(item.price * item.qty)}</td>
+                <td style="padding: 20px 0; font-size: 16px; font-weight: 600; line-height: 1.5; word-wrap: break-word; color: #303B38;">{item.name}</td>
+                <td style="padding: 20px 0; text-align: center; font-size: 15px; font-weight: 500; color: #4B5563;">{item.unit}</td>
+                <td style="padding: 20px 0; text-align: center; font-size: 15px; font-weight: 500; color: #4B5563;">{item.qty}</td>
+                <td style="padding: 20px 0; text-align: right; font-size: 15px; color: #4B5563;">{formatCurrency(item.price)}</td>
+                <td style="padding: 20px 0; text-align: right; font-size: 16px; font-weight: 700; color: #303B38;">{formatCurrency(item.price * item.qty)}</td>
               </tr>
             {/each}
           </tbody>
@@ -453,7 +456,7 @@
 
         <div style="display: flex; justify-content: flex-end; margin-bottom: 40px;">
           <div style="width: 320px;">
-            <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: {getColors().text};">
+            <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: #4B5563;">
               <span>Subtotal:</span>
               <span>{formatCurrency(subtotal)}</span>
             </div>
@@ -464,16 +467,16 @@
               </div>
             {/if}
             {#if includeDelivery && deliveryFee > 0}
-              <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: {getColors().text};">
+              <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: #4B5563;">
                 <span>Delivery:</span>
                 <span>{formatCurrency(deliveryFee)}</span>
               </div>
             {/if}
             {#if includeVAT}
-              <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: {getColors().text};">
+              <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: #4B5563;">
                 <span>VAT (7.5%):</span>
-              <span>{formatCurrency(vatAmount)}</span>
-            </div>
+                <span>{formatCurrency(vatAmount)}</span>
+              </div>
             {/if}
             <div style="display: flex; justify-content: space-between; padding: 20px 0 10px 0; font-size: 24px; font-weight: 800; color: {getColors().accent}; border-top: 3px solid #E5E7EB; margin-top: 10px;">
               <span>TOTAL:</span>
