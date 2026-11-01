@@ -73,7 +73,7 @@
     quoteItems = quoteItems.filter(i => i.id !== id);
   }
 
-  async function generateQuote() {
+    async function generateQuote() {
     if (!rawText.trim() || isLoading) return;
     
     isLoading = true;
@@ -90,20 +90,14 @@
       });
 
       const result = await response.json();
-      console.log("Frontend received:", result);
       
       if (result.type === 'failure') {
          throw new Error(result.data.error);
       }
 
-      // Ensure items exist and parse them safely
       if (result.data && result.data.items) {
-        // If the server returned a stringified array, parse it. If it's already an array, use it.
-        let parsedItems = typeof result.data.items === 'string' 
-          ? JSON.parse(result.data.items) 
-          : result.data.items;
-
-        // Force numbers to prevent NaN
+        // Parse the stringified array
+        const parsedItems = JSON.parse(result.data.items);
         quoteItems = parsedItems.map(item => ({
           ...item,
           price: Number(item.price) || 0,
@@ -116,7 +110,6 @@
     } catch (error) {
       console.error("Backend error:", error);
       aiError = error.message;
-      quoteItems = []; 
     } finally {
       isLoading = false;
       if (!aiError && quoteItems.length > 0) {
