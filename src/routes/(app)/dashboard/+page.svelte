@@ -30,10 +30,11 @@
   let vatAmount = $state(0);
   let total = $state(0);
 
-  // Safe calculation to prevent 'reduce' crash
   function calculateTotals() {
-    if (!quoteItems || !Array.isArray(quoteItems)) {
+    if (!quoteItems || !Array.isArray(quoteItems) || quoteItems.length === 0) {
       subtotal = 0;
+      discountAmount = 0;
+      vatAmount = 0;
       total = 0;
       return;
     }
@@ -77,7 +78,7 @@
     
     isLoading = true;
     aiError = "";
-    quoteItems = []; // Reset
+    quoteItems = []; 
 
     try {
       const formData = new FormData();
@@ -89,13 +90,18 @@
       });
 
       const result = await response.json();
+      console.log("Server Response:", result);
       
       if (result.type === 'failure') {
          throw new Error(result.data.error);
       }
 
-      // Ensure we set an array before changing the view
-      quoteItems = result.data.items || [];
+      // FIXED: Parse the stringified array back into an object
+      if (result.data && result.data.items) {
+        quoteItems = JSON.parse(result.data.items);
+      } else {
+        throw new Error("No valid items returned from server.");
+      }
 
     } catch (error) {
       console.error("Backend error:", error);
@@ -103,7 +109,6 @@
       quoteItems = []; 
     } finally {
       isLoading = false;
-      // Only go to builder if we didn't have an error
       if (!aiError) {
         pageView = 'builder';
       }
@@ -168,7 +173,7 @@
     <!-- Create New Quote Title and Input -->
     <div style="margin-bottom: 32px;">
       <h2 style="font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 800; color: #303B38; margin: 0 0 16px 0; padding-left: 4px;">
-        New <span style="color: #C4513D;">Quote</span>
+        Create New <span style="color: #C4513D;">Quote</span>
       </h2>
       
       {#if aiError}
