@@ -47,13 +47,17 @@
     const c = data.user || {};
     return {
       header: (c.header_color && c.header_color !== "") ? c.header_color : "#24503C",
-      text: (c.text_color && c.text_color !== "") ? c.text_color : "#303B38",
       accent: (c.accent_color && c.accent_color !== "") ? c.accent_color : "#C4513D",
       logo: c.logo_base64 || null,
       companyName: c.company_name || "Quotera.",
       companyAddress: c.company_address || "Your Company Address",
       companyContact: c.company_contact || "your@email.com"
     };
+  }
+
+  function toTitleCase(str) {
+    if (!str) return "";
+    return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
   }
 
   function calculateTotals() {
@@ -232,8 +236,8 @@
           {#each quoteItems as item (item.id)}
             <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid #F3F4F6;">
               <div style="flex: 1; padding-right: 12px;">
-                <div style="font-size: 14px; font-weight: 600; color: #303B38; line-height: 1.3;">{item.name}</div>
-                <div style="font-size: 12px; color: #6B7280; margin-top: 4px;">Unit: {item.unit} | Price: {formatCurrency(item.price)}</div>
+                <div style="font-size: 14px; font-weight: 600; color: #303B38; line-height: 1.3;">{toTitleCase(item.name)}</div>
+                <div style="font-size: 12px; color: #6B7280; margin-top: 4px;">Unit: {toTitleCase(item.unit)} | Price: {formatCurrency(item.price)}</div>
               </div>
               <div style="display: flex; align-items: center; gap: 12px;">
                 <input type="number" value={item.qty} oninput={(e) => updateQty(item.id, e.target.value)} style="width: 60px; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; text-align: center; font-size: 14px; outline: none;" min="1" />
@@ -277,7 +281,7 @@
     <!-- ON-SCREEN PREVIEW -->
     <div class="print-area" style="background: #ffffff; border-radius: 16px; border: 1px solid #E5E7EB; padding: 24px; font-family: 'Inter', sans-serif; color: #303B38; box-shadow: 0 4px 12px rgba(0,0,0,0.02); width: 100%; box-sizing: border-box; overflow: hidden;">
       
-      <!-- HEADER BANNER ON SCREEN -->
+      <!-- HEADER BANNER -->
       <div style="background-color: {getColors().header}; padding: 24px; border-radius: 8px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-start; color: white;">
         <div style="max-width: 50%;">
           <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
@@ -295,27 +299,27 @@
       </div>
 
       <div style="margin-bottom: 24px;">
-        <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #9CA3AF; margin-bottom: 4px;">Prepared For</div>
-        <div style="font-size: 14px; font-weight: 700; color: #303B38;">{customer.name}</div>
+        <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: {getColors().header}; margin-bottom: 4px;">Prepared For</div>
+        <div style="font-size: 14px; font-weight: 700; color: #303B38;">{toTitleCase(customer.name)}</div>
         <div style="font-size: 12px; color: #6B7280;">{customer.contact}</div>
       </div>
 
       <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; table-layout: fixed;">
         <thead>
           <tr style="border-bottom: 1px solid #E5E7EB;">
-            <th style="text-align: left; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 50%;">Item</th>
-            <th style="text-align: center; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 15%;">Unit</th>
-            <th style="text-align: center; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 10%;">Qty</th>
-            <th style="text-align: right; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 25%;">Total</th>
+            <th style="text-align: left; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: {getColors().header}; width: 50%;">Item</th>
+            <th style="text-align: center; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: {getColors().header}; width: 15%;">Unit</th>
+            <th style="text-align: center; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: {getColors().header}; width: 10%;">Qty</th>
+            <th style="text-align: right; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: {getColors().header}; width: 25%;">Total</th>
           </tr>
         </thead>
         <tbody>
           {#each quoteItems as item}
             <tr style="border-bottom: 1px solid #F3F4F6;">
-              <td style="padding: 16px 0; font-size: 14px; font-weight: 600; line-height: 1.4; word-wrap: break-word;">{item.name}</td>
-              <td style="padding: 16px 0; text-align: center; font-size: 14px;">{item.unit}</td>
-              <td style="padding: 16px 0; text-align: center; font-size: 14px;">{item.qty}</td>
-              <td style="padding: 16px 0; text-align: right; font-size: 14px; font-weight: 600;">{formatCurrency(item.price * item.qty)}</td>
+              <td style="padding: 16px 0; font-size: 14px; font-weight: 600; line-height: 1.4; word-wrap: break-word; color: #303B38;">{toTitleCase(item.name)}</td>
+              <td style="padding: 16px 0; text-align: center; font-size: 14px; color: #6B7280;">{toTitleCase(item.unit)}</td>
+              <td style="padding: 16px 0; text-align: center; font-size: 14px; color: #6B7280;">{item.qty}</td>
+              <td style="padding: 16px 0; text-align: right; font-size: 14px; font-weight: 600; color: #303B38;">{formatCurrency(item.price * item.qty)}</td>
             </tr>
           {/each}
         </tbody>
@@ -350,6 +354,10 @@
             <span>{formatCurrency(total)}</span>
           </div>
         </div>
+      </div>
+      
+      <div style="border-top: 1px solid #F3F4F6; padding-top: 24px; text-align: center;">
+        <p style="font-size: 12px; color: {getColors().header}; margin: 0; opacity: 0.7;">Thank you for your business. If you have any questions, please contact us.</p>
       </div>
     </div>
 
@@ -399,9 +407,9 @@
 <!-- HIDDEN PDF TEMPLATE (For direct download) -->
 <div style="position: absolute; top: 0; left: 0; z-index: -1; opacity: 0; pointer-events: none;">
   {#if pageView === 'builder'}
-    <div bind:this={hiddenPdfRef} style="width: 800px; background: white; font-family: 'Inter', sans-serif; color: {getColors().text};">
+    <div bind:this={hiddenPdfRef} style="width: 800px; background: white; font-family: 'Inter', sans-serif; color: #303B38;">
       
-      <!-- HEADER BANNER (Inset, professional, not clipped) -->
+      <!-- HEADER BANNER -->
       <div style="padding: 40px 50px 0 50px;">
         <div style="background-color: {getColors().header}; padding: 40px; border-radius: 16px; display: flex; justify-content: space-between; align-items: flex-start;">
           <div>
@@ -427,8 +435,8 @@
       <div style="padding: 40px 50px;">
         <div style="margin-bottom: 40px;">
           <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: {getColors().header}; margin-bottom: 6px; letter-spacing: 0.05em;">Prepared For</div>
-          <div style="font-size: 20px; font-weight: 800; color: {getColors().text};">{customer.name || "Customer"}</div>
-          <div style="font-size: 15px; color: {getColors().text}; margin-top: 4px;">{customer.contact || "Contact Info"}</div>
+          <div style="font-size: 20px; font-weight: 800; color: #303B38;">{toTitleCase(customer.name) || "Customer"}</div>
+          <div style="font-size: 15px; color: #6B7280; margin-top: 4px;">{customer.contact || "Contact Info"}</div>
         </div>
 
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 40px; table-layout: fixed;">
@@ -444,10 +452,10 @@
           <tbody>
             {#each quoteItems as item}
               <tr style="border-bottom: 1px solid #F3F4F6;">
-                <td style="padding: 20px 0; font-size: 16px; font-weight: 600; line-height: 1.5; word-wrap: break-word; color: #303B38;">{item.name}</td>
-                <td style="padding: 20px 0; text-align: center; font-size: 15px; font-weight: 500; color: #4B5563;">{item.unit}</td>
-                <td style="padding: 20px 0; text-align: center; font-size: 15px; font-weight: 500; color: #4B5563;">{item.qty}</td>
-                <td style="padding: 20px 0; text-align: right; font-size: 15px; color: #4B5563;">{formatCurrency(item.price)}</td>
+                <td style="padding: 20px 0; font-size: 16px; font-weight: 600; line-height: 1.5;word-wrap: break-word; color: #303B38;">{toTitleCase(item.name)}</td>
+                <td style="padding: 20px 0; text-align: center; font-size: 15px; font-weight: 500; color: #6B7280;">{toTitleCase(item.unit)}</td>
+                <td style="padding: 20px 0; text-align: center; font-size: 15px; font-weight: 500; color: #6B7280;">{item.qty}</td>
+                <td style="padding: 20px 0; text-align: right; font-size: 15px; color: #6B7280;">{formatCurrency(item.price)}</td>
                 <td style="padding: 20px 0; text-align: right; font-size: 16px; font-weight: 700; color: #303B38;">{formatCurrency(item.price * item.qty)}</td>
               </tr>
             {/each}
@@ -486,7 +494,7 @@
         </div>
 
         <div style="border-top: 1px solid #F3F4F6; padding-top: 30px; text-align: center;">
-          <p style="font-size: 13px; color: #6B7280; margin: 0;">Thank you for your business. If you have any questions, please contact us.</p>
+          <p style="font-size: 13px; color: {getColors().header}; opacity: 0.7; margin: 0;">Thank you for your business. If you have any questions, please contact us.</p>
         </div>
       </div>
     </div>
