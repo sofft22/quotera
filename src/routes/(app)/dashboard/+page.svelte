@@ -73,7 +73,7 @@
     quoteItems = quoteItems.filter(i => i.id !== id);
   }
 
-    async function generateQuote() {
+      async function generateQuote() {
     if (!rawText.trim() || isLoading) return;
     
     isLoading = true;
@@ -90,19 +90,25 @@
       });
 
       const result = await response.json();
+      console.log("Frontend received:", result);
       
       if (result.type === 'failure') {
          throw new Error(result.data.error);
       }
 
+      // Because SvelteKit wraps the data in an object, we have to dig it out correctly.
       if (result.data && result.data.items) {
-        // Parse the stringified array
-        const parsedItems = JSON.parse(result.data.items);
+        
+        // The items array is stringified. We parse it.
+        let parsedItems = JSON.parse(result.data.items);
+
+        // Map over the parsed items to ensure numbers
         quoteItems = parsedItems.map(item => ({
           ...item,
           price: Number(item.price) || 0,
           qty: Number(item.qty) || 1
         }));
+
       } else {
         throw new Error("No valid items returned from server.");
       }
@@ -110,6 +116,7 @@
     } catch (error) {
       console.error("Backend error:", error);
       aiError = error.message;
+      quoteItems = []; 
     } finally {
       isLoading = false;
       if (!aiError && quoteItems.length > 0) {
