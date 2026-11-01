@@ -44,14 +44,15 @@
   });
 
   function getColors() {
+    const c = data.user || {};
     return {
-      header: data.user?.header_color || "#24503C",
-      text: data.user?.text_color || "#303B38",
-      accent: data.user?.accent_color || "#C4513D",
-      logo: data.user?.logo_base64 || null,
-      companyName: data.user?.company_name || "Quotera.",
-      companyAddress: data.user?.company_address || "Your Company Address",
-      companyContact: data.user?.company_contact || "your@email.com"
+      header: (c.header_color && c.header_color !== "") ? c.header_color : "#24503C",
+      text: (c.text_color && c.text_color !== "") ? c.text_color : "#303B38",
+      accent: (c.accent_color && c.accent_color !== "") ? c.accent_color : "#C4513D",
+      logo: c.logo_base64 || null,
+      companyName: c.company_name || "Quotera.",
+      companyAddress: c.company_address || "Your Company Address",
+      companyContact: c.company_contact || "your@email.com"
     };
   }
 
@@ -276,18 +277,19 @@
     <!-- ON-SCREEN PREVIEW -->
     <div class="print-area" style="background: #ffffff; border-radius: 16px; border: 1px solid #E5E7EB; padding: 24px; font-family: 'Inter', sans-serif; color: #303B38; box-shadow: 0 4px 12px rgba(0,0,0,0.02); width: 100%; box-sizing: border-box; overflow: hidden;">
       
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; border-bottom: 2px solid #F3F4F6; padding-bottom: 20px;">
+      <!-- HEADER BANNER ON SCREEN (Forced White Text & Colored Background) -->
+      <div style="background-color: {getColors().header}; padding: 24px; border-radius: 8px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-start; color: white;">
         <div style="max-width: 50%;">
           {#if getColors().logo}
-            <img src={getColors().logo} alt="Logo" style="height: 40px; width: auto; max-width: 150px; object-fit: contain; margin-bottom: 8px;" />
+            <img src={getColors().logo} alt="Logo" style="height: 40px; width: auto; max-width: 150px; object-fit: contain; margin-bottom: 8px; filter: brightness(0) invert(1);" />
           {:else}
-            <div style="font-family: 'Manrope'; font-size: 22px; font-weight: 900; letter-spacing: -0.03em; color: {getColors().header};">{getColors().companyName}</div>
+            <div style="font-family: 'Manrope'; font-size: 22px; font-weight: 900; letter-spacing: -0.03em; color: #ffffff;">{getColors().companyName}</div>
           {/if}
-          <div style="font-size: 12px; color: #6B7280; margin-top: 4px; line-height: 1.5;">{getColors().companyAddress}<br/>{getColors().companyContact}</div>
+          <div style="font-size: 12px; color: rgba(255,255,255,0.8); margin-top: 4px; line-height: 1.5;">{getColors().companyAddress}<br/>{getColors().companyContact}</div>
         </div>
         <div style="text-align: right; max-width: 50%;">
-          <h1 style="font-family: 'Manrope'; font-size: 18px; margin: 0 0 4px 0; color: {getColors().header}; text-transform: uppercase;">Quotation</h1>
-          <div style="font-size: 12px; color: #6B7280;">Date: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
+          <h1 style="font-family: 'Manrope'; font-size: 18px; margin: 0 0 4px 0; color: #ffffff; text-transform: uppercase;">Quotation</h1>
+          <div style="font-size: 12px; color: rgba(255,255,255,0.8);">Date: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
         </div>
       </div>
 
@@ -402,7 +404,7 @@
       <div style="background-color: {getColors().header}; padding: 40px 50px; display: flex; justify-content: space-between; align-items: flex-start;">
         <div>
           {#if getColors().logo}
-            <img src={getColors().logo} alt="Logo" style="height: 50px; width: auto; max-width: 200px; object-fit: contain; margin-bottom: 12px;" />
+            <img src={getColors().logo} alt="Logo" style="height: 50px; width: auto; max-width: 200px; object-fit: contain; margin-bottom: 12px; filter: brightness(0) invert(1);" />
           {:else}
             <div style="font-family: 'Manrope', sans-serif; font-size: 32px; font-weight: 900; letter-spacing: -0.03em; color: #ffffff;">{getColors().companyName}</div>
           {/if}
@@ -469,8 +471,8 @@
             {#if includeVAT}
               <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: {getColors().text};">
                 <span>VAT (7.5%):</span>
-                <span>{formatCurrency(vatAmount)}</span>
-              </div>
+              <span>{formatCurrency(vatAmount)}</span>
+            </div>
             {/if}
             <div style="display: flex; justify-content: space-between; padding: 20px 0 10px 0; font-size: 24px; font-weight: 800; color: {getColors().accent}; border-top: 3px solid #E5E7EB; margin-top: 10px;">
               <span>TOTAL:</span>
@@ -479,7 +481,7 @@
           </div>
         </div>
 
-                <div style="border-top: 1px solid #F3F4F6; padding-top: 30px; text-align: center;">
+        <div style="border-top: 1px solid #F3F4F6; padding-top: 30px; text-align: center;">
           <p style="font-size: 13px; color: #6B7280; margin: 0;">Thank you for your business. If you have any questions, please contact us.</p>
         </div>
       </div>
