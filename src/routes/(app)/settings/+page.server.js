@@ -17,7 +17,6 @@ export async function load({ cookies, platform }) {
       company_address: user.company_address || "",
       company_contact: user.company_contact || "",
       header_color: user.header_color || "#24503C",
-      text_color: user.text_color || "#303B38",
       accent_color: user.accent_color || "#C4513D",
       logo_base64: user.logo_base64 || "",
       plan: user.plan || "Free"
@@ -35,25 +34,21 @@ export const actions = {
     const companyAddress = data.get('companyAddress');
     const companyContact = data.get('companyContact');
     const headerColor = data.get('headerColor');
-    const textColor = data.get('textColor');
     const accentColor = data.get('accentColor');
     const logoBase64 = data.get('logoBase64');
 
     const db = platform.env.DB;
 
     try {
-      console.log("Saving settings for user:", session);
-      
       await db.prepare(`
         UPDATE users 
-        SET company_name = ?, company_address = ?, company_contact = ?, header_color = ?, text_color = ?, accent_color = ?, logo_base64 = ?
+        SET company_name = ?, company_address = ?, company_contact = ?, header_color = ?, accent_color = ?, logo_base64 = ?
         WHERE id = ?
       `).bind(
         companyName, 
         companyAddress, 
         companyContact, 
         headerColor, 
-        textColor, 
         accentColor, 
         logoBase64 || null, 
         Number(session)
@@ -61,8 +56,7 @@ export const actions = {
 
       return { success: true };
     } catch (err) {
-      console.error("DB Error saving settings:", err);
-      return fail(500, { error: 'Failed to save settings: ' + err.message });
+      return fail(500, { error: 'Failed to save settings.' });
     }
   }
 };
