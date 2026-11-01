@@ -3,10 +3,17 @@ import { fail, redirect } from '@sveltejs/kit';
 export async function load({ cookies, platform }) {
   const session = cookies.get('session');
   if (!session) throw redirect(303, '/login');
+  
   const db = platform.env.DB;
   const stats = await db.prepare("SELECT COUNT(*) as count FROM quotes WHERE user_id = ?").bind(Number(session)).first();
-  const user = await db.prepare("SELECT fullname FROM users WHERE id = ?").bind(Number(session)).first();
-  return { totalQuotes: stats?.count || 0, user: user };
+  
+  // Fetch the full user object to get branding (colors, logo, address)
+  const user = await db.prepare("SELECT * FROM users WHERE id = ?").bind(Number(session)).first();
+  
+  return { 
+    totalQuotes: stats?.count || 0, 
+    user: user 
+  };
 }
 
 export const actions = {
