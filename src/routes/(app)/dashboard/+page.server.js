@@ -7,7 +7,7 @@ export async function load({ cookies, platform }) {
   const db = platform.env.DB;
   const stats = await db.prepare("SELECT COUNT(*) as count FROM quotes WHERE user_id = ?").bind(Number(session)).first();
   
-  // Fetch the full user object to get branding (colors, logo, address)
+  // Fetch the full user object for the PDF colors and logo
   const user = await db.prepare("SELECT * FROM users WHERE id = ?").bind(Number(session)).first();
   
   return { 
@@ -41,8 +41,7 @@ export const actions = {
       
       return { success: true };
     } catch (err) { 
-      console.error("DB Error:", err);
-      return fail(500, { error: 'Failed to save quote to database.' }); 
+      return fail(500, { error: 'Failed to save quote.' }); 
     }
   }
 };
