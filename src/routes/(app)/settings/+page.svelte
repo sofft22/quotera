@@ -8,9 +8,9 @@
   let companyContact = $state(data.user.company_contact || "");
   let logoBase64 = $state(data.user.logo_base64 || "");
   
-  // FALLBACK COLORS: Use the OR operator (||) to prevent black flicker
-  let headerColor = $state(data.user.header_color || "#24503C");
-  let accentColor = $state(data.user.accent_color || "#C4513D");
+  // Strict fallback to prevent black flicker
+  let headerColor = $state(data.user.header_color && data.user.header_color !== "" ? data.user.header_color : "#24503C");
+  let accentColor = $state(data.user.accent_color && data.user.accent_color !== "" ? data.user.accent_color : "#C4513D");
 
   let isUpgradeModalOpen = $state(false);
   let isCompressing = $state(false);
@@ -156,14 +156,26 @@
           <div style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 12px; padding: 16px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
             <span style="display: block; font-size: 12px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px;">Header Banner</span>
             <div style="position: relative; width: 100%; height: 44px; border-radius: 8px; overflow: hidden; border: 1px solid #D1D5DB;">
-              <input type="color" name="headerColor" bind:value={headerColor} style="position: absolute; top: -10px; left: -10px; width: 150%; height: 150%; cursor: pointer; border: none; padding: 0;" />
+              <input 
+                type="color" 
+                name="headerColor" 
+                value={headerColor} 
+                oninput={(e) => headerColor = e.target.value}
+                style="position: absolute; top: -10px; left: -10px; width: 150%; height: 150%; cursor: pointer; border: none; padding: 0;" 
+              />
             </div>
           </div>
 
           <div style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 12px; padding: 16px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
             <span style="display: block; font-size: 12px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px;">Accent Color</span>
             <div style="position: relative; width: 100%; height: 44px; border-radius: 8px; overflow: hidden; border: 1px solid #D1D5DB;">
-              <input type="color" name="accentColor" bind:value={accentColor} style="position: absolute; top: -10px; left: -10px; width: 150%; height: 150%; cursor: pointer; border: none; padding: 0;" />
+              <input 
+                type="color" 
+                name="accentColor" 
+                value={accentColor} 
+                oninput={(e) => accentColor = e.target.value}
+                style="position: absolute; top: -10px; left: -10px; width: 150%; height: 150%; cursor: pointer; border: none; padding: 0;" 
+              />
             </div>
           </div>
 
