@@ -7,7 +7,7 @@ export async function load({ cookies, platform }) {
   const db = platform.env.DB;
   const userId = Number(session);
 
-  // 1. Automatically delete quotes older than 30 days for this user
+  // 1. Delete quotes older than 30 days for this user
   await db.prepare(
     "DELETE FROM quotes WHERE user_id = ? AND created_at < date('now', '-30 days')"
   ).bind(userId).run();
