@@ -1,9 +1,10 @@
 <script>
   import { enhance } from '$app/forms';
 
-  let { form } = $props();
+  // Svelte 5 syntax for getting data from the server
+  let { data, form } = $props();
+  
   let greeting = "Good morning";
-
   if (typeof window !== 'undefined') {
     const hour = new Date().getHours();
     if (hour >= 12 && hour < 17) greeting = "Good afternoon";
@@ -13,9 +14,7 @@
   let pageView = $state('input'); 
   let rawText = $state("");
   let isLoading = $state(false); 
-
-  // Your Groq API Key goes here for testing
-  const API_KEY = "gsk_YOUR_GROQ_API_KEY_HERE"; 
+  let aiError = $state("");
 
   let customer = $state({ name: "New Customer", contact: "" });
   let quoteItems = $state([]);
@@ -54,7 +53,7 @@
   });
 
   function formatCurrency(val) {
-    if (isNaN(val)) return "₦0";
+    if (isNaN(val) || val === null) return "₦0";
     return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(val);
   }
 
@@ -71,41 +70,25 @@
     if (!rawText.trim() || isLoading) return;
     
     isLoading = true;
+    aiError = "";
 
     try {
-      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${API_KEY}`
-        },
-        body: JSON.stringify({
-          model: "openai/gpt-oss-120b",
-          messages: [
-            {
-              role: "system",
-              content: "You are a backend data extraction tool. Extract the requested items and their quantities from the user text. Return ONLY a raw JSON array. Do not use markdown blocks. Example format: [{\"name\": \"Hammer\", \"qty\": 2}]. If no items are found, return []."
-            },
-            {
-              role: "user",
-              content: rawText
-            }
-          ],
-          temperature: 0.1 // Keep it strict and factual
-        })
+      // Send text to our secure SvelteKit server action
+      const formData = new FormData();
+      formData.append('rawText', rawText);
+
+      const response = await fetch('?/generateAI', {
+        method: 'POST',
+        body: formData
       });
 
-      if (!response.ok) throw new Error("Network response was not ok");
-
-      const data = await response.json();
-      let responseText = data.choices[0].message.content.trim();
+      const result = await response.json();
       
-      if (responseText.startsWith("```json")) {
-        responseText = responseText.replace(/```json/g, "").replace(/```/g, "").trim();
+      if (result.type === 'failure') {
+         throw new Error(result.data.error);
       }
 
-      const extractedItems = JSON.parse(responseText);
-
+      const extractedItems = result.data.items;
       let nextId = 1;
       quoteItems = extractedItems.map(item => ({
         id: nextId++,
@@ -116,6 +99,8 @@
 
     } catch (error) {
       console.error("Backend error:", error);
+      aiError = error.message;
+      // Fallback so the user isn't stuck
       quoteItems = [{ id: 1, name: "Custom Item (Please edit)", price: 0, qty: 1 }];
     } finally {
       isLoading = false;
@@ -127,17 +112,6 @@
 <svelte:head>
   <title>Dashboard | Quotera</title>
   <style>
-    .quote-row { border-bottom: 1px solid #F3F4F6; transition: background-color 0.2s; }
-    .quote-row:hover { background-color: #F9FAFB; }
-    .quote-row:last-child { border-bottom: none; }
-    
-    @media (max-width: 640px) {
-      .table-container { margin: 0 -8px; }
-      th, td { padding: 12px 4px !important; }
-      th { font-size: 10px !important; }
-      td { font-size: 13px !important; }
-    }
-
     @media print {
       body * { visibility: hidden; }
       .print-area, .print-area * { visibility: visible; }
@@ -150,32 +124,34 @@
 
 <div style="max-width: 1000px; margin: 0 auto; padding: 16px;">
 
-  <!-- ========================================== -->
-  <!-- PAGE VIEW 1: DASHBOARD + INPUT SCREEN      -->
-  <!-- ========================================== -->
   {#if pageView === 'input'}
-    
     <!-- Greeting -->
     <div style="margin-bottom: 32px; padding-top: 16px;">
       <h1 style="font-family: 'Manrope', sans-serif; font-size: clamp(22px, 6vw, 32px); font-weight: 800; margin: 0; color: #303B38; letter-spacing: -0.03em;">
-        {greeting}, <span style="color: #C4513D;">John</span>.
+        {greeting}, <span style="color: #C4513D;">{data.user?.fullname || 'User'}</span>.
       </h1>
     </div>
 
-    <!-- Quick Stats -->
+    <!-- Quick Stats (Connected to Database) -->
     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 32px; width: 100%;">
       <div style="background-color: #F0FDF4; border: 1px solid #DCFCE7; border-radius: 12px; padding: 20px; width: 100%; box-sizing: border-box;">
         <p style="font-size: 11px; font-weight: 600; color: #166534; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 0.05em;">Total Quoted Value</p>
-        <h2 style="font-family: 'Manrope', sans-serif; font-size: 28px; font-weight: 800; color: #14532D; margin: 0;">₦4.2M</h2>
+        <h2 style="font-family: 'Manrope', sans-serif; font-size: 28px; font-weight: 800; color: #14532D; margin: 0;">{formatCurrency(data.totalValue)}</h2>
       </div>
       <div style="background-color: #ffffff; border: 1px solid #E5E7EB; border-radius: 12px; padding: 20px; width: 100%; box-sizing: border-box;">
         <p style="font-size: 11px; font-weight: 600; color: #9CA3AF; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 0.05em;">Quotes Generated</p>
-        <h2 style="font-family: 'Manrope', sans-serif; font-size: 28px; font-weight: 800; color: #303B38; margin: 0;">24</h2>
+        <h2 style="font-family: 'Manrope', sans-serif; font-size: 28px; font-weight: 800; color: #303B38; margin: 0;">{data.totalQuotes}</h2>
       </div>
     </div>
 
-    <!-- Extractor -->
+    <!-- AI Extractor -->
     <div style="margin-bottom: 40px;">
+      {#if aiError}
+        <div style="background: #FEE2E2; color: #DC2626; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-weight: 600;">
+          {aiError}
+        </div>
+      {/if}
+
       <div style="display: flex; flex-direction: column; background-color: #ffffff; border: 1px solid #E5E7EB; border-radius: 16px; box-shadow: 0 8px 24px rgba(48, 59, 56, 0.06); overflow: hidden;">
         <textarea 
           bind:value={rawText}
@@ -190,7 +166,7 @@
               <svg style="width: 18px; height: 18px; margin-right: 8px; animation: spin 1s linear infinite;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
               </svg>
-              Generating Quote...
+              Extracting...
             {:else}
               Generate Quote
             {/if}
@@ -198,14 +174,9 @@
         </div>
       </div>
     </div>
-
   {/if}
 
-  <!-- ========================================== -->
-  <!-- PAGE VIEW 2: BUILDER SCREEN                -->
-  <!-- ========================================== -->
   {#if pageView === 'builder'}
-    
     <!-- TOP: EDIT BOX -->
     <div class="no-print" style="background: #ffffff; border-radius: 12px; border: 1px solid #E5E7EB; padding: 12px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); margin-top: 16px;">
       
@@ -341,7 +312,7 @@
       </div>
     </div>
 
-    <!-- BOTTOM BUTTON -->
+    <!-- BOTTOM BUTTON (Saves to DB then Prints) -->
     <div class="no-print" style="margin-top: 12px;">
       
       {#if form?.success}
@@ -356,7 +327,6 @@
         </div>
       {/if}
 
-      <!-- This form connects directly to the +page.server.js action -->
       <form 
         method="POST" 
         action="?/saveQuote" 
