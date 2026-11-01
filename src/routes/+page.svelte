@@ -139,7 +139,7 @@
     .nav-cta { font-size: 13px; font-weight: 600; color: #fff; background: var(--green); padding: 8px 16px; border-radius: 6px; text-decoration: none; transition: background 0.2s; }
     .nav-cta:hover { background: #1a3a2b; }
 
-    /* ─── HERO (Massive Space) ─── */
+    /* ─── HERO ─── */
     .hero-wrapper {
       width: 100%;
       display: flex;
@@ -147,51 +147,49 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 160px 20px 120px;
       background: radial-gradient(circle at 50% 0%, rgba(196, 81, 61, 0.15) 0%, rgba(238, 242, 238, 1) 60%);
     }
     
-    .hero-content { display: flex; flex-direction: column; gap: 32px; max-width: 800px; width: 100%; }
+    .hero-content { display: flex; flex-direction: column; gap: 20px; max-width: 800px; width: 100%; }
     .h-hero { font-family: 'Manrope', sans-serif; font-size: clamp(36px, 9vw, 72px); font-weight: 800; line-height: 1.05; color: var(--ink); }
     .h-hero span { color: var(--terra); }
     .hero-desc { font-size: clamp(15px, 4vw, 18px); color: var(--muted); line-height: 1.6; max-width: 480px; margin: 0 auto; }
-    .hero-ctas { display: flex; flex-direction: column; gap: 16px; align-items: center; width: 100%; margin-top: 16px; }
+    .hero-ctas { display: flex; flex-direction: column; gap: 12px; align-items: center; width: 100%; margin-top: 12px; }
     
     .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; font-weight: 600; padding: 14px 24px; border-radius: 8px; text-decoration: none; background: var(--green); color: #fff; transition: all 0.2s; width: 100%; max-width: 320px; border: none; cursor: pointer; }
     .btn:hover { background: #1a3a2b; }
 
-    /* ─── GLOBAL SECTIONS (Massive Space) ─── */
-    .section { padding: 120px 20px; max-width: 1200px; margin: 0 auto; }
-    @media (min-width: 900px) { .section { padding: 160px 24px; } }
-    .sec-head { text-align: center; margin-bottom: 64px; }
+    /* ─── GLOBAL SECTIONS ─── */
+    .section { max-width: 1200px; margin: 0 auto; }
+    .sec-head { text-align: center; margin-bottom: 40px; }
     .h-section { font-family: 'Manrope', sans-serif; font-size: clamp(28px, 6vw, 42px); font-weight: 800; letter-spacing: -0.03em; color: var(--ink); }
 
-    /* ─── STATS (Massive Space) ─── */
-    .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; padding: 80px 20px; border-top: 1px solid rgba(48,59,56,0.1); border-bottom: 1px solid rgba(48,59,56,0.1); text-align: center; max-width: 1200px; margin: 0 auto; }
-    @media (min-width: 700px) { .stats { grid-template-columns: repeat(4, 1fr); gap: 48px; padding: 96px 24px; } }
+    /* ─── STATS ─── */
+    .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; border-top: 1px solid rgba(48,59,56,0.1); border-bottom: 1px solid rgba(48,59,56,0.1); text-align: center; max-width: 1200px; margin: 0 auto; }
+    @media (min-width: 700px) { .stats { grid-template-columns: repeat(4, 1fr); gap: 40px; } }
     .stat-num { font-family: 'Manrope', sans-serif; font-size: 28px; font-weight: 800; color: var(--ink); }
-    .stat-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-top: 8px; letter-spacing: 0.05em; }
+    .stat-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-top: 4px; letter-spacing: 0.05em; }
 
-    /* ─── WHY (Massive Space) ─── */
-    .ba { display: grid; grid-template-columns: 1fr; gap: 24px; }
-    @media (min-width: 700px) { .ba { grid-template-columns: 1fr 1fr; gap: 40px; } }
-    .ba-card { padding: 48px 32px; border-radius: 16px; }
+    /* ─── WHY ─── */
+    .ba { display: grid; grid-template-columns: 1fr; gap: 20px; }
+    @media (min-width: 700px) { .ba { grid-template-columns: 1fr 1fr; gap: 32px; } }
+    .ba-card { border-radius: 12px; }
     .ba-card.no { background: #fff; border: 1px solid var(--line); }
     .ba-card.yes { background: var(--green); color: #fff; }
-    .ba-card h3 { font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 24px; }
-    .ba-card ul { list-style: none; display: flex; flex-direction: column; gap: 20px; }
+    .ba-card h3 { font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 20px; }
+    .ba-card ul { list-style: none; display: flex; flex-direction: column; gap: 14px; }
     .ba-card li { display: flex; align-items: center; gap: 12px; font-size: 15px; }
     .ba-card.no li { color: var(--muted); }
     .ba-card.yes li { color: rgba(255,255,255,0.9); }
     .ba-card.yes svg { stroke: #fff; }
 
-    /* ─── STEPS (Massive Space) ─── */
-    .steps { display: grid; grid-template-columns: 1fr; gap: 48px; }
-    @media (min-width: 900px) { .steps { grid-template-columns: repeat(3, 1fr); gap: 64px; } }
-    .step { border-top: 1px solid var(--line); padding-top: 32px; position: relative; }
+    /* ─── STEPS ─── */
+    .steps { display: grid; grid-template-columns: 1fr; gap: 32px; }
+    @media (min-width: 900px) { .steps { grid-template-columns: repeat(3, 1fr); gap: 48px; } }
+    .step { border-top: 1px solid var(--line); position: relative; }
     .step::before { content: ""; position: absolute; top: -1px; left: 0; width: 40px; height: 2px; background: var(--terra); }
-    .step-num { font-family: monospace; font-size: 13px; font-weight: 700; color: var(--terra); margin-bottom: 16px; }
-    .step h3 { font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 800; margin-bottom: 12px; color: var(--ink); }
+    .step-num { font-family: monospace; font-size: 13px; font-weight: 700; color: var(--terra); margin-bottom: 12px; }
+    .step h3 { font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 800; margin-bottom: 10px; color: var(--ink); }
     .step p { font-size: 14px; color: var(--muted); line-height: 1.6; }
 
     /* ─── PRICING (Untouched) ─── */
@@ -303,11 +301,9 @@
   </nav>
 
   <main id="top">
-    <!-- HERO -->
-    <!-- NOTE: Inline padding forces massive breathing room regardless of external CSS -->
-    <header class="hero-wrapper" style="padding-top: 180px; padding-bottom: 140px;">
+    <!-- HERO (INLINE PADDING ADDED) -->
+    <header class="hero-wrapper" style="padding-top: 180px; padding-bottom: 140px; padding-left: 20px; padding-right: 20px;">
       <div class="hero-content" use:Reveal={{ direction: 'up', delay: 0.1 }}>
-        <!-- TYPEWRITER RESTORED -->
         <div class="typewriter">
           <h1 class="h-hero">
             Quote smarter, <br/><span>close faster.</span>
@@ -321,23 +317,21 @@
       </div>
     </header>
 
-    <!-- STATS -->
-    <!-- NOTE: Inline padding forces massive breathing room -->
-    <div class="stats" use:Reveal={{ direction: 'up' }} style="padding-top: 96px; padding-bottom: 96px;">
+    <!-- STATS (INLINE PADDING ADDED) -->
+    <div class="stats" use:Reveal={{ direction: 'up' }} style="padding-top: 96px; padding-bottom: 96px; padding-left: 20px; padding-right: 20px;">
       <div><div class="stat-num" use:CountUp={{to: 5000, suffix: '+'}}>0</div><div class="stat-label">Quotes Generated</div></div>
       <div><div class="stat-num" use:CountUp={{to: 5, suffix: 's'}}>0</div><div class="stat-label">To Generate</div></div>
       <div><div class="stat-num" use:CountUp={{to: 30, suffix: '+ hrs'}}>0</div><div class="stat-label">Saved Monthly</div></div>
       <div><div class="stat-num" use:CountUp={{to: 99, suffix: '%'}}>0</div><div class="stat-label">Math Accuracy</div></div>
     </div>
 
-    <!-- WHY -->
-    <!-- NOTE: Inline padding forces massive breathing room -->
-    <section class="section" style="padding-top: 160px; padding-bottom: 160px;">
+    <!-- WHY (INLINE PADDING ADDED) -->
+    <section class="section" style="padding-top: 140px; padding-bottom: 140px; padding-left: 20px; padding-right: 20px;">
       <div class="sec-head" use:Reveal={{ direction: 'up' }}>
         <h2 class="h-section">Still quoting from Excel?</h2>
       </div>
       <div class="ba">
-        <div class="ba-card no" use:Reveal={{ direction: 'left' }} style="padding: 56px 40px;">
+        <div class="ba-card no" use:Reveal={{ direction: 'left' }} style="padding: 48px 32px;">
           <h3>The Old Way</h3>
           <ul>
             <li>{@html I.cross} Manual entry</li>
@@ -345,7 +339,7 @@
             <li>{@html I.cross} Costly errors</li>
           </ul>
         </div>
-        <div class="ba-card yes" use:Reveal={{ direction: 'right' }} style="padding: 56px 40px;">
+        <div class="ba-card yes" use:Reveal={{ direction: 'right' }} style="padding: 48px 32px;">
           <h3>The Quotera Way</h3>
           <ul>
             <li>{@html I.check} Paste messy text</li>
@@ -356,6 +350,196 @@
       </div>
     </section>
 
-    <!-- HOW IT WORKS -->
-    <!-- NOTE: Inline padding forces massive breathing room -->
-    <section class="section" id="how" style="padding-top
+    <!-- HOW IT WORKS (INLINE PADDING ADDED) -->
+    <section class="section" id="how" style="padding-top: 140px; padding-bottom: 140px; padding-left: 20px; padding-right: 20px;">
+      <div class="sec-head" use:Reveal={{ direction: 'up' }}>
+        <h2 class="h-section">Three steps to close.</h2>
+      </div>
+      <div class="steps">
+        <div class="step" use:Reveal={{ direction: 'up', delay: 0.1 }} style="padding-top: 32px;">
+          <div class="step-num">01</div>
+          <h3>Paste the request</h
+<div class="step" use:Reveal={{ direction: 'up', delay: 0.1 }} style="padding-top: 32px;">
+          <div class="step-num">01</div>
+          <h3>Paste the request</h3>
+          <p>Copy the exact text your customer sent you on WhatsApp or email.</p>
+        </div>
+        <div class="step" use:Reveal={{ direction: 'up', delay: 0.2 }} style="padding-top: 32px;">
+          <div class="step-num">02</div>
+          <h3>Quotera does the math</h3>
+          <p>It extracts items, matches your prices, and calculates totals perfectly.</p>
+        </div>
+        <div class="step" use:Reveal={{ direction: 'up', delay: 0.3 }} style="padding-top: 32px;">
+          <div class="step-num">03</div>
+          <h3>Send the PDF</h3>
+          <p>Download a beautifully branded PDF and send it to close the deal.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING (Untouched) -->
+    <section class="section" id="pricing" style="padding-top: 60px; padding-bottom: 60px; padding-left: 20px; padding-right: 20px;">
+      <div class="sec-head" use:Reveal={{ direction: 'up' }}>
+        <h2 class="h-section">Simple pricing.</h2>
+      </div>
+      <div class="plans">
+        <div class="plan" use:Reveal={{ direction: 'up', delay: 0.05 }}>
+          <h3>Free</h3>
+          <p class="desc">For testing the waters.</p>
+          <div class="price">₦0<span>/mo</span></div>
+          <ul>
+            <li>{@html I.check} 3 quotes / mo</li>
+            <li>{@html I.check} 5 products</li>
+            <li class="hide-mobile">{@html I.check} Watermarked PDF</li>
+          </ul>
+          <a href={`https://wa.me/${WHATSAPP}?text=Hi Quotera, I want to get started with the Free plan`} target="_blank" class="btn">Start Free</a>
+        </div>
+        <div class="plan" use:Reveal={{ direction: 'up', delay: 0.1 }}>
+          <h3>Starter</h3>
+          <p class="desc">For the casual freelancer.</p>
+          <div class="price">₦2,000<span>/mo</span></div>
+          <ul>
+            <li>{@html I.check} 15 quotes / mo</li>
+            <li>{@html I.check} 15 products</li>
+            <li class="hide-mobile">{@html I.check} Standard PDF</li>
+          </ul>
+          <a href={`https://wa.me/${WHATSAPP}?text=Hi Quotera, I want to upgrade to the Starter plan (₦2,000/mo)`} target="_blank" class="btn">Get Starter</a>
+        </div>
+        <div class="plan pop" use:Reveal={{ direction: 'up', delay: 0.15 }}>
+          <h3>Pro</h3>
+          <p class="desc">For serious business.</p>
+          <div class="price">₦6,000<span>/mo</span></div>
+          <ul>
+            <li>{@html I.check} 50 quotes / mo</li>
+            <li>{@html I.check} 50 products</li>
+            <li>{@html I.check} Branded PDF</li>
+            <li class="hide-mobile">{@html I.check} Advanced pricing rules</li>
+          </ul>
+          <a href={`https://wa.me/${WHATSAPP}?text=Hi Quotera, I want to upgrade to the Pro plan (₦6,000/mo)`} target="_blank" class="btn">Get Pro</a>
+        </div>
+        <div class="plan" use:Reveal={{ direction: 'up', delay: 0.2 }}>
+          <h3>Agency</h3>
+          <p class="desc">For growing teams.</p>
+          <div class="price">₦15,000<span>/mo</span></div>
+          <ul>
+            <li>{@html I.check} 50 + 25/seat quotes</li>
+            <li>{@html I.check} 50 + 25/seat products</li>
+            <li class="hide-mobile">{@html I.check} Team roles & approvals</li>
+            <li class="hide-mobile">{@html I.check} Pricing guardrails</li>
+          </ul>
+          <a href={`https://wa.me/${WHATSAPP}?text=Hi Quotera, I want to contact sales for the Agency plan`} target="_blank" class="btn">Contact Sales</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SHORT REVIEWS (Untouched) -->
+    <section class="section" style="padding-top: 60px; padding-bottom: 60px; padding-left: 20px; padding-right: 20px;">
+      <div class="sec-head" use:Reveal={{ direction: 'up' }}>
+        <h2 class="h-section">Reviews.</h2>
+      </div>
+      <div class="reviews-grid">
+        <div class="review-card" use:Reveal={{ direction: 'up', delay: 0.1 }}>
+          <p class="review-text">"I used to spend 20 minutes typing out orders. Now I paste the customer's message and get a PDF instantly."</p>
+          <p class="review-author">CHIOMA O.</p>
+          <p class="review-role">Hair Vendor</p>
+        </div>
+        <div class="review-card" use:Reveal={{ direction: 'up', delay: 0.2 }}>
+          <p class="review-text">"The math is always perfect. I never double-check my VAT or totals anymore. It saves me hours weekly."</p>
+          <p class="review-author">DAVID A.</p>
+          <p class="review-role">Hardware Supplier</p>
+        </div>
+        <div class="review-card" use:Reveal={{ direction: 'up', delay: 0.3 }}>
+          <p class="review-text">"I was quoting in Word docs. Now Quotera takes the client's text and generates a beautiful proposal in 5 seconds."</p>
+          <p class="review-author">SARAH M.</p>
+          <p class="review-role">Event Planner</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ (Untouched) -->
+    <section class="section" id="faq" style="padding-top: 60px; padding-bottom: 60px; padding-left: 20px; padding-right: 20px;">
+      <div class="sec-head" use:Reveal={{ direction: 'up' }}>
+        <h2 class="h-section">Questions.</h2>
+      </div>
+      <div class="faq" use:Reveal={{ direction: 'up', delay: 0.1 }}>
+        <details>
+          <summary>How does the extraction work?</summary>
+          <p>You paste the customer's raw text, and our engine reads it to find items and quantities that match your saved price list.</p>
+        </details>
+        <details>
+          <summary>Can I add my company logo?</summary>
+          <p>Yes. You can upload your logo, choose your brand color, and set your terms in the Settings page.</p>
+        </details>
+        <details>
+          <summary>Is the free plan limited?</summary>
+          <p>The free plan gives you 3 quotes a month. You can upgrade anytime for unlimited access.</p>
+        </details>
+        <details>
+          <summary>What if my product names have typos?</summary>
+          <p>The engine is smart enough to match typos like "Mikita grinder" to your saved "Makita Angle Grinder".</p>
+        </details>
+        <details>
+          <summary>Can I edit the quote before sending?</summary>
+          <p>Yes, you can adjust quantities and prices before generating the final PDF.</p>
+        </details>
+        <details>
+          <summary>Do my customers need an account?</summary>
+          <p>No, they just receive the PDF via WhatsApp or email. No sign-up required for them.</p>
+        </details>
+        <details>
+          <summary>Can I use this on my phone?</summary>
+          <p>Yes, Quotera is fully responsive and works perfectly on mobile browsers.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- FINAL CTA (Untouched) -->
+    <section class="final-cta">
+      <div use:Reveal={{ direction: 'scale', delay: 0.1 }}>
+        <h2>Ready to close deals faster?</h2>
+        <p>Join hundreds of businesses generating flawless PDFs in seconds.</p>
+        <a href="/register" class="btn">Start for free today</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER (Untouched) -->
+  <footer>
+    <div class="fgrid">
+      <div use:Reveal={{ direction: 'up' }}>
+        <a href="#top" class="brand">
+          {@html I.logo} Quotera<span>.</span>
+        </a>
+        <p>Quote smarter, close faster. The automated quoting engine for modern business.</p>
+      </div>
+      <div use:Reveal={{ direction: 'up', delay: 0.1 }}>
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#how">How it works</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div use:Reveal={{ direction: 'up', delay: 0.15 }}>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href={`https://wa.me/${WHATSAPP}`} target="_blank">Contact</a></li>
+          <li><a href="#">Blog</a></li>
+        </ul>
+      </div>
+      <div use:Reveal={{ direction: 'up', delay: 0.2 }}>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="fbot">
+      <span>© 2026 Quotera. All rights reserved.</span>
+      <div class="status"><div class="dot"></div> All systems operational</div>
+    </div>
+  </footer>
+</div>
+```
