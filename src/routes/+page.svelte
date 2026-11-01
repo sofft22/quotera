@@ -94,8 +94,6 @@
       --serif: 'Manrope', sans-serif;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
     /* ─── RESTORED TYPING ANIMATION ─── */
     .typewriter h1 {
       display: inline-block;
@@ -147,49 +145,51 @@
       align-items: center;
       justify-content: center;
       text-align: center;
+      padding: 140px 20px 80px;
       background: radial-gradient(circle at 50% 0%, rgba(196, 81, 61, 0.15) 0%, rgba(238, 242, 238, 1) 60%);
     }
     
-    .hero-content { display: flex; flex-direction: column; gap: 20px; max-width: 800px; width: 100%; }
+    .hero-content { display: flex; flex-direction: column; gap: 24px; max-width: 800px; width: 100%; }
     .h-hero { font-family: 'Manrope', sans-serif; font-size: clamp(36px, 9vw, 72px); font-weight: 800; line-height: 1.05; color: var(--ink); }
     .h-hero span { color: var(--terra); }
     .hero-desc { font-size: clamp(15px, 4vw, 18px); color: var(--muted); line-height: 1.6; max-width: 480px; margin: 0 auto; }
-    .hero-ctas { display: flex; flex-direction: column; gap: 12px; align-items: center; width: 100%; margin-top: 12px; }
+    .hero-ctas { display: flex; flex-direction: column; gap: 16px; align-items: center; width: 100%; margin-top: 12px; }
     
     .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; font-weight: 600; padding: 14px 24px; border-radius: 8px; text-decoration: none; background: var(--green); color: #fff; transition: all 0.2s; width: 100%; max-width: 320px; border: none; cursor: pointer; }
     .btn:hover { background: #1a3a2b; }
 
-    /* ─── GLOBAL SECTIONS ─── */
-    .section { max-width: 1200px; margin: 0 auto; }
-    .sec-head { text-align: center; margin-bottom: 40px; }
+    /* ─── GLOBAL SECTIONS (Internal Spacing Only) ─── */
+    .section { padding: 80px 20px; max-width: 1200px; margin: 0 auto; }
+    @media (min-width: 900px) { .section { padding: 100px 24px; } }
+    .sec-head { text-align: center; margin-bottom: 48px; }
     .h-section { font-family: 'Manrope', sans-serif; font-size: clamp(28px, 6vw, 42px); font-weight: 800; letter-spacing: -0.03em; color: var(--ink); }
 
     /* ─── STATS ─── */
-    .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; border-top: 1px solid rgba(48,59,56,0.1); border-bottom: 1px solid rgba(48,59,56,0.1); text-align: center; max-width: 1200px; margin: 0 auto; }
-    @media (min-width: 700px) { .stats { grid-template-columns: repeat(4, 1fr); gap: 40px; } }
-    .stat-num { font-family: 'Manrope', sans-serif; font-size: 28px; font-weight: 800; color: var(--ink); }
-    .stat-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-top: 4px; letter-spacing: 0.05em; }
+    .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; padding: 60px 20px; border-top: 1px solid rgba(48,59,56,0.1); border-bottom: 1px solid rgba(48,59,56,0.1); text-align: center; max-width: 1200px; margin: 0 auto; }
+    @media (min-width: 700px) { .stats { grid-template-columns: repeat(4, 1fr); gap: 48px; padding: 64px 24px; } }
+    .stat-num { font-family: 'Manrope', sans-serif; font-size: 32px; font-weight: 800; color: var(--ink); }
+    .stat-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-top: 6px; letter-spacing: 0.05em; }
 
     /* ─── WHY ─── */
-    .ba { display: grid; grid-template-columns: 1fr; gap: 20px; }
+    .ba { display: grid; grid-template-columns: 1fr; gap: 24px; }
     @media (min-width: 700px) { .ba { grid-template-columns: 1fr 1fr; gap: 32px; } }
-    .ba-card { border-radius: 12px; }
+    .ba-card { padding: 40px 32px; border-radius: 16px; }
     .ba-card.no { background: #fff; border: 1px solid var(--line); }
     .ba-card.yes { background: var(--green); color: #fff; }
-    .ba-card h3 { font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 20px; }
-    .ba-card ul { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+    .ba-card h3 { font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 24px; }
+    .ba-card ul { list-style: none; display: flex; flex-direction: column; gap: 16px; }
     .ba-card li { display: flex; align-items: center; gap: 12px; font-size: 15px; }
     .ba-card.no li { color: var(--muted); }
     .ba-card.yes li { color: rgba(255,255,255,0.9); }
     .ba-card.yes svg { stroke: #fff; }
 
     /* ─── STEPS ─── */
-    .steps { display: grid; grid-template-columns: 1fr; gap: 32px; }
+    .steps { display: grid; grid-template-columns: 1fr; gap: 40px; }
     @media (min-width: 900px) { .steps { grid-template-columns: repeat(3, 1fr); gap: 48px; } }
-    .step { border-top: 1px solid var(--line); position: relative; }
+    .step { border-top: 1px solid var(--line); padding-top: 32px; position: relative; }
     .step::before { content: ""; position: absolute; top: -1px; left: 0; width: 40px; height: 2px; background: var(--terra); }
-    .step-num { font-family: monospace; font-size: 13px; font-weight: 700; color: var(--terra); margin-bottom: 12px; }
-    .step h3 { font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 800; margin-bottom: 10px; color: var(--ink); }
+    .step-num { font-family: monospace; font-size: 13px; font-weight: 700; color: var(--terra); margin-bottom: 16px; }
+    .step h3 { font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 800; margin-bottom: 12px; color: var(--ink); }
     .step p { font-size: 14px; color: var(--muted); line-height: 1.6; }
 
     /* ─── PRICING (Untouched) ─── */
@@ -239,23 +239,23 @@
     .faq details[open] summary::after { content: "−"; }
     .faq p { margin-top: 12px; font-size: 14px; color: var(--muted); line-height: 1.6; }
 
-    /* ─── FINAL CTA (Untouched) ─── */
+    /* ─── FINAL CTA ─── */
     .final-cta { text-align: center; padding: 80px 20px; background: var(--ink); color: #fff; }
     .final-cta h2 { font-family: 'Manrope', sans-serif; font-size: clamp(28px, 6vw, 48px); font-weight: 800; margin-bottom: 16px; color: #fff; }
     .final-cta p { font-size: 16px; color: rgba(255,255,255,0.8); margin-bottom: 32px; }
     .final-cta .btn { background: var(--terra); font-size: 16px; padding: 16px 32px; color: #fff; margin: 0 auto; }
     .final-cta .btn:hover { background: #a83a29; }
 
-    /* ─── FOOTER (Untouched) ─── */
-    footer { background: var(--ink); color: #fff; padding: 48px 20px 32px; border-top: 1px solid rgba(255,255,255,0.1); }
-    .fgrid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 32px 20px; text-align: left; }
-    .fgrid > div:first-child { grid-column: 1 / -1; text-align: center; margin-bottom: 16px; }
+    /* ─── FOOTER (Cleaned up) ─── */
+    footer { background: var(--ink); color: #fff; padding: 64px 20px 32px; }
+    .fgrid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 40px 20px; text-align: left; }
+    .fgrid > div:first-child { grid-column: 1 / -1; text-align: center; margin-bottom: 24px; }
     .fgrid > div:nth-child(2) { grid-column: 1 / 2; }
     .fgrid > div:nth-child(3) { grid-column: 2 / 3; }
-    .fgrid > div:nth-child(4) { grid-column: 1 / -1; text-align: left; margin-top: 16px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.1); }
+    .fgrid > div:nth-child(4) { grid-column: 1 / -1; text-align: left; margin-top: 8px; padding-top: 0; border-top: none; }
 
     @media (min-width: 900px) {
-      .fgrid { grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; text-align: left; }
+      .fgrid { grid-template-columns: 2fr 1fr 1fr 1fr; gap: 64px; text-align: left; }
       .fgrid > div:first-child { grid-column: auto; text-align: left; margin-bottom: 0; }
       .fgrid > div:nth-child(2) { grid-column: auto; }
       .fgrid > div:nth-child(3) { grid-column: auto; }
@@ -272,7 +272,8 @@
     footer a { color: #fff; text-decoration: none; font-size: 14px; transition: color 0.2s; }
     footer a:hover { color: var(--terra); }
     
-    .fbot { max-width: 1200px; margin: 32px auto 0; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; display: flex; flex-direction: column; gap: 12px; align-items: center; justify-content: center; font-size: 13px; color: rgba(255,255,255,0.4); text-align: center; }
+    /* Single divider line at the very end */
+    .fbot { max-width: 1200px; margin: 48px auto 0; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; display: flex; flex-direction: column; gap: 12px; align-items: center; justify-content: center; font-size: 13px; color: rgba(255,255,255,0.4); text-align: center; }
     @media (min-width: 700px) { .fbot { flex-direction: row; justify-content: space-between; text-align: left; } }
     .status { display: flex; align-items: center; gap: 8px; }
     .dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; }
@@ -301,8 +302,8 @@
   </nav>
 
   <main id="top">
-    <!-- HERO (INLINE PADDING ADDED) -->
-    <header class="hero-wrapper" style="padding-top: 180px; padding-bottom: 140px; padding-left: 20px; padding-right: 20px;">
+    <!-- HERO -->
+    <header class="hero-wrapper">
       <div class="hero-content" use:Reveal={{ direction: 'up', delay: 0.1 }}>
         <div class="typewriter">
           <h1 class="h-hero">
@@ -317,21 +318,21 @@
       </div>
     </header>
 
-    <!-- STATS (INLINE PADDING ADDED) -->
-    <div class="stats" use:Reveal={{ direction: 'up' }} style="padding-top: 96px; padding-bottom: 96px; padding-left: 20px; padding-right: 20px;">
+    <!-- STATS -->
+    <div class="stats" use:Reveal={{ direction: 'up' }}>
       <div><div class="stat-num" use:CountUp={{to: 5000, suffix: '+'}}>0</div><div class="stat-label">Quotes Generated</div></div>
       <div><div class="stat-num" use:CountUp={{to: 5, suffix: 's'}}>0</div><div class="stat-label">To Generate</div></div>
       <div><div class="stat-num" use:CountUp={{to: 30, suffix: '+ hrs'}}>0</div><div class="stat-label">Saved Monthly</div></div>
       <div><div class="stat-num" use:CountUp={{to: 99, suffix: '%'}}>0</div><div class="stat-label">Math Accuracy</div></div>
     </div>
 
-    <!-- WHY (INLINE PADDING ADDED) -->
-    <section class="section" style="padding-top: 140px; padding-bottom: 140px; padding-left: 20px; padding-right: 20px;">
+    <!-- WHY -->
+    <section class="section">
       <div class="sec-head" use:Reveal={{ direction: 'up' }}>
         <h2 class="h-section">Still quoting from Excel?</h2>
       </div>
       <div class="ba">
-        <div class="ba-card no" use:Reveal={{ direction: 'left' }} style="padding: 48px 32px;">
+        <div class="ba-card no" use:Reveal={{ direction: 'left' }}>
           <h3>The Old Way</h3>
           <ul>
             <li>{@html I.cross} Manual entry</li>
@@ -339,7 +340,7 @@
             <li>{@html I.cross} Costly errors</li>
           </ul>
         </div>
-        <div class="ba-card yes" use:Reveal={{ direction: 'right' }} style="padding: 48px 32px;">
+        <div class="ba-card yes" use:Reveal={{ direction: 'right' }}>
           <h3>The Quotera Way</h3>
           <ul>
             <li>{@html I.check} Paste messy text</li>
@@ -350,23 +351,17 @@
       </div>
     </section>
 
-        <!-- HOW IT WORKS (INLINE PADDING ADDED) -->
-    <section class="section" id="how" style="padding-top: 140px; padding-bottom: 140px; padding-left: 20px; padding-right: 20px;">
-      <div class="sec-head" use:Reveal={{ direction: 'up' }}>
-        <h2 class="h-section">Three steps to close.</h2>
-      </div>
-      <div class="steps">
-        <div class="step" use:Reveal={{ direction: 'up', delay: 0.1 }} style="padding-top: 32px;">
+            <div class="step" use:Reveal={{ direction: 'up', delay: 0.1 }}>
           <div class="step-num">01</div>
           <h3>Paste the request</h3>
           <p>Copy the exact text your customer sent you on WhatsApp or email.</p>
         </div>
-        <div class="step" use:Reveal={{ direction: 'up', delay: 0.2 }} style="padding-top: 32px;">
+        <div class="step" use:Reveal={{ direction: 'up', delay: 0.2 }}>
           <div class="step-num">02</div>
           <h3>Quotera does the math</h3>
           <p>It extracts items, matches your prices, and calculates totals perfectly.</p>
         </div>
-        <div class="step" use:Reveal={{ direction: 'up', delay: 0.3 }} style="padding-top: 32px;">
+        <div class="step" use:Reveal={{ direction: 'up', delay: 0.3 }}>
           <div class="step-num">03</div>
           <h3>Send the PDF</h3>
           <p>Download a beautifully branded PDF and send it to close the deal.</p>
@@ -374,8 +369,8 @@
       </div>
     </section>
 
-    <!-- PRICING (Untouched) -->
-    <section class="section" id="pricing" style="padding-top: 60px; padding-bottom: 60px; padding-left: 20px; padding-right: 20px;">
+    <!-- PRICING -->
+    <section class="section" id="pricing">
       <div class="sec-head" use:Reveal={{ direction: 'up' }}>
         <h2 class="h-section">Simple pricing.</h2>
       </div>
@@ -429,8 +424,8 @@
       </div>
     </section>
 
-    <!-- SHORT REVIEWS (Untouched) -->
-    <section class="section" style="padding-top: 60px; padding-bottom: 60px; padding-left: 20px; padding-right: 20px;">
+    <!-- SHORT REVIEWS -->
+    <section class="section">
       <div class="sec-head" use:Reveal={{ direction: 'up' }}>
         <h2 class="h-section">Reviews.</h2>
       </div>
@@ -453,8 +448,8 @@
       </div>
     </section>
 
-    <!-- FAQ (Untouched) -->
-    <section class="section" id="faq" style="padding-top: 60px; padding-bottom: 60px; padding-left: 20px; padding-right: 20px;">
+    <!-- FAQ -->
+    <section class="section" id="faq">
       <div class="sec-head" use:Reveal={{ direction: 'up' }}>
         <h2 class="h-section">Questions.</h2>
       </div>
@@ -490,7 +485,7 @@
       </div>
     </section>
 
-    <!-- FINAL CTA (Untouched) -->
+    <!-- FINAL CTA -->
     <section class="final-cta">
       <div use:Reveal={{ direction: 'scale', delay: 0.1 }}>
         <h2>Ready to close deals faster?</h2>
@@ -500,7 +495,7 @@
     </section>
   </main>
 
-  <!-- FOOTER (Untouched) -->
+  <!-- FOOTER -->
   <footer>
     <div class="fgrid">
       <div use:Reveal={{ direction: 'up' }}>
