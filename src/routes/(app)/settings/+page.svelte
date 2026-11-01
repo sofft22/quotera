@@ -8,6 +8,7 @@
   let companyContact = $state(data.user.company_contact || "");
   let logoBase64 = $state(data.user.logo_base64 || "");
   
+  // FALLBACK COLORS: Use the OR operator (||) to prevent black flicker
   let headerColor = $state(data.user.header_color || "#24503C");
   let accentColor = $state(data.user.accent_color || "#C4513D");
 
