@@ -13,6 +13,7 @@ export const actions = {
   saveQuote: async ({ request, cookies, platform }) => {
     const session = cookies.get('session');
     if (!session) return fail(401, { error: 'Not logged in' });
+    
     const data = await request.formData();
     const db = platform.env.DB;
     
@@ -30,7 +31,11 @@ export const actions = {
         data.get('delivery'),
         data.get('vat')
       ).run();
+      
       return { success: true };
-    } catch (err) { return fail(500, { error: 'Failed to save quote.' }); }
+    } catch (err) { 
+      console.error("DB Error:", err);
+      return fail(500, { error: 'Failed to save quote to database.' }); 
+    }
   }
 };
