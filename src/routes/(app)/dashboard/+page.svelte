@@ -73,7 +73,7 @@
     quoteItems = quoteItems.filter(i => i.id !== id);
   }
 
-    async function generateQuote() {
+     async function generateQuote() {
     if (!rawText.trim() || isLoading) return;
     
     isLoading = true;
@@ -81,31 +81,25 @@
     quoteItems = []; 
 
     try {
-      const formData = new FormData();
-      formData.append('rawText', rawText);
-
-      const response = await fetch('?/generateAI', {
+      const response = await fetch('/api/generate', {
         method: 'POST',
-        body: formData
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rawText })
       });
+
+      if (!response.ok) throw new Error("Failed to generate");
 
       const result = await response.json();
       
-      if (result.type === 'failure') {
-        throw new Error(result.data.error);
-      }
-
-      // This is the magic fix. We extract the array from the data object.
-      console.log("Parsed result:", result.data);
-
-      if (result.data && result.data.items) {
-         quoteItems = result.data.items;
+      // This is a clean array now.
+      if (result.items && Array.isArray(result.items)) {
+        quoteItems = result.items;
       } else {
-         throw new Error("No items found.");
+        throw new Error("No items found.");
       }
 
     } catch (error) {
-      console.error("Backend error:", error);
+      console.error("Error:", error);
       aiError = error.message;
       quoteItems = []; 
     } finally {
