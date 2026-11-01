@@ -109,6 +109,21 @@
 <svelte:head>
   <title>Dashboard | Quotera</title>
   <style>
+    /* Professional Grid Layout for the Builder */
+    .builder-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+
+    /* On desktop, split into two columns */
+    @media (min-width: 1024px) {
+      .builder-grid {
+        grid-template-columns: 1fr 1.2fr;
+        align-items: start;
+      }
+    }
+
     @media print {
       body * { visibility: hidden; }
       .print-area, .print-area * { visibility: visible; }
@@ -187,10 +202,8 @@
       </button>
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr; gap: 32px;">
-      @media (min-width: 1000px) {
-        <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 32px; align-items: start;">
-      }
+    <!-- The Grid Layout -->
+    <div class="builder-grid">
       
       <!-- LEFT COLUMN: EDIT FORM -->
       <div class="no-print" style="background: #ffffff; border-radius: 16px; border: 1px solid #E5E7EB; padding: 32px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);">
@@ -379,7 +392,6 @@
         </div>
       </div>
 
-      }
     </div>
   {/if}
 
