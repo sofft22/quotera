@@ -1,9 +1,7 @@
 <script>
-  let products = $state([
-    { id: 1, name: "Makita Angle Grinder 720W", unit: "Piece", price: 95000 },
-    { id: 2, name: "2-inch Black Coated Screws", unit: "Box", price: 3000 },
-    { id: 3, name: "Bosch GKS 190 Circular Saw", unit: "Piece", price: 140000 },
-  ]);
+  import { enhance } from '$app/forms';
+
+  let { data, form } = $props();
 
   let isModalOpen = $state(false);
   let isEditing = $state(false);
@@ -25,22 +23,6 @@
     isModalOpen = true;
   }
 
-  function saveProduct() {
-    if (!currentProduct.name || !currentProduct.price) return;
-    
-    if (isEditing) {
-      products = products.map(p => p.id === currentProduct.id ? currentProduct : p);
-    } else {
-      products = [...products, { ...currentProduct, id: Date.now() }];
-    }
-    closeModal();
-  }
-
-  function deleteProduct() {
-    products = products.filter(p => p.id !== currentProduct.id);
-    closeModal();
-  }
-
   function closeModal() {
     isModalOpen = false;
   }
@@ -54,7 +36,6 @@
   .page-wrapper {
     max-width: 1000px;
     margin: 0 auto;
-    /* Ruthless padding on mobile so the table stretches */
     padding: 16px 8px; 
     width: 100%;
     box-sizing: border-box;
@@ -75,7 +56,6 @@
     margin-bottom: 24px;
   }
 
-  /* SEAMLESS TABLE */
   .table-container {
     width: 100%;
     display: flex;
@@ -96,7 +76,7 @@
   .list-row {
     display: flex;
     align-items: center;
-    padding: 16px 8px; /* Tight mobile padding */
+    padding: 16px 8px;
     border-bottom: 1px solid #F3F4F6;
     cursor: pointer;
     transition: background-color 0.2s;
@@ -106,7 +86,6 @@
     background-color: rgba(255, 255, 255, 0.5);
   }
 
-  /* Column Alignments */
   .col-name { flex: 1; padding-right: 12px; font-weight: 500; color: #303B38; font-size: 14px; line-height: 1.4; }
   .col-unit { width: 60px; text-align: center; font-size: 12px; color: #6B7280; font-weight: 500; }
   .col-amount { width: 100px; text-align: right; font-weight: 600; color: #303B38; font-size: 14px; }
@@ -117,7 +96,6 @@
     .col-name { font-size: 13px; }
   }
 
-  /* MODAL */
   .modal-overlay {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -156,21 +134,18 @@
 
 <div class="page-wrapper">
   
-  <!-- Header -->
   <div class="header-row">
     <div>
       <h1 style="font-family: 'Manrope', sans-serif; font-size: 28px; font-weight: 800; margin: 0 0 6px 0; color: #303B38; letter-spacing: -0.02em;">Price List</h1>
       <p style="color: #6B7280; margin: 0; font-size: 13px;">Tap any row to edit.</p>
     </div>
     
-    <!-- Svelte 5: Use onclick instead of on:click -->
     <button onclick={openAddModal} style="background-color: #24503C; color: white; padding: 10px 16px; border-radius: 8px; border: none; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background-color 0.2s;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
       Add Item
     </button>
   </div>
 
-  <!-- Seamless List -->
   <div class="table-container">
     
     <div class="table-header">
@@ -179,18 +154,23 @@
       <span class="col-amount">Price</span>
     </div>
 
-    {#each products as product (product.id)}
-      <div class="list-row" onclick={() => openEditModal(product)} role="button" tabindex="0">
-        <span class="col-name">{product.name}</span>
-        <span class="col-unit">{product.unit}</span>
-        <span class="col-amount">{formatCurrency(product.price)}</span>
+    {#if data.products && data.products.length > 0}
+      {#each data.products as product (product.id)}
+        <div class="list-row" onclick={() => openEditModal(product)} role="button" tabindex="0">
+          <span class="col-name">{product.name}</span>
+          <span class="col-unit">{product.unit}</span>
+          <span class="col-amount">{formatCurrency(product.price)}</span>
+        </div>
+      {/each}
+    {:else}
+      <div style="padding: 32px 8px; text-align: center; color: #6B7280; font-size: 14px;">
+        Your price list is empty. Add your first item to get started.
       </div>
-    {/each}
+    {/if}
 
   </div>
 </div>
 
-<!-- MODAL -->
 {#if isModalOpen}
   <div class="modal-overlay" onclick={closeModal} role="presentation">
     <div class="modal-content" onclick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
@@ -204,26 +184,56 @@
         </button>
       </div>
 
-      <form onsubmit={(e) => { e.preventDefault(); saveProduct(); }}>
+      {#if form?.error}
+        <div style="background: #FEE2E2; color: #DC2626; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; font-weight: 600;">
+          {form.error}
+        </div>
+      {/if}
+
+      <form 
+        method="POST" 
+        action={isEditing ? '?/edit' : '?/add'} 
+        use:enhance={() => {
+          return async ({ result, update }) => {
+            await update();
+            if (result.type === 'success') closeModal();
+          };
+        }}
+      >
+        {#if isEditing}
+          <input type="hidden" name="id" value={currentProduct.id} />
+        {/if}
+
         <div style="margin-bottom: 16px;">
           <label style="display: block; font-size: 13px; font-weight: 600; color: #303B38; margin-bottom: 6px;">Item Name</label>
-          <input type="text" bind:value={currentProduct.name} placeholder="e.g. Makita Angle Grinder 720W" required style="width: 100%; padding: 12px 16px; border: 1px solid #E5E7EB; border-radius: 8px; font-family: 'Inter'; font-size: 15px; box-sizing: border-box;" />
+          <input type="text" name="name" bind:value={currentProduct.name} placeholder="e.g. Makita Angle Grinder 720W" required style="width: 100%; padding: 12px 16px; border: 1px solid #E5E7EB; border-radius: 8px; font-family: 'Inter'; font-size: 15px; box-sizing: border-box;" />
         </div>
 
         <div style="display: flex; gap: 12px; margin-bottom: 24px;">
           <div style="flex: 1;">
             <label style="display: block; font-size: 13px; font-weight: 600; color: #303B38; margin-bottom: 6px;">Unit</label>
-            <input type="text" bind:value={currentProduct.unit} placeholder="Piece" required style="width: 100%; padding: 12px 16px; border: 1px solid #E5E7EB; border-radius: 8px; font-family: 'Inter'; font-size: 15px; box-sizing: border-box;" />
+            <input type="text" name="unit" bind:value={currentProduct.unit} placeholder="Piece" required style="width: 100%; padding: 12px 16px; border: 1px solid #E5E7EB; border-radius: 8px; font-family: 'Inter'; font-size: 15px; box-sizing: border-box;" />
           </div>
           <div style="flex: 1;">
             <label style="display: block; font-size: 13px; font-weight: 600; color: #303B38; margin-bottom: 6px;">Price (₦)</label>
-            <input type="number" bind:value={currentProduct.price} placeholder="0.00" required style="width: 100%; padding: 12px 16px; border: 1px solid #E5E7EB; border-radius: 8px; font-family: 'Inter'; font-size: 15px; box-sizing: border-box;" />
+            <input type="number" name="price" bind:value={currentProduct.price} placeholder="0.00" required style="width: 100%; padding: 12px 16px; border: 1px solid #E5E7EB; border-radius: 8px; font-family: 'Inter'; font-size: 15px; box-sizing: border-box;" />
           </div>
         </div>
 
         <div style="display: flex; justify-content: space-between; align-items: center;">
           {#if isEditing}
-            <button type="button" onclick={deleteProduct} style="background: none; border: none; color: #DC2626; font-weight: 600; font-size: 14px; cursor: pointer; padding: 0;">
+            <button 
+              type="button" 
+              onclick={async () => {
+                const formData = new FormData();
+                formData.append('id', currentProduct.id);
+                const res = await fetch('?/delete', { method: 'POST', body: formData });
+                if (res.ok) {
+                  window.location.reload(); 
+                }
+              }} 
+              style="background: none; border: none; color: #DC2626; font-weight: 600; font-size: 14px; cursor: pointer; padding: 0;"
+            >
               Delete Item
             </button>
           {:else}
