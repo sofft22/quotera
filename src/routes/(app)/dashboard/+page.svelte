@@ -73,7 +73,7 @@
     quoteItems = quoteItems.filter(i => i.id !== id);
   }
 
-     async function generateQuote() {
+  async function generateQuote() {
     if (!rawText.trim() || isLoading) return;
     
     isLoading = true;
@@ -81,6 +81,9 @@
     quoteItems = []; 
 
     try {
+      const formData = new FormData();
+      formData.append('rawText', rawText);
+
       const response = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -91,9 +94,12 @@
 
       const result = await response.json();
       
-      // This is a clean array now.
       if (result.items && Array.isArray(result.items)) {
-        quoteItems = result.items;
+        quoteItems = result.items.map(item => ({
+          ...item,
+          price: Number(item.price) || 0,
+          qty: Number(item.qty) || 1
+        }));
       } else {
         throw new Error("No items found.");
       }
@@ -370,6 +376,11 @@
         <input type="hidden" name="customerName" value={customer.name} />
         <input type="hidden" name="customerContact" value={customer.contact} />
         <input type="hidden" name="total" value={total} />
+        <input type="hidden" name="itemsJson" value={JSON.stringify(quoteItems)} />
+        <input type="hidden" name="subtotal" value={subtotal} />
+        <input type="hidden" name="discount" value={discountAmount} />
+        <input type="hidden" name="delivery" value={includeDelivery ? deliveryFee : 0} />
+        <input type="hidden" name="vat" value={vatAmount} />
 
         <button type="submit" style="width: 100%; background: #24503C; color: white; padding: 16px; border-radius: 8px; border: none; font-weight: 600; font-size: 16px; cursor: pointer;">
           Download PDF & Save
