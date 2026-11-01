@@ -139,7 +139,7 @@
     .nav-cta { font-size: 13px; font-weight: 600; color: #fff; background: var(--green); padding: 8px 16px; border-radius: 6px; text-decoration: none; transition: background 0.2s; }
     .nav-cta:hover { background: #1a3a2b; }
 
-    /* ─── HERO (Massive Spacing) ─── */
+    /* ─── HERO (Massive Space) ─── */
     .hero-wrapper {
       width: 100%;
       display: flex;
@@ -147,7 +147,7 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 180px 20px 140px;
+      padding: 160px 20px 120px;
       background: radial-gradient(circle at 50% 0%, rgba(196, 81, 61, 0.15) 0%, rgba(238, 242, 238, 1) 60%);
     }
     
@@ -155,25 +155,25 @@
     .h-hero { font-family: 'Manrope', sans-serif; font-size: clamp(36px, 9vw, 72px); font-weight: 800; line-height: 1.05; color: var(--ink); }
     .h-hero span { color: var(--terra); }
     .hero-desc { font-size: clamp(15px, 4vw, 18px); color: var(--muted); line-height: 1.6; max-width: 480px; margin: 0 auto; }
-    .hero-ctas { display: flex; flex-direction: column; gap: 20px; align-items: center; width: 100%; margin-top: 16px; }
+    .hero-ctas { display: flex; flex-direction: column; gap: 16px; align-items: center; width: 100%; margin-top: 16px; }
     
     .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; font-weight: 600; padding: 14px 24px; border-radius: 8px; text-decoration: none; background: var(--green); color: #fff; transition: all 0.2s; width: 100%; max-width: 320px; border: none; cursor: pointer; }
     .btn:hover { background: #1a3a2b; }
 
-    /* ─── GLOBAL SECTIONS (Massive Spacing) ─── */
+    /* ─── GLOBAL SECTIONS (Massive Space) ─── */
     .section { padding: 120px 20px; max-width: 1200px; margin: 0 auto; }
     @media (min-width: 900px) { .section { padding: 160px 24px; } }
     .sec-head { text-align: center; margin-bottom: 64px; }
     .h-section { font-family: 'Manrope', sans-serif; font-size: clamp(28px, 6vw, 42px); font-weight: 800; letter-spacing: -0.03em; color: var(--ink); }
 
-    /* ─── STATS (Massive Spacing) ─── */
+    /* ─── STATS (Massive Space) ─── */
     .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; padding: 80px 20px; border-top: 1px solid rgba(48,59,56,0.1); border-bottom: 1px solid rgba(48,59,56,0.1); text-align: center; max-width: 1200px; margin: 0 auto; }
     @media (min-width: 700px) { .stats { grid-template-columns: repeat(4, 1fr); gap: 48px; padding: 96px 24px; } }
     .stat-num { font-family: 'Manrope', sans-serif; font-size: 28px; font-weight: 800; color: var(--ink); }
-    .stat-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-top: 6px; letter-spacing: 0.05em; }
+    .stat-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-top: 8px; letter-spacing: 0.05em; }
 
-    /* ─── WHY (Massive Spacing) ─── */
-    .ba { display: grid; grid-template-columns: 1fr; gap: 32px; }
+    /* ─── WHY (Massive Space) ─── */
+    .ba { display: grid; grid-template-columns: 1fr; gap: 24px; }
     @media (min-width: 700px) { .ba { grid-template-columns: 1fr 1fr; gap: 40px; } }
     .ba-card { padding: 48px 32px; border-radius: 16px; }
     .ba-card.no { background: #fff; border: 1px solid var(--line); }
@@ -185,7 +185,7 @@
     .ba-card.yes li { color: rgba(255,255,255,0.9); }
     .ba-card.yes svg { stroke: #fff; }
 
-    /* ─── STEPS (Massive Spacing) ─── */
+    /* ─── STEPS (Massive Space) ─── */
     .steps { display: grid; grid-template-columns: 1fr; gap: 48px; }
     @media (min-width: 900px) { .steps { grid-template-columns: repeat(3, 1fr); gap: 64px; } }
     .step { border-top: 1px solid var(--line); padding-top: 32px; position: relative; }
@@ -194,7 +194,7 @@
     .step h3 { font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 800; margin-bottom: 12px; color: var(--ink); }
     .step p { font-size: 14px; color: var(--muted); line-height: 1.6; }
 
-    /* ─── PRICING (Left exactly as it was) ─── */
+    /* ─── PRICING (Untouched) ─── */
     .plans { display: grid; grid-template-columns: 1fr; gap: 20px; align-items: start; }
     @media (min-width: 900px) { .plans { grid-template-columns: repeat(4, 1fr); gap: 24px; } }
     .plan { padding: 28px 20px; border: 1px solid var(--line); border-radius: 16px; background: #fff; display: flex; flex-direction: column; height: fit-content; }
@@ -213,7 +213,7 @@
     .plan .btn { margin-top: auto; width: 100%; background: var(--bg); color: var(--ink); justify-content: center; padding: 10px; font-size: 13px; }
     .plan.pop .btn { background: #fff; color: var(--green); }
 
-    /* ─── SHORT REVIEWS (Mobile-first) ─── */
+    /* ─── SHORT REVIEWS (Untouched) ─── */
     .reviews-grid { display: grid; grid-template-columns: 1fr; gap: 24px; text-align: center; }
     @media (min-width: 900px) { .reviews-grid { grid-template-columns: repeat(3, 1fr); gap: 32px; } }
     
@@ -233,7 +233,7 @@
     .review-author { font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink); margin: 0; }
     .review-role { font-size: 11px; color: var(--muted); margin: 4px 0 0; }
 
-    /* ─── FAQ ─── */
+    /* ─── FAQ (Untouched) ─── */
     .faq { display: flex; flex-direction: column; gap: 12px; max-width: 800px; margin: 0 auto; }
     .faq details { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 20px; }
     .faq summary { font-family: 'Manrope', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
@@ -241,14 +241,14 @@
     .faq details[open] summary::after { content: "−"; }
     .faq p { margin-top: 12px; font-size: 14px; color: var(--muted); line-height: 1.6; }
 
-    /* ─── FINAL CTA ─── */
+    /* ─── FINAL CTA (Untouched) ─── */
     .final-cta { text-align: center; padding: 80px 20px; background: var(--ink); color: #fff; }
     .final-cta h2 { font-family: 'Manrope', sans-serif; font-size: clamp(28px, 6vw, 48px); font-weight: 800; margin-bottom: 16px; color: #fff; }
     .final-cta p { font-size: 16px; color: rgba(255,255,255,0.8); margin-bottom: 32px; }
     .final-cta .btn { background: var(--terra); font-size: 16px; padding: 16px 32px; color: #fff; margin: 0 auto; }
     .final-cta .btn:hover { background: #a83a29; }
 
-    /* ─── FOOTER ─── */
+    /* ─── FOOTER (Untouched) ─── */
     footer { background: var(--ink); color: #fff; padding: 48px 20px 32px; border-top: 1px solid rgba(255,255,255,0.1); }
     .fgrid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 32px 20px; text-align: left; }
     .fgrid > div:first-child { grid-column: 1 / -1; text-align: center; margin-bottom: 16px; }
@@ -304,7 +304,8 @@
 
   <main id="top">
     <!-- HERO -->
-    <header class="hero-wrapper">
+    <!-- NOTE: Inline padding forces massive breathing room regardless of external CSS -->
+    <header class="hero-wrapper" style="padding-top: 180px; padding-bottom: 140px;">
       <div class="hero-content" use:Reveal={{ direction: 'up', delay: 0.1 }}>
         <!-- TYPEWRITER RESTORED -->
         <div class="typewriter">
@@ -321,7 +322,8 @@
     </header>
 
     <!-- STATS -->
-    <div class="stats" use:Reveal={{ direction: 'up' }}>
+    <!-- NOTE: Inline padding forces massive breathing room -->
+    <div class="stats" use:Reveal={{ direction: 'up' }} style="padding-top: 96px; padding-bottom: 96px;">
       <div><div class="stat-num" use:CountUp={{to: 5000, suffix: '+'}}>0</div><div class="stat-label">Quotes Generated</div></div>
       <div><div class="stat-num" use:CountUp={{to: 5, suffix: 's'}}>0</div><div class="stat-label">To Generate</div></div>
       <div><div class="stat-num" use:CountUp={{to: 30, suffix: '+ hrs'}}>0</div><div class="stat-label">Saved Monthly</div></div>
@@ -329,12 +331,13 @@
     </div>
 
     <!-- WHY -->
-    <section class="section">
+    <!-- NOTE: Inline padding forces massive breathing room -->
+    <section class="section" style="padding-top: 160px; padding-bottom: 160px;">
       <div class="sec-head" use:Reveal={{ direction: 'up' }}>
         <h2 class="h-section">Still quoting from Excel?</h2>
       </div>
       <div class="ba">
-        <div class="ba-card no" use:Reveal={{ direction: 'left' }}>
+        <div class="ba-card no" use:Reveal={{ direction: 'left' }} style="padding: 56px 40px;">
           <h3>The Old Way</h3>
           <ul>
             <li>{@html I.cross} Manual entry</li>
@@ -342,7 +345,7 @@
             <li>{@html I.cross} Costly errors</li>
           </ul>
         </div>
-        <div class="ba-card yes" use:Reveal={{ direction: 'right' }}>
+        <div class="ba-card yes" use:Reveal={{ direction: 'right' }} style="padding: 56px 40px;">
           <h3>The Quotera Way</h3>
           <ul>
             <li>{@html I.check} Paste messy text</li>
@@ -354,17 +357,5 @@
     </section>
 
     <!-- HOW IT WORKS -->
-    <section class="section" id="how">
-      <div class="sec-head" use:Reveal={{ direction: 'up' }}>
-        <h2 class="h-section">Three steps to close.</h2>
-      </div>
-      <div class="steps">
-        <div class="step" use:Reveal={{ direction: 'up', delay: 0.1 }}>
-          <div class="step-num">01</div>
-          <h3>Paste the request</h3>
-          <p>Copy the exact text your customer sent you on WhatsApp or email.</p>
-        </div>
-        <div class="step" use:Reveal={{ direction: 'up', delay: 0.2 }}>
-          <div class="step-num">02</div>
-          <h3>Quotera does the math</h3>
-          <p>It extracts items, matches your prices, and calculates
+    <!-- NOTE: Inline padding forces massive breathing room -->
+    <section class="section" id="how" style="padding-top
