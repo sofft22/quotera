@@ -1,19 +1,19 @@
 <script>
-  let { data } = $props();
+  import { enhance } from '$app/forms';
+
+  let { data, form } = $props();
 
   let companyName = $state(data.user.company_name || "");
   let companyAddress = $state(data.user.company_address || "");
   let companyContact = $state(data.user.company_contact || "");
   let logoBase64 = $state(data.user.logo_base64 || "");
   
+  // Fallback prevents black flicker if database is empty
   let headerColor = $state(data.user.header_color && data.user.header_color !== "" ? data.user.header_color : "#24503C");
   let accentColor = $state(data.user.accent_color && data.user.accent_color !== "" ? data.user.accent_color : "#C4513D");
 
   let isUpgradeModalOpen = $state(false);
   let isCompressing = $state(false);
-  
-  let isSaving = $state(false);
-  let saveSuccess = $state(false);
 
   const WHATSAPP = "2347072789513"; 
 
@@ -52,37 +52,6 @@
   function removeLogo() {
     logoBase64 = "";
   }
-
-  async function handleSave() {
-    isSaving = true;
-    saveSuccess = false;
-
-    try {
-      const response = await fetch('/settings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          companyName,
-          companyAddress,
-          companyContact,
-          headerColor,
-          accentColor,
-          logoBase64
-        })
-      });
-
-      if (response.ok) {
-        saveSuccess = true;
-        setTimeout(() => saveSuccess = false, 3000);
-      } else {
-        alert("Failed to save settings.");
-      }
-    } catch (err) {
-      alert("Network error.");
-    } finally {
-      isSaving = false;
-    }
-  }
 </script>
 
 <svelte:head>
@@ -115,13 +84,28 @@
     </div>
   </div>
 
-  <div style="background: #ffffff; border: 1px solid #E5E7EB; border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 8px 24px rgba(48, 59, 56, 0.04);">
+  <!-- MAGIC HAPPENS HERE: reset: false stops the black flicker -->
+  <form 
+    method="POST" 
+    use:enhance={() => {
+      return async ({ update }) => {
+        await update({ reset: false }); 
+      };
+    }} 
+    style="background: #ffffff; border: 1px solid #E5E7EB; border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 8px 24px rgba(48, 59, 56, 0.04);"
+  >
     
     <h2 style="font-family: 'Manrope', sans-serif; font-size: 22px; font-weight: 800; color: #303B38; margin: 0 0 24px 0; letter-spacing: -0.02em;">PDF Branding</h2>
 
-    {#if saveSuccess}
+    {#if form?.success}
       <div style="background: #DCFCE7; color: #166534; padding: 14px 16px; border-radius: 8px; margin-bottom: 20px; font-weight: 600; font-size: 15px;">
         Settings saved successfully!
+      </div>
+    {/if}
+
+    {#if form?.error}
+      <div style="background: #FEE2E2; color: #DC2626; padding: 14px 16px; border-radius: 8px; margin-bottom: 20px; font-weight: 600; font-size: 15px;">
+        {form.error}
       </div>
     {/if}
 
@@ -129,17 +113,17 @@
       
       <div>
         <label style="display: block; font-size: 14px; font-weight: 600; color: #303B38; margin-bottom: 8px;">Company Name</label>
-        <input type="text" bind:value={companyName} placeholder="e.g. Acme Hardware Ltd" style="width: 100%; padding: 14px 16px; border: 1px solid #E5E7EB; border-radius: 10px; font-size: 16px; box-sizing: border-box; transition: border-color 0.2s; outline: none; color: #303B38;" />
+        <input type="text" name="companyName" bind:value={companyName} placeholder="e.g. Acme Hardware Ltd" style="width: 100%; padding: 14px 16px; border: 1px solid #E5E7EB; border-radius: 10px; font-size: 16px; box-sizing: border-box; transition: border-color 0.2s; outline: none; color: #303B38;" />
       </div>
 
       <div>
         <label style="display: block; font-size: 14px; font-weight: 600; color: #303B38; margin-bottom: 8px;">Business Address</label>
-        <input type="text" bind:value={companyAddress} placeholder="e.g. 12 Marina Road, Lagos" style="width: 100%; padding: 14px 16px; border: 1px solid #E5E7EB; border-radius: 10px; font-size: 16px; box-sizing: border-box; transition: border-color 0.2s; outline: none; color: #303B38;" />
+        <input type="text" name="companyAddress" bind:value={companyAddress} placeholder="e.g. 12 Marina Road, Lagos" style="width: 100%; padding: 14px 16px; border: 1px solid #E5E7EB; border-radius: 10px; font-size: 16px; box-sizing: border-box; transition: border-color 0.2s; outline: none; color: #303B38;" />
       </div>
 
       <div>
         <label style="display: block; font-size: 14px; font-weight: 600; color: #303B38; margin-bottom: 8px;">Contact Info</label>
-        <input type="text" bind:value={companyContact} placeholder="e.g. sales@acme.com" style="width: 100%; padding: 14px 16px; border: 1px solid #E5E7EB; border-radius: 10px; font-size: 16px; box-sizing: border-box; transition: border-color 0.2s; outline: none; color: #303B38;" />
+        <input type="text" name="companyContact" bind:value={companyContact} placeholder="e.g. sales@acme.com" style="width: 100%; padding: 14px 16px; border: 1px solid #E5E7EB; border-radius: 10px; font-size: 16px; box-sizing: border-box; transition: border-color 0.2s; outline: none; color: #303B38;" />
       </div>
 
       <div style="margin-top: 8px;">
@@ -164,6 +148,7 @@
         {#if isCompressing}
           <p style="font-size: 13px; color: #24503C; margin-top: 8px; font-weight: 600;">Compressing image...</p>
         {/if}
+        <input type="hidden" name="logoBase64" value={logoBase64} />
       </div>
 
       <!-- ONLY 2 COLOR PICKERS NOW -->
@@ -176,6 +161,7 @@
             <div style="position: relative; width: 100%; height: 44px; border-radius: 8px; overflow: hidden; border: 1px solid #D1D5DB;">
               <input 
                 type="color" 
+                name="headerColor" 
                 value={headerColor} 
                 oninput={(e) => headerColor = e.target.value}
                 style="position: absolute; top: -10px; left: -10px; width: 150%; height: 150%; cursor: pointer; border: none; padding: 0;" 
@@ -188,6 +174,7 @@
             <div style="position: relative; width: 100%; height: 44px; border-radius: 8px; overflow: hidden; border: 1px solid #D1D5DB;">
               <input 
                 type="color" 
+                name="accentColor" 
                 value={accentColor} 
                 oninput={(e) => accentColor = e.target.value}
                 style="position: absolute; top: -10px; left: -10px; width: 150%; height: 150%; cursor: pointer; border: none; padding: 0;" 
@@ -199,10 +186,10 @@
       </div>
     </div>
 
-    <button onclick={handleSave} disabled={isSaving} style="width: 100%; background: #24503C; color: white; padding: 16px; border-radius: 10px; border: none; font-weight: 700; font-size: 16px; cursor: {isSaving ? 'not-allowed' : 'pointer'}; margin-top: 28px; box-shadow: 0 4px 6px -1px rgba(36,80,60,0.2); transition: transform 0.1s; opacity: {isSaving ? 0.7 : 1};">
-      {isSaving ? 'Saving...' : 'Save Settings'}
+    <button type="submit" style="width: 100%; background: #24503C; color: white; padding: 16px; border-radius: 10px; border: none; font-weight: 700; font-size: 16px; cursor: pointer; margin-top: 28px; box-shadow: 0 4px 6px -1px rgba(36,80,60,0.2); transition: transform 0.1s;">
+      Save Settings
     </button>
-  </div>
+  </form>
 
 </div>
 
