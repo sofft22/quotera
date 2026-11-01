@@ -18,13 +18,17 @@ export const actions = {
     
     try {
       await db.prepare(
-        "INSERT INTO quotes (user_id, customer_name, customer_contact, total, items_json) VALUES (?, ?, ?, ?, ?)"
+        "INSERT INTO quotes (user_id, customer_name, customer_contact, total, items_json, subtotal, discount, delivery, vat) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
       ).bind(
         Number(session), 
         data.get('customerName'), 
         data.get('customerContact'), 
         data.get('total'),
-        data.get('itemsJson')
+        data.get('itemsJson'),
+        data.get('subtotal'),
+        data.get('discount'),
+        data.get('delivery'),
+        data.get('vat')
       ).run();
       return { success: true };
     } catch (err) { return fail(500, { error: 'Failed to save quote.' }); }
