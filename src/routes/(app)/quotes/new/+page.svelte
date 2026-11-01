@@ -61,13 +61,6 @@
       }
     }, 300);
   };
-
-  // Helper to calculate subtotal from the items JSON
-  function calculateSubtotal(itemsJson) {
-    if (!itemsJson) return 0;
-    const items = JSON.parse(itemsJson);
-    return items.reduce((acc, item) => acc + (item.price * item.qty), 0);
-  }
 </script>
 
 <svelte:head>
@@ -206,51 +199,51 @@
   </div>
 </div>
 
-<!-- HIDDEN PDF TEMPLATE -->
+<!-- HIDDEN PDF TEMPLATE (Bolder & Larger) -->
 <div style="position: absolute; top: 0; left: 0; z-index: -1; opacity: 0; pointer-events: none;">
   {#if pdfQuote}
-    <div bind:this={hiddenReceiptRef} style="width: 800px; background: white; padding: 40px; font-family: 'Inter', sans-serif; color: #303B38;">
+    <div bind:this={hiddenReceiptRef} style="width: 800px; background: white; padding: 50px; font-family: 'Inter', sans-serif; color: #303B38;">
       
       <!-- PDF Header -->
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; border-bottom: 2px solid #F3F4F6; padding-bottom: 20px;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 50px; border-bottom: 2px solid #F3F4F6; padding-bottom: 25px;">
         <div>
-          <div style="font-family: 'Manrope', sans-serif; font-size: 24px; font-weight: 900; letter-spacing: -0.03em; color: #24503C;">Quotera.</div>
-          <div style="font-size: 12px; color: #6B7280; margin-top: 4px; line-height: 1.5;">Your Company Address<br/>your@email.com</div>
+          <div style="font-family: 'Manrope', sans-serif; font-size: 32px; font-weight: 900; letter-spacing: -0.03em; color: #24503C;">Quotera.</div>
+          <div style="font-size: 14px; color: #6B7280; margin-top: 6px; line-height: 1.6;">Your Company Address<br/>your@email.com</div>
         </div>
         <div style="text-align: right;">
-          <h1 style="font-family: 'Manrope', sans-serif; font-size: 20px; margin: 0 0 4px 0; color: #303B38; text-transform: uppercase;">Quotation</h1>
-          <div style="font-size: 12px; color: #6B7280;">Date: {formatDate(pdfQuote.created_at)}</div>
-          <div style="font-size: 12px; color: #6B7280;">Quote #: Q-{pdfQuote.id}</div>
+          <h1 style="font-family: 'Manrope', sans-serif; font-size: 26px; font-weight: 800; margin: 0 0 6px 0; color: #303B38; text-transform: uppercase;">Quotation</h1>
+          <div style="font-size: 14px; color: #6B7280;">Date: {formatDate(pdfQuote.created_at)}</div>
+          <div style="font-size: 14px; color: #6B7280;">Quote #: Q-{pdfQuote.id}</div>
         </div>
       </div>
 
       <!-- Customer Info -->
-      <div style="margin-bottom: 32px;">
-        <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #9CA3AF; margin-bottom: 4px;">Prepared For</div>
-        <div style="font-size: 16px; font-weight: 700; color: #303B38;">{pdfQuote.customer_name || "Customer"}</div>
-        <div style="font-size: 13px; color: #6B7280;">{pdfQuote.customer_contact || ""}</div>
+      <div style="margin-bottom: 40px;">
+        <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: #9CA3AF; margin-bottom: 6px; letter-spacing: 0.05em;">Prepared For</div>
+        <div style="font-size: 20px; font-weight: 800; color: #303B38;">{pdfQuote.customer_name || "Customer"}</div>
+        <div style="font-size: 15px; color: #6B7280; margin-top: 4px;">{pdfQuote.customer_contact || ""}</div>
       </div>
 
-      <!-- Items Table with Unit Price -->
-      <table style="width: 100%; border-collapse: collapse; margin-bottom: 32px; table-layout: fixed;">
+      <!-- Items Table -->
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 40px; table-layout: fixed;">
         <thead>
-          <tr style="border-bottom: 1px solid #E5E7EB;">
-            <th style="text-align: left; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 40%;">Item</th>
-            <th style="text-align: center; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 15%;">Unit</th>
-            <th style="text-align: center; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 10%;">Qty</th>
-            <th style="text-align: right; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 15%;">Price</th>
-            <th style="text-align: right; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 20%;">Total</th>
+          <tr style="border-bottom: 2px solid #E5E7EB;">
+            <th style="text-align: left; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #6B7280; width: 40%;">Item</th>
+            <th style="text-align: center; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #6B7280; width: 15%;">Unit</th>
+            <th style="text-align: center; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #6B7280; width: 10%;">Qty</th>
+            <th style="text-align: right; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #6B7280; width: 15%;">Price</th>
+            <th style="text-align: right; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #6B7280; width: 20%;">Total</th>
           </tr>
         </thead>
         <tbody>
           {#if pdfQuote.items_json}
             {#each JSON.parse(pdfQuote.items_json) as item}
               <tr style="border-bottom: 1px solid #F3F4F6;">
-                <td style="padding: 16px 0; font-size: 14px; font-weight: 600; line-height: 1.4; word-wrap: break-word;">{item.name}</td>
-                <td style="padding: 16px 0; text-align: center; font-size: 14px;">{item.unit}</td>
-                <td style="padding: 16px 0; text-align: center; font-size: 14px;">{item.qty}</td>
-                <td style="padding: 16px 0; text-align: right; font-size: 14px;">{formatCurrency(item.price)}</td>
-                <td style="padding: 16px 0; text-align: right; font-size: 14px; font-weight: 600;">{formatCurrency(item.price * item.qty)}</td>
+                <td style="padding: 20px 0; font-size: 16px; font-weight: 600; line-height: 1.5; word-wrap: break-word;">{item.name}</td>
+                <td style="padding: 20px 0; text-align: center; font-size: 15px; font-weight: 500;">{item.unit}</td>
+                <td style="padding: 20px 0; text-align: center; font-size: 15px; font-weight: 500;">{item.qty}</td>
+                <td style="padding: 20px 0; text-align: right; font-size: 15px;">{formatCurrency(item.price)}</td>
+                <td style="padding: 20px 0; text-align: right; font-size: 16px; font-weight: 700;">{formatCurrency(item.price * item.qty)}</td>
               </tr>
             {/each}
           {/if}
@@ -258,17 +251,36 @@
       </table>
 
       <!-- Totals Breakdown -->
-      <div style="display: flex; justify-content: flex-end; margin-bottom: 32px;">
-        <div style="width: 280px;">
-          <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; color: #4B5563;">
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 40px;">
+        <div style="width: 320px;">
+          
+          <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: #4B5563;">
             <span>Subtotal:</span>
-            <span>{formatCurrency(calculateSubtotal(pdfQuote.items_json))}</span>
+            <span>{formatCurrency(pdfQuote.subtotal)}</span>
           </div>
           
-          <!-- Note: These will only show if the data is in the DB. Since your current DB only saves the total, 
-               we calculate the difference. For a perfect system, we need to save discount/delivery to DB too. -->
+          {#if pdfQuote.discount > 0}
+            <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: #DC2626; font-weight: 500;">
+              <span>Discount:</span>
+              <span>-{formatCurrency(pdfQuote.discount)}</span>
+            </div>
+          {/if}
           
-          <div style="display: flex; justify-content: space-between; padding: 16px 0 6px 0; font-size: 18px; font-weight: 800; color: #24503C; border-top: 2px solid #E5E7EB; margin-top: 8px;">
+          {#if pdfQuote.delivery > 0}
+            <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: #4B5563;">
+              <span>Delivery:</span>
+              <span>{formatCurrency(pdfQuote.delivery)}</span>
+            </div>
+          {/if}
+          
+          {#if pdfQuote.vat > 0}
+            <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: #4B5563;">
+              <span>VAT (7.5%):</span>
+              <span>{formatCurrency(pdfQuote.vat)}</span>
+            </div>
+          {/if}
+          
+          <div style="display: flex; justify-content: space-between; padding: 20px 0 10px 0; font-size: 24px; font-weight: 800; color: #24503C; border-top: 3px solid #E5E7EB; margin-top: 10px;">
             <span>TOTAL:</span>
             <span>{formatCurrency(pdfQuote.total)}</span>
           </div>
@@ -276,8 +288,8 @@
       </div>
 
       <!-- Footer -->
-      <div style="border-top: 1px solid #F3F4F6; padding-top: 24px; text-align: center;">
-        <p style="font-size: 11px; color: #9CA3AF; margin: 0;">Thank you for your business. If you have any questions, please contact us.</p>
+      <div style="border-top: 1px solid #F3F4F6; padding-top: 30px; text-align: center;">
+        <p style="font-size: 13px; color: #9CA3AF; margin: 0;">Thank you for your business. If you have any questions, please contact us.</p>
       </div>
 
     </div>
