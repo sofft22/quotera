@@ -67,7 +67,6 @@
 
   async function generateQuote() {
     if (!rawText.trim() || isLoading) return;
-    
     isLoading = true;
     aiError = "";
 
@@ -82,9 +81,7 @@
 
       const result = await response.json();
       
-      if (result.type === 'failure') {
-         throw new Error(result.data.error);
-      }
+      if (result.type === 'failure') throw new Error(result.data.error);
 
       const extractedItems = result.data.items;
       let nextId = 1;
@@ -109,21 +106,6 @@
 <svelte:head>
   <title>Dashboard | Quotera</title>
   <style>
-    /* Professional Grid Layout */
-    .builder-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 32px;
-    }
-
-    @media (min-width: 1024px) {
-      .builder-grid {
-        grid-template-columns: 1fr 1.2fr;
-        align-items: start;
-      }
-    }
-
-    /* Clean Focus Ring for Inputs */
     .input-clean {
       width: 100%;
       padding: 12px 16px;
@@ -138,7 +120,6 @@
       border-color: #24503C;
       box-shadow: 0 0 0 3px rgba(36, 80, 60, 0.1);
     }
-
     @media print {
       body * { visibility: hidden; }
       .print-area, .print-area * { visibility: visible; }
@@ -149,17 +130,19 @@
   </style>
 </svelte:head>
 
-<div style="max-width: 1100px; margin: 0 auto; padding: 32px 24px;">
+<div style="max-width: 900px; margin: 0 auto; padding: 32px 24px;">
 
   {#if pageView === 'input'}
-    <div style="margin-bottom: 40px;">
+    <!-- Greeting -->
+    <div style="margin-bottom: 32px;">
       <h1 style="font-family: 'Manrope', sans-serif; font-size: clamp(24px, 5vw, 36px); font-weight: 800; margin: 0 0 8px 0; color: #303B38; letter-spacing: -0.03em;">
         {greeting}, <span style="color: #C4513D;">{data?.user?.fullname || 'User'}</span>.
       </h1>
       <p style="color: #6B7280; font-size: 15px; margin: 0;">Here is an overview of your business.</p>
     </div>
 
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 48px;">
+    <!-- Stats Cards -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 40px;">
       <div style="background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%); border: 1px solid #BBF7D0; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);">
         <p style="font-size: 12px; font-weight: 700; color: #166534; margin: 0 0 12px 0; text-transform: uppercase; letter-spacing: 0.05em;">Total Quoted Value</p>
         <h2 style="font-family: 'Manrope', sans-serif; font-size: 32px; font-weight: 800; color: #14532D; margin: 0;">{formatCurrency(data?.totalValue)}</h2>
@@ -170,7 +153,8 @@
       </div>
     </div>
 
-    <div style="max-width: 800px;">
+    <!-- Text Box -->
+    <div>
       <h2 style="font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 800; color: #303B38; margin: 0 0 16px 0;">Create New Quote</h2>
       
       {#if aiError}
@@ -179,7 +163,7 @@
         </div>
       {/if}
 
-      <div style="background: #ffffff; border: 1px solid #E5E7EB; border-radius: 16px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); overflow: hidden; transition: all 0.2s;">
+      <div style="background: #ffffff; border: 1px solid #E5E7EB; border-radius: 16px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); overflow: hidden;">
         <textarea 
           bind:value={rawText}
           placeholder="Paste the customer's messy WhatsApp message or email here..."
@@ -188,7 +172,7 @@
         ></textarea>
         
         <div style="padding: 16px 24px; background-color: #F9FAFB; border-top: 1px solid #E5E7EB; display: flex; justify-content: flex-end;">
-          <button onclick={generateQuote} disabled={isLoading} style="background-color: #24503C; color: white; padding: 14px 32px; border-radius: 8px; border: none; font-weight: 600; font-size: 15px; cursor: {isLoading ? 'not-allowed' : 'pointer'}; display: flex; align-items: center; justify-content: center; opacity: {isLoading ? 0.7 : 1}; transition: opacity 0.2s; box-shadow: 0 4px 6px -1px rgba(36, 80, 60, 0.2);">
+          <button onclick={generateQuote} disabled={isLoading} style="background-color: #24503C; color: white; padding: 14px 32px; border-radius: 8px; border: none; font-weight: 600; font-size: 15px; cursor: {isLoading ? 'not-allowed' : 'pointer'}; display: flex; align-items: center; justify-content: center; opacity: {isLoading ? 0.7 : 1}; box-shadow: 0 4px 6px -1px rgba(36, 80, 60, 0.2);">
             {#if isLoading}
               <svg style="width: 18px; height: 18px; margin-right: 8px; animation: spin 1s linear infinite;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
@@ -204,205 +188,185 @@
   {/if}
 
   {#if pageView === 'builder'}
+    <!-- Builder Header -->
     <div class="no-print" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
       <div>
         <h1 style="font-family: 'Manrope', sans-serif; font-size: 28px; font-weight: 800; margin: 0; color: #303B38; letter-spacing: -0.02em;">Review Quote</h1>
-        <p style="color: #6B7280; font-size: 14px; margin: 4px 0 0 0;">Adjust quantities and prices before generating the PDF.</p>
       </div>
-      <button onclick={() => pageView = 'input'} style="background: #ffffff; border: 1px solid #E5E7EB; color: #4B5563; font-weight: 600; font-size: 14px; padding: 10px 16px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
-        ← Back to Extractor
+      <button onclick={() => pageView = 'input'} style="background: #ffffff; border: 1px solid #E5E7EB; color: #4B5563; font-weight: 600; font-size: 14px; padding: 10px 16px; border-radius: 8px; cursor: pointer;">
+        ← Back
       </button>
     </div>
 
-    <div class="builder-grid">
-      
-      <!-- LEFT COLUMN: EDIT FORM -->
-      <div class="no-print" style="background: #ffffff; border-radius: 16px; border: 1px solid #E5E7EB; padding: 32px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);">
-        <h2 style="font-family: 'Manrope'; font-size: 18px; font-weight: 800; color: #303B38; margin: 0 0 24px 0;">Details & Items</h2>
+    <!-- Edit Card -->
+    <div class="no-print" style="background: #ffffff; border-radius: 16px; border: 1px solid #E5E7EB; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); margin-bottom: 24px;">
+      <h2 style="font-family: 'Manrope'; font-size: 18px; font-weight: 800; color: #303B38; margin: 0 0 20px 0;">Edit Details</h2>
 
-        <!-- Customer Info -->
-        <div style="margin-bottom: 24px;">
-          <label style="display: block; font-size: 13px; font-weight: 600; color: #303B38; margin-bottom: 8px;">Customer Name</label>
-          <input type="text" bind:value={customer.name} placeholder="e.g. John Doe" class="input-clean" style="margin-bottom: 12px;" />
-          
-          <label style="display: block; font-size: 13px; font-weight: 600; color: #303B38; margin-bottom: 8px;">Contact (Phone or Email)</label>
-          <input type="text" bind:value={customer.contact} placeholder="e.g. 0801 234 5678" class="input-clean" />
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; font-size: 13px; font-weight: 600; color: #303B38; margin-bottom: 8px;">Customer Name</label>
+        <input type="text" bind:value={customer.name} placeholder="e.g. John Doe" class="input-clean" style="margin-bottom: 12px;" />
+        
+        <label style="display: block; font-size: 13px; font-weight: 600; color: #303B38; margin-bottom: 8px;">Contact</label>
+        <input type="text" bind:value={customer.contact} placeholder="Phone or Email" class="input-clean" />
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        {#each quoteItems as item (item.id)}
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #F3F4F6;">
+            <div style="flex: 1; padding-right: 12px;">
+              <div style="font-size: 14px; font-weight: 600; color: #303B38;">{item.name}</div>
+              <input type="number" bind:value={item.price} placeholder="Price (₦)" class="input-clean" style="margin-top: 8px; width: 120px; padding: 8px 12px; font-size: 13px;" />
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="display: flex; align-items: center; background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 6px;">
+                <button onclick={() => updateQty(item.id, item.qty - 1)} style="background: none; border: none; padding: 6px 10px; cursor: pointer; color: #6B7280;">-</button>
+                <input type="number" value={item.qty} oninput={(e) => updateQty(item.id, e.target.value)} style="width: 32px; padding: 6px 0; border: none; background: transparent; text-align: center; font-size: 13px; font-weight: 600; outline: none;" min="1" />
+                <button onclick={() => updateQty(item.id, item.qty + 1)} style="background: none; border: none; padding: 6px 10px; cursor: pointer; color: #6B7280;">+</button>
+              </div>
+              <div style="font-weight: 700; font-size: 14px; color: #303B38; width: 80px; text-align: right;">{formatCurrency(item.price * item.qty)}</div>
+              <button onclick={() => removeItem(item.id)} style="background: none; border: none; color: #DC2626; cursor: pointer; font-size: 16px;">✕</button>
+            </div>
+          </div>
+        {/each}
+      </div>
+
+      <div style="background: #F9FAFB; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: #303B38;">
+            <input type="checkbox" bind:checked={includeDiscount} style="width: 16px; height: 16px; accent-color: #24503C;" /> Discount
+          </label>
+          {#if includeDiscount}
+            <div style="display: flex; gap: 8px;">
+              <select bind:value={discountType} class="input-clean" style="padding: 6px 10px; font-size: 13px;">
+                <option value="percentage">%</option>
+                <option value="flat">₦</option>
+              </select>
+              <input type="number" bind:value={discountValue} placeholder="0" class="input-clean" style="width: 70px; padding: 6px 10px; font-size: 13px;" />
+            </div>
+          {/if}
+        </div>
+        
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: #303B38;">
+            <input type="checkbox" bind:checked={includeDelivery} style="width: 16px; height: 16px; accent-color: #24503C;" /> Delivery
+          </label>
+          {#if includeDelivery}
+            <input type="number" bind:value={deliveryFee} placeholder="Amount (₦)" class="input-clean" style="width: 100px; padding: 6px 10px; font-size: 13px;" />
+          {/if}
         </div>
 
-        <!-- Items List -->
-        <div style="margin-bottom: 32px;">
-          <label style="display: block; font-size: 13px; font-weight: 600; color: #303B38; margin-bottom: 12px;">Extracted Items</label>
-          {#each quoteItems as item (item.id)}
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #F3F4F6;">
-              <div style="flex: 1; padding-right: 12px;">
-                <div style="font-size: 14px; font-weight: 600; color: #303B38; line-height: 1.4;">{item.name}</div>
-                <input type="number" bind:value={item.price} placeholder="Price (₦)" class="input-clean" style="margin-top: 8px; width: 120px; padding: 8px 12px; font-size: 13px;" />
-              </div>
-              <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="display: flex; align-items: center; background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 6px;">
-                  <button onclick={() => updateQty(item.id, item.qty - 1)} style="background: none; border: none; padding: 6px 10px; cursor: pointer; color: #6B7280;">-</button>
-                  <input type="number" value={item.qty} oninput={(e) => updateQty(item.id, e.target.value)} style="width: 32px; padding: 6px 0; border: none; background: transparent; text-align: center; font-size: 13px; font-weight: 600; outline: none;" min="1" />
-                  <button onclick={() => updateQty(item.id, item.qty + 1)} style="background: none; border: none; padding: 6px 10px; cursor: pointer; color: #6B7280;">+</button>
-                </div>
-                <div style="font-weight: 700; font-size: 14px; color: #303B38; width: 80px; text-align: right;">{formatCurrency(item.price * item.qty)}</div>
-                <button onclick={() => removeItem(item.id)} style="background: none; border: none; color: #DC2626; cursor: pointer; font-size: 16px; padding: 4px;">✕</button>
-              </div>
-            </div>
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: #303B38;">
+            <input type="checkbox" bind:checked={includeVAT} style="width: 16px; height: 16px; accent-color: #24503C;" /> VAT (7.5%)
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- PDF Preview -->
+    <div class="print-area" style="background: #ffffff; border-radius: 16px; border: 1px solid #E5E7EB; padding: 32px; font-family: 'Inter', sans-serif; color: #303B38; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); margin-bottom: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px; border-bottom: 2px solid #F3F4F6; padding-bottom: 16px;">
+        <div>
+          <div style="font-family: 'Manrope'; font-size: 20px; font-weight: 900; color: #24503C;">Quotera.</div>
+          <div style="font-size: 11px; color: #6B7280; margin-top: 4px;">Your Company Address<br/>your@email.com</div>
+        </div>
+        <div style="text-align: right;">
+          <h1 style="font-family: 'Manrope'; font-size: 16px; margin: 0 0 4px 0; color: #303B38; text-transform: uppercase;">Quotation</h1>
+          <div style="font-size: 11px; color: #6B7280;">Date: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 24px;">
+        <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #9CA3AF; margin-bottom: 4px;">Prepared For</div>
+        <div style="font-size: 14px; font-weight: 700; color: #303B38;">{customer.name || "Customer Name"}</div>
+        <div style="font-size: 12px; color: #6B7280;">{customer.contact || "Contact Info"}</div>
+      </div>
+
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+        <thead>
+          <tr style="border-bottom: 1px solid #E5E7EB;">
+            <th style="text-align: left; padding: 8px 0; font-size: 10px; text-transform: uppercase; color: #6B7280;">Item</th>
+            <th style="text-align: center; padding: 8px 0; font-size: 10px; text-transform: uppercase; color: #6B7280;">Qty</th>
+            <th style="text-align: right; padding: 8px 0; font-size: 10px; text-transform: uppercase; color: #6B7280;">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {#each quoteItems as item}
+            <tr style="border-bottom: 1px solid #F3F4F6;">
+              <td style="padding: 12px 0; font-size: 13px; font-weight: 600;">{item.name}</td>
+              <td style="padding: 12px 0; text-align: center; font-size: 13px;">{item.qty}</td>
+              <td style="padding: 12px 0; text-align: right; font-size: 13px; font-weight: 600;">{formatCurrency(item.price * item.qty)}</td>
+            </tr>
           {/each}
-        </div>
+        </tbody>
+      </table>
 
-        <!-- Adjustments -->
-        <div style="background: #F9FAFB; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 16px;">
-          <div style="display: flex; align-items: center; justify-content: space-between;">
-            <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: #303B38;">
-              <input type="checkbox" bind:checked={includeDiscount} style="width: 16px; height: 16px; accent-color: #24503C;" /> Apply Discount
-            </label>
-            {#if includeDiscount}
-              <div style="display: flex; gap: 8px;">
-                <select bind:value={discountType} class="input-clean" style="padding: 8px 12px; font-size: 13px;">
-                  <option value="percentage">%</option>
-                  <option value="flat">₦</option>
-                </select>
-                <input type="number" bind:value={discountValue} placeholder="0" class="input-clean" style="width: 80px; padding: 8px 12px; font-size: 13px;" />
-              </div>
-            {/if}
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 24px;">
+        <div style="width: 200px;">
+          <div style="display: flex; justify-content: space-between; padding: 4px 0; font-size: 12px; color: #4B5563;">
+            <span>Subtotal:</span>
+            <span>{formatCurrency(subtotal)}</span>
           </div>
-          
-          <div style="display: flex; align-items: center; justify-content: space-between;">
-            <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: #303B38;">
-              <input type="checkbox" bind:checked={includeDelivery} style="width: 16px; height: 16px; accent-color: #24503C;" /> Delivery Fee
-            </label>
-            {#if includeDelivery}
-              <input type="number" bind:value={deliveryFee} placeholder="Amount (₦)" class="input-clean" style="width: 120px; padding: 8px 12px; font-size: 13px;" />
-            {/if}
-          </div>
-
-          <div style="display: flex; align-items: center; justify-content: space-between;">
-            <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: #303B38;">
-              <input type="checkbox" bind:checked={includeVAT} style="width: 16px; height: 16px; accent-color: #24503C;" /> Include VAT (7.5%)
-            </label>
+          {#if includeDiscount}
+            <div style="display: flex; justify-content: space-between; padding: 4px 0; font-size: 12px; color: #DC2626;">
+              <span>Discount:</span>
+              <span>-{formatCurrency(discountAmount)}</span>
+            </div>
+          {/if}
+          {#if includeDelivery && deliveryFee > 0}
+            <div style="display: flex; justify-content: space-between; padding: 4px 0; font-size: 12px; color: #4B5563;">
+              <span>Delivery:</span>
+              <span>{formatCurrency(deliveryFee)}</span>
+            </div>
+          {/if}
+          {#if includeVAT}
+            <div style="display: flex; justify-content: space-between; padding: 4px 0; font-size: 12px; color: #4B5563;">
+              <span>VAT (7.5%):</span>
+              <span>{formatCurrency(vatAmount)}</span>
+            </div>
+          {/if}
+          <div style="display: flex; justify-content: space-between; padding: 12px 0; font-size: 16px; font-weight: 800; color: #24503C; border-top: 2px solid #E5E7EB; margin-top: 8px;">
+            <span>TOTAL:</span>
+            <span>{formatCurrency(total)}</span>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- RIGHT COLUMN: PDF PREVIEW -->
-      <div style="position: sticky; top: 24px;">
-        <div class="print-area" style="background: #ffffff; border-radius: 16px; border: 1px solid #E5E7EB; padding: 40px; font-family: 'Inter', sans-serif; color: #303B38; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);">
-          
-          <!-- PDF Header -->
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; border-bottom: 2px solid #F3F4F6; padding-bottom: 20px;">
-            <div>
-              <div style="font-family: 'Manrope'; font-size: 24px; font-weight: 900; letter-spacing: -0.03em; color: #24503C;">Quotera.</div>
-              <div style="font-size: 12px; color: #6B7280; margin-top: 4px; line-height: 1.5;">Your Company Address<br/>your@email.com</div>
-            </div>
-            <div style="text-align: right;">
-              <h1 style="font-family: 'Manrope'; font-size: 20px; margin: 0 0 4px 0; color: #303B38; text-transform: uppercase; letter-spacing: 0.05em;">Quotation</h1>
-              <div style="font-size: 12px; color: #6B7280;">Date: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
-            </div>
-          </div>
-
-          <!-- Customer Info -->
-          <div style="margin-bottom: 32px;">
-            <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #9CA3AF; margin-bottom: 4px; letter-spacing: 0.05em;">Prepared For</div>
-            <div style="font-size: 16px; font-weight: 700; color: #303B38;">{customer.name || "Customer Name"}</div>
-            <div style="font-size: 13px; color: #6B7280; margin-top: 2px;">{customer.contact || "Contact Info"}</div>
-          </div>
-
-          <!-- Items Table -->
-          <table style="width: 100%; border-collapse: collapse; margin-bottom: 32px;">
-            <thead>
-              <tr style="border-bottom: 1px solid #E5E7EB;">
-                <th style="text-align: left; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; letter-spacing: 0.05em;">Item</th>
-                <th style="text-align: center; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; letter-spacing: 0.05em;">Qty</th>
-                <th style="text-align: right; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; letter-spacing: 0.05em;">Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              {#each quoteItems as item}
-                <tr style="border-bottom: 1px solid #F3F4F6;">
-                  <td style="padding: 16px 0; font-size: 14px; font-weight: 600; line-height: 1.4;">{item.name}</td>
-                  <td style="padding: 16px 0; text-align: center; font-size: 14px;">{item.qty}</td>
-                  <td style="padding: 16px 0; text-align: right; font-size: 14px; font-weight: 600;">{formatCurrency(item.price * item.qty)}</td>
-                </tr>
-              {/each}
-            </tbody>
-          </table>
-
-          <!-- Totals -->
-          <div style="display: flex; justify-content: flex-end; margin-bottom: 24px;">
-            <div style="width: 240px;">
-              <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; color: #4B5563;">
-                <span>Subtotal:</span>
-                <span>{formatCurrency(subtotal)}</span>
-              </div>
-              {#if includeDiscount}
-                <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; color: #DC2626;">
-                  <span>Discount:</span>
-                  <span>-{formatCurrency(discountAmount)}</span>
-                </div>
-              {/if}
-              {#if includeDelivery && deliveryFee > 0}
-                <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; color: #4B5563;">
-                  <span>Delivery:</span>
-                  <span>{formatCurrency(deliveryFee)}</span>
-                </div>
-              {/if}
-              {#if includeVAT}
-                <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; color: #4B5563;">
-                  <span>VAT (7.5%):</span>
-                  <span>{formatCurrency(vatAmount)}</span>
-                </div>
-              {/if}
-              <div style="display: flex; justify-content: space-between; padding: 16px 0; font-size: 18px; font-weight: 800; color: #24503C; border-top: 2px solid #E5E7EB; margin-top: 12px;">
-                <span>TOTAL:</span>
-                <span>{formatCurrency(total)}</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Footer note -->
-          <div style="border-top: 1px solid #F3F4F6; padding-top: 24px; text-align: center;">
-            <p style="font-size: 11px; color: #9CA3AF; margin: 0;">Thank you for your business. If you have any questions, please contact us.</p>
-          </div>
+    <!-- Save Button -->
+    <div class="no-print">
+      {#if form?.success}
+        <div style="background: #DCFCE7; color: #166534; padding: 16px; border-radius: 12px; margin-bottom: 16px; font-weight: 600; text-align: center; border: 1px solid #BBF7D0;">
+          Quote saved successfully!
         </div>
+      {/if}
 
-        <!-- BOTTOM BUTTON -->
-        <div class="no-print" style="margin-top: 24px;">
-          {#if form?.success}
-            <div style="background: #DCFCE7; color: #166534; padding: 16px; border-radius: 12px; margin-bottom: 16px; font-weight: 600; text-align: center; border: 1px solid #BBF7D0;">
-              Quote saved successfully!
-            </div>
-          {/if}
-
-          {#if form?.error}
-            <div style="background: #FEE2E2; color: #DC2626; padding: 16px; border-radius: 12px; margin-bottom: 16px; font-weight: 600; text-align: center; border: 1px solid #FCA5A5;">
-              {form.error}
-            </div>
-          {/if}
-
-          <form 
-            method="POST" 
-            action="?/saveQuote" 
-            use:enhance={() => {
-              return async ({ result, update }) => {
-                await update(); 
-                if (result.type === 'success') {
-                  window.print(); 
-                }
-              };
-            }}
-          >
-            <input type="hidden" name="customerName" value={customer.name} />
-            <input type="hidden" name="customerContact" value={customer.contact} />
-            <input type="hidden" name="total" value={total} />
-
-            <button type="submit" style="width: 100%; background: #24503C; color: white; padding: 16px; border-radius: 12px; border: none; font-weight: 700; font-size: 16px; cursor: pointer; box-shadow: 0 4px 6px -1px rgba(36, 80, 60, 0.2); transition: transform 0.1s;">
-              Download PDF & Save
-            </button>
-          </form>
+      {#if form?.error}
+        <div style="background: #FEE2E2; color: #DC2626; padding: 16px; border-radius: 12px; margin-bottom: 16px; font-weight: 600; text-align: center; border: 1px solid #FCA5A5;">
+          {form.error}
         </div>
-      </div>
+      {/if}
 
+      <form 
+        method="POST" 
+        action="?/saveQuote" 
+        use:enhance={() => {
+          return async ({ result, update }) => {
+            await update(); 
+            if (result.type === 'success') {
+              window.print(); 
+            }
+          };
+        }}
+      >
+        <input type="hidden" name="customerName" value={customer.name} />
+        <input type="hidden" name="customerContact" value={customer.contact} />
+        <input type="hidden" name="total" value={total} />
+
+        <button type="submit" style="width: 100%; background: #24503C; color: white; padding: 16px; border-radius: 12px; border: none; font-weight: 700; font-size: 16px; cursor: pointer; box-shadow: 0 4px 6px -1px rgba(36, 80, 60, 0.2);">
+          Download PDF & Save
+        </button>
+      </form>
     </div>
   {/if}
 
