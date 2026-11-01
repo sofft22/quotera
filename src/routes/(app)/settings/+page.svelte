@@ -1,19 +1,20 @@
 <script>
-  import { enhance } from '$app/forms';
-
-  let { data, form } = $props();
+  let { data } = $props();
 
   let companyName = $state(data.user.company_name || "");
   let companyAddress = $state(data.user.company_address || "");
   let companyContact = $state(data.user.company_contact || "");
   let logoBase64 = $state(data.user.logo_base64 || "");
   
-  // Strict fallback to prevent black flicker
   let headerColor = $state(data.user.header_color && data.user.header_color !== "" ? data.user.header_color : "#24503C");
   let accentColor = $state(data.user.accent_color && data.user.accent_color !== "" ? data.user.accent_color : "#C4513D");
 
   let isUpgradeModalOpen = $state(false);
   let isCompressing = $state(false);
+  
+  // UI States for the Save button
+  let isSaving = $state(false);
+  let saveSuccess = $state(false);
 
   const WHATSAPP = "2347072789513"; 
 
@@ -33,7 +34,7 @@
         let height = img.height;
 
         if (width > height) {
-          if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+          if (width > MAX_WIDTH) { height *= MAX_WIDTH / height; width = MAX_WIDTH; }
         } else {
           if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
         }
@@ -51,6 +52,31 @@
 
   function removeLogo() {
     logoBase64 = "";
+  }
+
+  // This intercepts the form submission so the page NEVER reloads and flickers
+  async function handleSubmit(event) {
+    event.preventDefault();
+    isSaving = true;
+    saveSuccess = false;
+
+    const formData = new FormData(event.target);
+    
+    try {
+      const response = await fetch('?/default', {
+        method: 'POST',
+        body: formData
+      });
+      
+      if (response.ok) {
+        saveSuccess = true;
+        setTimeout(() => saveSuccess = false, 3000);
+      }
+    } catch (error) {
+      alert("Failed to save settings.");
+    } finally {
+      isSaving = false;
+    }
   }
 </script>
 
@@ -85,24 +111,15 @@
   </div>
 
   <form 
-    method="POST" 
-    use:enhance={() => {
-      return async ({ update }) => { await update(); };
-    }} 
+    onsubmit={handleSubmit}
     style="background: #ffffff; border: 1px solid #E5E7EB; border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 8px 24px rgba(48, 59, 56, 0.04);"
   >
     
     <h2 style="font-family: 'Manrope', sans-serif; font-size: 22px; font-weight: 800; color: #303B38; margin: 0 0 24px 0; letter-spacing: -0.02em;">PDF Branding</h2>
 
-    {#if form?.success}
+    {#if saveSuccess}
       <div style="background: #DCFCE7; color: #166534; padding: 14px 16px; border-radius: 8px; margin-bottom: 20px; font-weight: 600; font-size: 15px;">
         Settings saved successfully!
-      </div>
-    {/if}
-
-    {#if form?.error}
-      <div style="background: #FEE2E2; color: #DC2626; padding: 14px 16px; border-radius: 8px; margin-bottom: 20px; font-weight: 600; font-size: 15px;">
-        {form.error}
       </div>
     {/if}
 
@@ -183,14 +200,14 @@
       </div>
     </div>
 
-    <button type="submit" style="width: 100%; background: #24503C; color: white; padding: 16px; border-radius: 10px; border: none; font-weight: 700; font-size: 16px; cursor: pointer; margin-top: 28px; box-shadow: 0 4px 6px -1px rgba(36,80,60,0.2); transition: transform 0.1s;">
-      Save Settings
+    <button type="submit" disabled={isSaving} style="width: 100%; background: #24503C; color: white; padding: 16px; border-radius: 10px; border: none; font-weight: 700; font-size: 16px; cursor: {isSaving ? 'not-allowed' : 'pointer'}; margin-top: 28px; box-shadow: 0 4px 6px -1px rgba(36,80,60,0.2); transition: transform 0.1s; opacity: {isSaving ? 0.7 : 1};">
+      {isSaving ? 'Saving...' : 'Save Settings'}
     </button>
   </form>
 
 </div>
 
-<!-- UPGRADE MODAL -->
+<!-- UPGRADE MODAL (Unchanged) -->
 {#if isUpgradeModalOpen}
   <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(48, 59, 56, 0.7); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 16px;">
     <div style="background: #EEF2EE; width: 100%; max-width: 1200px; border-radius: 24px; padding: 32px; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 48px rgba(0,0,0,0.2);">
