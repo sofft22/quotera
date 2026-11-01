@@ -109,6 +109,19 @@
       .no-print { display: none !important; }
       @page { margin: 10mm; }
     }
+
+    /* Fix the 70/30 grid stacking on mobile */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    @media (min-width: 640px) {
+      .stats-grid {
+        grid-template-columns: 7fr 3fr;
+      }
+    }
   </style>
 </svelte:head>
 
@@ -122,10 +135,9 @@
       </h1>
     </div>
 
-    <!-- 70/30 Grid for Stats and Plan -->
-    <div style="display: grid; grid-template-columns: 7fr 3fr; gap: 16px; margin-bottom: 32px;">
-      
-      <!-- 70% Green Stats Card -->
+    <!-- Stats and Plan Cards -->
+    <div class="stats-grid">
+      <!-- Green Stats Card -->
       <div style="background: linear-gradient(135deg, #24503C 0%, #1a3a2b 100%); border-radius: 16px; padding: 24px; box-shadow: 0 8px 16px -4px rgba(36, 80, 60, 0.3); display: flex; flex-direction: column; justify-content: center; width: 100%; box-sizing: border-box; position: relative; overflow: hidden;">
         <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background: rgba(255,255,255,0.05); border-radius: 50%; pointer-events: none;"></div>
         <p style="font-size: 11px; font-weight: 700; color: #A7F3D0; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 0.08em;">Total Quotes Generated</p>
@@ -134,7 +146,7 @@
         </h2>
       </div>
 
-      <!-- 30% Current Plan Card -->
+      <!-- Plan Card -->
       <div style="background: #ffffff; border: 1px solid #E5E7EB; border-radius: 16px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: center; box-sizing: border-box;">
         <p style="font-size: 11px; font-weight: 700; color: #9CA3AF; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 0.05em;">Current Plan</p>
         <div style="display: flex; align-items: center; justify-content: space-between;">
@@ -142,11 +154,12 @@
           <a href="/settings" style="font-size: 12px; font-weight: 600; color: #24503C; text-decoration: none;">Upgrade</a>
         </div>
       </div>
-
     </div>
 
-    <!-- THE BOX (Taller input) -->
+    <!-- Create New Quote Title and Input -->
     <div style="margin-bottom: 32px;">
+      <h2 style="font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 800; color: #303B38; margin: 0 0 16px 0; padding-left: 4px;">Create New Quote</h2>
+      
       {#if aiError}
         <div style="background: #FEE2E2; color: #DC2626; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-weight: 500; font-size: 14px; border: 1px solid #FCA5A5;">
           {aiError}
@@ -192,7 +205,7 @@
         <input type="text" bind:value={customer.contact} placeholder="Phone or Email" style="width: 100%; padding: 12px; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 14px; box-sizing: border-box;" />
       </div>
 
-      <!-- Items (Unit and Price are auto-filled, only Qty is editable) -->
+      <!-- Items (Auto-matched) -->
       <div style="margin-bottom: 24px;">
         <h3 style="font-family: 'Manrope'; font-size: 14px; font-weight: 800; color: #303B38; margin: 0 0 12px 0;">Matched Items</h3>
         {#each quoteItems as item (item.id)}
