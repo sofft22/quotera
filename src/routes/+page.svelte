@@ -350,16 +350,13 @@
       </div>
     </section>
 
-    <!-- HOW IT WORKS (INLINE PADDING ADDED) -->
+        <!-- HOW IT WORKS (INLINE PADDING ADDED) -->
     <section class="section" id="how" style="padding-top: 140px; padding-bottom: 140px; padding-left: 20px; padding-right: 20px;">
       <div class="sec-head" use:Reveal={{ direction: 'up' }}>
         <h2 class="h-section">Three steps to close.</h2>
       </div>
       <div class="steps">
         <div class="step" use:Reveal={{ direction: 'up', delay: 0.1 }} style="padding-top: 32px;">
-          <div class="step-num">01</div>
-          <h3>Paste the request</h
-<div class="step" use:Reveal={{ direction: 'up', delay: 0.1 }} style="padding-top: 32px;">
           <div class="step-num">01</div>
           <h3>Paste the request</h3>
           <p>Copy the exact text your customer sent you on WhatsApp or email.</p>
@@ -542,4 +539,3 @@
     </div>
   </footer>
 </div>
-```
