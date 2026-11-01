@@ -459,14 +459,13 @@
             <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: #4B5563;">
               <span>Subtotal:</span>
               <span>{formatCurrency(subtotal)}</span>
-            </div>
-            {#if includeDiscount}
-              <div style="display: flex; justify-content: space-between; padding: 10px 0{#if includeDiscount}
-              <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: #DC2626; font-weight: 500;">
-                <span>Discount:</span>
-                <span>-{formatCurrency(discountAmount)}</span>
-              </div>
-            {/if}
+                          </div>
+              {#if includeDiscount}
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: #DC2626; font-weight: 500;">
+                  <span>Discount:</span>
+                  <span>-{formatCurrency(discountAmount)}</span>
+                </div>
+              {/if}
             {#if includeDelivery && deliveryFee > 0}
               <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: #4B5563;">
                 <span>Delivery:</span>
