@@ -69,13 +69,19 @@ export const actions = {
         });
 
         if (match) {
-          return { id: nextId++, name: match.name, unit: match.unit, price: match.price, qty: aiItem.qty || 1 };
+          // FIXED: Force the price to be a Number so it calculates correctly
+          return { 
+            id: nextId++, 
+            name: match.name, 
+            unit: match.unit, 
+            price: Number(match.price), 
+            qty: aiItem.qty || 1 
+          };
         } else {
           return { id: nextId++, name: aiItem.name, unit: "Piece", price: 0, qty: aiItem.qty || 1 };
         }
       });
 
-      // FIXED: Stringify the items so SvelteKit doesn't strip the array
       return { success: true, items: JSON.stringify(matchedItems) };
     } catch (err) {
       console.error("Error:", err.message);
