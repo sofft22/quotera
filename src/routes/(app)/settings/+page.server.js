@@ -16,7 +16,9 @@ export async function load({ cookies, platform }) {
       company_name: user.company_name || "",
       company_address: user.company_address || "",
       company_contact: user.company_contact || "",
-      theme: user.theme || "forest",
+      header_color: user.header_color || "#24503C",
+      text_color: user.text_color || "#303B38",
+      accent_color: user.accent_color || "#C4513D",
       logo_base64: user.logo_base64 || "",
       plan: user.plan || "Free"
     }
@@ -32,7 +34,9 @@ export const actions = {
     const companyName = data.get('companyName');
     const companyAddress = data.get('companyAddress');
     const companyContact = data.get('companyContact');
-    const theme = data.get('theme');
+    const headerColor = data.get('headerColor');
+    const textColor = data.get('textColor');
+    const accentColor = data.get('accentColor');
     const logoBase64 = data.get('logoBase64');
 
     const db = platform.env.DB;
@@ -40,9 +44,18 @@ export const actions = {
     try {
       await db.prepare(`
         UPDATE users 
-        SET company_name = ?, company_address = ?, company_contact = ?, theme = ?, logo_base64 = ?
+        SET company_name = ?, company_address = ?, company_contact = ?, header_color = ?, text_color = ?, accent_color = ?, logo_base64 = ?
         WHERE id = ?
-      `).bind(companyName, companyAddress, companyContact, theme, logoBase64, Number(session)).run();
+      `).bind(
+        companyName, 
+        companyAddress, 
+        companyContact, 
+        headerColor, 
+        textColor, 
+        accentColor, 
+        logoBase64 || null, 
+        Number(session)
+      ).run();
 
       return { success: true };
     } catch (err) {
