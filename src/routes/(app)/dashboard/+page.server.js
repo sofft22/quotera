@@ -47,7 +47,12 @@ export const actions = {
     if (!API_KEY) return fail(500, { error: 'Groq API Key is missing.' });
 
     try {
-      // 1. Extract items via AI
+      // 1. Fetch the user's price list ONCE before calling the AI
+      const db = platform.env.DB;
+      const priceListData = await db.prepare("SELECT * FROM price_list WHERE user_id = ?").bind(session).all();
+      const products = priceListData.results || [];
+
+      // 2. Extract items via AI
       const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
@@ -67,37 +72,38 @@ export const actions = {
       if (responseText.startsWith("```json")) responseText = responseText.replace(/```json/g, "").replace(/```/g, "").trim();
       
       const extractedItems = JSON.parse(responseText);
-      const db = platform.env.DB;
 
-      // 2. Match each extracted item with the database price list
+      // 3. Match items using smart text matching (Fast & Free)
       let nextId = 1;
-      const matchedItems = [];
-      
-      for (const aiItem of extractedItems) {
-        // Search the price list for a name that matches the AI name
-        const match = await db.prepare(
-          "SELECT name, unit, price FROM price_list WHERE user_id = ? AND name LIKE ? LIMIT 1"
-        ).bind(session, `%${aiItem.name}%`).first();
+      const matchedItems = extractedItems.map(aiItem => {
+        const aiName = aiItem.name.toLowerCase().trim();
+        
+        // Find the best match from the user's price list
+        const match = products.find(p => {
+          const dbName = p.name.toLowerCase().trim();
+          // Check if AI name is inside DB name, or DB name is inside AI name
+          return dbName.includes(aiName) || aiName.includes(dbName);
+        });
 
         if (match) {
-          matchedItems.push({
+          return {
             id: nextId++,
-            name: match.name,      // Use the exact name from the DB
-            unit: match.unit,      // Use the unit from the DB
-            price: match.price,    // Use the price from the DB
+            name: match.name, // Use the exact DB name
+            unit: match.unit, // Use the exact DB unit
+            price: match.price, // Use the exact DB price
             qty: aiItem.qty || 1
-          });
+          };
         } else {
-          // Fallback if the AI item isn't in the database
-          matchedItems.push({
+          // Fallback if no match is found
+          return {
             id: nextId++,
             name: aiItem.name,
             unit: "Piece",
             price: 0,
             qty: aiItem.qty || 1
-          });
+          };
         }
-      }
+      });
 
       return { success: true, items: matchedItems };
     } catch (err) {
