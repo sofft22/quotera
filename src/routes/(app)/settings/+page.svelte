@@ -8,7 +8,6 @@
   let companyContact = $state(data.user.company_contact || "");
   let logoBase64 = $state(data.user.logo_base64 || "");
   
-  // Only 2 colors now, with fallbacks to prevent black glitches
   let headerColor = $state(data.user.header_color || "#24503C");
   let accentColor = $state(data.user.accent_color || "#C4513D");
 
@@ -153,7 +152,6 @@
         <label style="display: block; font-size: 14px; font-weight: 600; color: #303B38; margin-bottom: 12px;">PDF Colors</label>
         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
           
-          <!-- Header Banner Color -->
           <div style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 12px; padding: 16px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
             <span style="display: block; font-size: 12px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px;">Header Banner</span>
             <div style="position: relative; width: 100%; height: 44px; border-radius: 8px; overflow: hidden; border: 1px solid #D1D5DB;">
@@ -161,7 +159,6 @@
             </div>
           </div>
 
-          <!-- Accent Color (Total) -->
           <div style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 12px; padding: 16px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
             <span style="display: block; font-size: 12px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px;">Accent Color</span>
             <div style="position: relative; width: 100%; height: 44px; border-radius: 8px; overflow: hidden; border: 1px solid #D1D5DB;">
@@ -180,7 +177,7 @@
 
 </div>
 
-<!-- UPGRADE MODAL (Unchanged) -->
+<!-- UPGRADE MODAL -->
 {#if isUpgradeModalOpen}
   <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(48, 59, 56, 0.7); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 16px;">
     <div style="background: #EEF2EE; width: 100%; max-width: 1200px; border-radius: 24px; padding: 32px; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 48px rgba(0,0,0,0.2);">
