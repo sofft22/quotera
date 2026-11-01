@@ -33,23 +33,19 @@ export const actions = {
       }
 
       // 3. Create a "Session Cookie" to keep them logged in
-      try {
-        cookies.set('session', user.id.toString(), {
-          path: '/',
-          httpOnly: true,
-          sameSite: 'strict',
-          secure: true, // Requires HTTPS (your pages.dev is HTTPS, so this is fine)
-          maxAge: 60 * 60 * 24 * 7
-        });
-      } catch (cookieErr) {
-        return fail(500, { error: 'Cookie Error: ' + (cookieErr.message || JSON.stringify(cookieErr)) });
-      }
+      cookies.set('session', user.id.toString(), {
+        path: '/',
+        httpOnly: true,
+        sameSite: 'strict',
+        secure: true, 
+        maxAge: 60 * 60 * 24 * 7 // Lasts for 1 week
+      });
 
-      // 4. Send them to the app
-      throw redirect(303, '/');
+      // 4. Send them to the DASHBOARD (not the landing page)
+      throw redirect(303, '/dashboard');
 
     } catch (err) {
-      // If it's a redirect, let it pass through
+      // If it's the redirect throwing an error, let it pass through
       if (err.status === 303) throw err;
       
       return fail(500, { error: 'Login Error: ' + (err.message || JSON.stringify(err)) });
