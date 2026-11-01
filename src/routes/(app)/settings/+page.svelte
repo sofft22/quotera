@@ -95,11 +95,15 @@
   </div>
 
   <!-- Branding Section -->
-  <form method="POST" use:enhance={() => {
-    return async ({ update }) => {
-      await update();
-    };
-  }}" style="background: #ffffff; border: 1px solid #E5E7EB; border-radius: 16px; padding: 32px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
+  <form 
+    method="POST" 
+    use:enhance={() => {
+      return async ({ update }) => {
+        await update();
+      };
+    }} 
+    style="background: #ffffff; border: 1px solid #E5E7EB; border-radius: 16px; padding: 32px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.02);"
+  >
     
     <h2 style="font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 800; color: #303B38; margin: 0 0 20px 0;">PDF Branding</h2>
 
