@@ -42,6 +42,8 @@ export const actions = {
     const db = platform.env.DB;
 
     try {
+      console.log("Saving settings for user:", session);
+      
       await db.prepare(`
         UPDATE users 
         SET company_name = ?, company_address = ?, company_contact = ?, header_color = ?, text_color = ?, accent_color = ?, logo_base64 = ?
@@ -59,8 +61,8 @@ export const actions = {
 
       return { success: true };
     } catch (err) {
-      console.error(err);
-      return fail(500, { error: 'Failed to save settings.' });
+      console.error("DB Error saving settings:", err);
+      return fail(500, { error: 'Failed to save settings: ' + err.message });
     }
   }
 };
