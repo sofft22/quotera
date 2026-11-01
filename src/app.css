@@ -2,15 +2,16 @@
 
 * {
   box-sizing: border-box;
-  /* REMOVED margin: 0; and padding: 0; so the cards can breathe */
+  /* ADDED BACK: These are required to stop the browser's default messy spacing */
+  margin: 0;
+  padding: 0;
 }
 
 body {
   font-family: 'Inter', system-ui, sans-serif;
-  /* REMOVED background-color here so the Login page can use its gradient */
+  /* REMOVED background-color here so your custom pages can use their gradients */
   color: #303B38;
   -webkit-font-smoothing: antialiased;
-  margin: 0;
 }
 
 h1, h2, h3, h4 { 
