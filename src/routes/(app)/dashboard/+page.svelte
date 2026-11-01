@@ -224,7 +224,7 @@
         <input type="text" bind:value={customer.contact} placeholder="Phone or Email" style="width: 100%; padding: 12px; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 14px; box-sizing: border-box;" />
       </div>
 
-      <div style="margin-bottom: 24px;">
+     <div style="margin-bottom: 24px;">
         <h3 style="font-family: 'Manrope'; font-size: 14px; font-weight: 800; color: #303B38; margin: 0 0 12px 0;">Matched Items</h3>
         {#if quoteItems.length === 0}
           <p style="font-size: 13px; color: #6B7280;">No items matched.</p>
@@ -277,14 +277,15 @@
     <!-- ON-SCREEN PREVIEW -->
     <div class="print-area" style="background: #ffffff; border-radius: 16px; border: 1px solid #E5E7EB; padding: 24px; font-family: 'Inter', sans-serif; color: #303B38; box-shadow: 0 4px 12px rgba(0,0,0,0.02); width: 100%; box-sizing: border-box; overflow: hidden;">
       
-      <!-- HEADER BANNER ON SCREEN (Forced White Text & Colored Background) -->
+      <!-- HEADER BANNER ON SCREEN -->
       <div style="background-color: {getColors().header}; padding: 24px; border-radius: 8px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-start; color: white;">
         <div style="max-width: 50%;">
-          {#if getColors().logo}
-            <img src={getColors().logo} alt="Logo" style="height: 40px; width: auto; max-width: 150px; object-fit: contain; margin-bottom: 8px; filter: brightness(0) invert(1);" />
-          {:else}
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+            {#if getColors().logo}
+              <img src={getColors().logo} alt="Logo" style="height: 40px; width: auto; max-width: 120px; object-fit: contain; background: white; border-radius: 4px; padding: 4px;" />
+            {/if}
             <div style="font-family: 'Manrope'; font-size: 22px; font-weight: 900; letter-spacing: -0.03em; color: #ffffff;">{getColors().companyName}</div>
-          {/if}
+          </div>
           <div style="font-size: 12px; color: rgba(255,255,255,0.8); margin-top: 4px; line-height: 1.5;">{getColors().companyAddress}<br/>{getColors().companyContact}</div>
         </div>
         <div style="text-align: right; max-width: 50%;">
