@@ -7,7 +7,7 @@ export async function load({ cookies, platform }) {
   const db = platform.env.DB;
   const stats = await db.prepare("SELECT COUNT(*) as count FROM quotes WHERE user_id = ?").bind(Number(session)).first();
   
-  // Fetch the full user object for the PDF colors and logo
+  // Fetch the full user object for the PDF branding
   const user = await db.prepare("SELECT * FROM users WHERE id = ?").bind(Number(session)).first();
   
   return { 
