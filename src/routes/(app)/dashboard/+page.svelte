@@ -128,9 +128,9 @@
 <div style="max-width: 1000px; margin: 0 auto; padding: 8px;">
 
   {#if pageView === 'input'}
-    <!-- Greeting -->
+    <!-- Greeting (Bigger) -->
     <div style="margin-bottom: 24px; padding-left: 4px; padding-top: 16px;">
-      <h1 style="font-family: 'Manrope', sans-serif; font-size: clamp(22px, 6vw, 32px); font-weight: 800; margin: 0; color: #303B38; letter-spacing: -0.03em;">
+      <h1 style="font-family: 'Manrope', sans-serif; font-size: clamp(28px, 8vw, 40px); font-weight: 800; margin: 0; color: #303B38; letter-spacing: -0.03em;">
         {greeting}, <span style="color: #C4513D;">{data?.user?.fullname || 'User'}</span>.
       </h1>
     </div>
@@ -158,7 +158,10 @@
 
     <!-- Create New Quote Title and Input -->
     <div style="margin-bottom: 32px;">
-      <h2 style="font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 800; color: #303B38; margin: 0 0 16px 0; padding-left: 4px;">Create New Quote</h2>
+      <!-- Smaller Title with Terracotta color -->
+      <h2 style="font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 800; color: #303B38; margin: 0 0 16px 0; padding-left: 4px;">
+        Create New <span style="color: #C4513D;">Quote</span>
+      </h2>
       
       {#if aiError}
         <div style="background: #FEE2E2; color: #DC2626; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-weight: 500; font-size: 14px; border: 1px solid #FCA5A5;">
