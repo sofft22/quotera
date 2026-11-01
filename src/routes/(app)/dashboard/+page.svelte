@@ -73,7 +73,7 @@
     quoteItems = quoteItems.filter(i => i.id !== id);
   }
 
-      async function generateQuote() {
+        async function generateQuote() {
     if (!rawText.trim() || isLoading) return;
     
     isLoading = true;
@@ -90,20 +90,20 @@
       });
 
       const result = await response.json();
-      console.log("Frontend received:", result);
       
       if (result.type === 'failure') {
-         throw new Error(result.data.error);
+        throw new Error(result.data.error);
       }
 
-      // Because SvelteKit wraps the data in an object, we have to dig it out correctly.
+      // THE FIX: Check if items is a string or array, then parse it safely
       if (result.data && result.data.items) {
+        let items = result.data.items;
         
-        // The items array is stringified. We parse it.
-        let parsedItems = JSON.parse(result.data.items);
+        if (typeof items === 'string') {
+          items = JSON.parse(items);
+        }
 
-        // Map over the parsed items to ensure numbers
-        quoteItems = parsedItems.map(item => ({
+        quoteItems = items.map(item => ({
           ...item,
           price: Number(item.price) || 0,
           qty: Number(item.qty) || 1
