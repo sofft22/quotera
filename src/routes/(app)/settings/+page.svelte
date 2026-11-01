@@ -8,15 +8,14 @@
   let companyContact = $state(data.user.company_contact || "");
   let logoBase64 = $state(data.user.logo_base64 || "");
   
-  // Fallback colors if the database returns empty strings
+  // Only 2 colors now, with fallbacks to prevent black glitches
   let headerColor = $state(data.user.header_color || "#24503C");
-  let textColor = $state(data.user.text_color || "#303B38");
   let accentColor = $state(data.user.accent_color || "#C4513D");
 
   let isUpgradeModalOpen = $state(false);
   let isCompressing = $state(false);
 
-  const WHATSAPP = "2347072789513"; // Replace with your WhatsApp number
+  const WHATSAPP = "2347072789513"; 
 
   async function handleLogoUpload(event) {
     const file = event.target.files[0];
@@ -59,7 +58,6 @@
   <title>Settings | Quotera</title>
 </svelte:head>
 
-<!-- Reduced outer padding to stretch properly -->
 <div style="max-width: 1000px; margin: 0 auto; padding: 12px;">
 
   <div style="margin-bottom: 24px; padding-left: 4px;">
@@ -67,7 +65,6 @@
     <p style="color: #6B7280; margin: 0; font-size: 15px;">Manage your account and PDF branding.</p>
   </div>
 
-  <!-- Account & Plan Section -->
   <div style="background: #ffffff; border: 1px solid #E5E7EB; border-radius: 16px; padding: 24px; margin-bottom: 20px; box-shadow: 0 8px 24px rgba(48, 59, 56, 0.04);">
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
       <div>
@@ -87,7 +84,6 @@
     </div>
   </div>
 
-  <!-- Branding Section -->
   <form 
     method="POST" 
     use:enhance={() => {
@@ -127,7 +123,6 @@
         <input type="text" name="companyContact" bind:value={companyContact} placeholder="e.g. sales@acme.com" style="width: 100%; padding: 14px 16px; border: 1px solid #E5E7EB; border-radius: 10px; font-size: 16px; box-sizing: border-box; transition: border-color 0.2s; outline: none; color: #303B38;" />
       </div>
 
-      <!-- Logo Uploader -->
       <div style="margin-top: 8px;">
         <label style="display: block; font-size: 14px; font-weight: 600; color: #303B38; margin-bottom: 8px;">Company Logo</label>
         <div style="display: flex; align-items: center; gap: 16px;">
@@ -153,14 +148,14 @@
         <input type="hidden" name="logoBase64" value={logoBase64} />
       </div>
 
-      <!-- Standard Color Pickers -->
+      <!-- ONLY 2 COLOR PICKERS NOW -->
       <div style="margin-top: 16px;">
         <label style="display: block; font-size: 14px; font-weight: 600; color: #303B38; margin-bottom: 12px;">PDF Colors</label>
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
           
           <!-- Header Banner Color -->
           <div style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 12px; padding: 16px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-            <span style="display: block; font-size: 12px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px;">Banner</span>
+            <span style="display: block; font-size: 12px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px;">Header Banner</span>
             <div style="position: relative; width: 100%; height: 44px; border-radius: 8px; overflow: hidden; border: 1px solid #D1D5DB;">
               <input type="color" name="headerColor" bind:value={headerColor} style="position: absolute; top: -10px; left: -10px; width: 150%; height: 150%; cursor: pointer; border: none; padding: 0;" />
             </div>
@@ -168,17 +163,9 @@
 
           <!-- Accent Color (Total) -->
           <div style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 12px; padding: 16px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-            <span style="display: block; font-size: 12px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px;">Accent</span>
+            <span style="display: block; font-size: 12px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px;">Accent Color</span>
             <div style="position: relative; width: 100%; height: 44px; border-radius: 8px; overflow: hidden; border: 1px solid #D1D5DB;">
               <input type="color" name="accentColor" bind:value={accentColor} style="position: absolute; top: -10px; left: -10px; width: 150%; height: 150%; cursor: pointer; border: none; padding: 0;" />
-            </div>
-          </div>
-
-          <!-- Body Text Color -->
-          <div style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 12px; padding: 16px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-            <span style="display: block; font-size: 12px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px;">Text</span>
-            <div style="position: relative; width: 100%; height: 44px; border-radius: 8px; overflow: hidden; border: 1px solid #D1D5DB;">
-              <input type="color" name="textColor" bind:value={textColor} style="position: absolute; top: -10px; left: -10px; width: 150%; height: 150%; cursor: pointer; border: none; padding: 0;" />
             </div>
           </div>
 
@@ -193,7 +180,7 @@
 
 </div>
 
-<!-- UPGRADE MODAL -->
+<!-- UPGRADE MODAL (Unchanged) -->
 {#if isUpgradeModalOpen}
   <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(48, 59, 56, 0.7); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 16px;">
     <div style="background: #EEF2EE; width: 100%; max-width: 1200px; border-radius: 24px; padding: 32px; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 48px rgba(0,0,0,0.2);">
