@@ -1,5 +1,9 @@
 <script>
+  import { enhance } from '$app/forms';
+
+  export let form;
   let greeting = "Good morning";
+
   if (typeof window !== 'undefined') {
     const hour = new Date().getHours();
     if (hour >= 12 && hour < 17) greeting = "Good afternoon";
@@ -10,7 +14,7 @@
   let rawText = $state("");
   let isLoading = $state(false); 
 
-  // Your Groq API Key goes here
+  // Your Groq API Key goes here for testing
   const API_KEY = "gsk_YOUR_GROQ_API_KEY_HERE"; 
 
   let customer = $state({ name: "New Customer", contact: "" });
@@ -63,10 +67,6 @@
     quoteItems = quoteItems.filter(i => i.id !== id);
   }
 
-  function downloadPDF() {
-    window.print();
-  }
-
   async function generateQuote() {
     if (!rawText.trim() || isLoading) return;
     
@@ -91,7 +91,7 @@
               content: rawText
             }
           ],
-          temperature: 0.1
+          temperature: 0.1 // Keep it strict and factual
         })
       });
 
@@ -343,9 +343,40 @@
 
     <!-- BOTTOM BUTTON -->
     <div class="no-print" style="margin-top: 12px;">
-      <button onclick={downloadPDF} style="width: 100%; background: #24503C; color: white; padding: 12px; border-radius: 8px; border: none; font-weight: 600; font-size: 15px; cursor: pointer;">
-        Download PDF
-      </button>
+      
+      {#if form?.success}
+        <div style="background: #DCFCE7; color: #166534; padding: 12px; border-radius: 8px; margin-bottom: 12px; font-weight: 600; text-align: center;">
+          Quote saved successfully!
+        </div>
+      {/if}
+
+      {#if form?.error}
+        <div style="background: #FEE2E2; color: #DC2626; padding: 12px; border-radius: 8px; margin-bottom: 12px; font-weight: 600; text-align: center;">
+          {form.error}
+        </div>
+      {/if}
+
+      <!-- This form connects directly to the +page.server.js action -->
+      <form 
+        method="POST" 
+        action="?/saveQuote" 
+        use:enhance={() => {
+          return async ({ result, update }) => {
+            await update(); 
+            if (result.type === 'success') {
+              window.print(); 
+            }
+          };
+        }}
+      >
+        <input type="hidden" name="customerName" value={customer.name} />
+        <input type="hidden" name="customerContact" value={customer.contact} />
+        <input type="hidden" name="total" value={total} />
+
+        <button type="submit" style="width: 100%; background: #24503C; color: white; padding: 12px; border-radius: 8px; border: none; font-weight: 600; font-size: 15px; cursor: pointer;">
+          Download PDF & Save
+        </button>
+      </form>
     </div>
   {/if}
 
