@@ -73,7 +73,7 @@
     quoteItems = quoteItems.filter(i => i.id !== id);
   }
 
-  async function generateQuote() {
+   async function generateQuote() {
     if (!rawText.trim() || isLoading) return;
     
     isLoading = true;
@@ -96,9 +96,16 @@
          throw new Error(result.data.error);
       }
 
-      // Directly use the array from the server
-      if (result.data && Array.isArray(result.data.items)) {
-        quoteItems = result.data.items.map(item => ({
+      // Check if the data is a string (as seen in your console) and parse it
+      if (result.data && result.data.items) {
+        let items = result.data.items;
+        
+        // This is the missing piece: parsing the string back into an array
+        if (typeof items === 'string') {
+          items = JSON.parse(items);
+        }
+
+        quoteItems = items.map(item => ({
           ...item,
           price: Number(item.price) || 0,
           qty: Number(item.qty) || 1
