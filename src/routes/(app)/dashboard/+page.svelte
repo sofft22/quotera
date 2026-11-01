@@ -44,6 +44,15 @@
     jsPDF = jspdfModule.jsPDF;
   });
 
+  // Helper to get theme colors safely
+  function getColors() {
+    return {
+      header: data.user.header_color || "#24503C",
+      text: data.user.text_color || "#303B38",
+      accent: data.user.accent_color || "#C4513D"
+    };
+  }
+
   function calculateTotals() {
     if (!quoteItems || !Array.isArray(quoteItems) || quoteItems.length === 0) {
       subtotal = 0; discountAmount = 0; vatAmount = 0; total = 0; return;
@@ -278,37 +287,37 @@
       
       <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; border-bottom: 2px solid #F3F4F6; padding-bottom: 20px;">
         <div style="max-width: 50%;">
-          <div style="font-family: 'Manrope'; font-size: 22px; font-weight: 900; letter-spacing: -0.03em; color: #24503C;">Quotera.</div>
-          <div style="font-size: 12px; color: #6B7280; margin-top: 4px; line-height: 1.5;">Your Company Address<br/>your@email.com</div>
+          <div style="font-family: 'Manrope'; font-size: 22px; font-weight: 900; letter-spacing: -0.03em; color: {getColors().header};">{data.user.company_name || 'Quotera.'}</div>
+          <div style="font-size: 12px; color: {getColors().text}; margin-top: 4px; line-height: 1.5;">{data.user.company_address || 'Your Company Address'}<br/>{data.user.company_contact || 'your@email.com'}</div>
         </div>
         <div style="text-align: right; max-width: 50%;">
-          <h1 style="font-family: 'Manrope'; font-size: 18px; margin: 0 0 4px 0; color: #303B38; text-transform: uppercase;">Quotation</h1>
-          <div style="font-size: 12px; color: #6B7280;">Date: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
+          <h1 style="font-family: 'Manrope'; font-size: 18px; margin: 0 0 4px 0; color: {getColors().header}; text-transform: uppercase;">Quotation</h1>
+          <div style="font-size: 12px; color: {getColors().text};">Date: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
         </div>
       </div>
 
       <div style="margin-bottom: 24px;">
-        <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #9CA3AF; margin-bottom: 4px;">Prepared For</div>
-        <div style="font-size: 14px; font-weight: 700; color: #303B38;">{customer.name}</div>
-        <div style="font-size: 12px; color: #6B7280;">{customer.contact}</div>
+        <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: {getColors().header}; margin-bottom: 4px;">Prepared For</div>
+        <div style="font-size: 14px; font-weight: 700; color: {getColors().text};">{customer.name}</div>
+        <div style="font-size: 12px; color: {getColors().text};">{customer.contact}</div>
       </div>
 
       <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; table-layout: fixed;">
         <thead>
-          <tr style="border-bottom: 1px solid #E5E7EB;">
-            <th style="text-align: left; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 50%;">Item</th>
-            <th style="text-align: center; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 15%;">Unit</th>
-            <th style="text-align: center; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 10%;">Qty</th>
-            <th style="text-align: right; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 25%;">Total</th>
+          <tr style="border-bottom: 1px solid {getColors().header};">
+            <th style="text-align: left; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: {getColors().header}; width: 50%;">Item</th>
+            <th style="text-align: center; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: {getColors().header}; width: 15%;">Unit</th>
+            <th style="text-align: center; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: {getColors().header}; width: 10%;">Qty</th>
+            <th style="text-align: right; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: {getColors().header}; width: 25%;">Total</th>
           </tr>
         </thead>
         <tbody>
           {#each quoteItems as item}
             <tr style="border-bottom: 1px solid #F3F4F6;">
-              <td style="padding: 16px 0; font-size: 14px; font-weight: 600; line-height: 1.4; word-wrap: break-word;">{item.name}</td>
-              <td style="padding: 16px 0; text-align: center; font-size: 14px;">{item.unit}</td>
-              <td style="padding: 16px 0; text-align: center; font-size: 14px;">{item.qty}</td>
-              <td style="padding: 16px 0; text-align: right; font-size: 14px; font-weight: 600;">{formatCurrency(item.price * item.qty)}</td>
+              <td style="padding: 16px 0; font-size: 14px; font-weight: 600; line-height: 1.4; word-wrap: break-word; color: {getColors().text};">{item.name}</td>
+              <td style="padding: 16px 0; text-align: center; font-size: 14px; color: {getColors().text};">{item.unit}</td>
+              <td style="padding: 16px 0; text-align: center; font-size: 14px; color: {getColors().text};">{item.qty}</td>
+              <td style="padding: 16px 0; text-align: right; font-size: 14px; font-weight: 600; color: {getColors().text};">{formatCurrency(item.price * item.qty)}</td>
             </tr>
           {/each}
         </tbody>
@@ -316,7 +325,7 @@
 
       <div style="display: flex; justify-content: flex-end; margin-bottom: 24px;">
         <div style="width: 220px;">
-          <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; color: #4B5563;">
+          <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; color: {getColors().text};">
             <span>Subtotal:</span>
             <span>{formatCurrency(subtotal)}</span>
           </div>
@@ -327,18 +336,18 @@
             </div>
           {/if}
           {#if includeDelivery && deliveryFee > 0}
-            <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; color: #4B5563;">
+            <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; color: {getColors().text};">
               <span>Delivery:</span>
               <span>{formatCurrency(deliveryFee)}</span>
             </div>
           {/if}
           {#if includeVAT}
-            <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; color: #4B5563;">
+            <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; color: {getColors().text};">
               <span>VAT (7.5%):</span>
               <span>{formatCurrency(vatAmount)}</span>
             </div>
           {/if}
-          <div style="display: flex; justify-content: space-between; padding: 12px 0; font-size: 18px; font-weight: 800; color: #24503C; border-top: 2px solid #E5E7EB; margin-top: 8px;">
+          <div style="display: flex; justify-content: space-between; padding: 12px 0; font-size: 18px; font-weight: 800; color: {getColors().accent}; border-top: 2px solid #E5E7EB; margin-top: 8px;">
             <span>TOTAL:</span>
             <span>{formatCurrency(total)}</span>
           </div>
@@ -367,7 +376,7 @@
           return async ({ result, update }) => {
             await update(); 
             if (result.type === 'success') {
-              handleDownload(); // Direct download
+              handleDownload(); 
             }
           };
         }}
@@ -393,43 +402,43 @@
 <!-- HIDDEN PDF TEMPLATE (For direct download) -->
 <div style="position: absolute; top: 0; left: 0; z-index: -1; opacity: 0; pointer-events: none;">
   {#if pageView === 'builder'}
-    <div bind:this={hiddenPdfRef} style="width: 800px; background: white; padding: 50px; font-family: 'Inter', sans-serif; color: #303B38;">
+    <div bind:this={hiddenPdfRef} style="width: 800px; background: white; padding: 50px; font-family: 'Inter', sans-serif; color: {getColors().text};">
       
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 50px; border-bottom: 2px solid #F3F4F6; padding-bottom: 25px;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 50px; border-bottom: 2px solid {getColors().header}; padding-bottom: 25px;">
         <div>
-          <div style="font-family: 'Manrope', sans-serif; font-size: 32px; font-weight: 900; letter-spacing: -0.03em; color: #24503C;">Quotera.</div>
-          <div style="font-size: 14px; color: #6B7280; margin-top: 6px; line-height: 1.6;">Your Company Address<br/>your@email.com</div>
+          <div style="font-family: 'Manrope', sans-serif; font-size: 32px; font-weight: 900; letter-spacing: -0.03em; color: {getColors().header};">{data.user.company_name || 'Quotera.'}</div>
+          <div style="font-size: 14px; color: {getColors().text}; margin-top: 6px; line-height: 1.6;">{data.user.company_address || 'Your Company Address'}<br/>{data.user.company_contact || 'your@email.com'}</div>
         </div>
         <div style="text-align: right;">
-          <h1 style="font-family: 'Manrope', sans-serif; font-size: 26px; font-weight: 800; margin: 0 0 6px 0; color: #303B38; text-transform: uppercase;">Quotation</h1>
-          <div style="font-size: 14px; color: #6B7280;">Date: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
+          <h1 style="font-family: 'Manrope', sans-serif; font-size: 26px; font-weight: 800; margin: 0 0 6px 0; color: {getColors().header}; text-transform: uppercase;">Quotation</h1>
+          <div style="font-size: 14px; color: {getColors().text};">Date: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
         </div>
       </div>
 
       <div style="margin-bottom: 40px;">
-        <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: #9CA3AF; margin-bottom: 6px; letter-spacing: 0.05em;">Prepared For</div>
-        <div style="font-size: 20px; font-weight: 800; color: #303B38;">{customer.name || "Customer"}</div>
-        <div style="font-size: 15px; color: #6B7280; margin-top: 4px;">{customer.contact || "Contact Info"}</div>
+        <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: {getColors().header}; margin-bottom: 6px; letter-spacing: 0.05em;">Prepared For</div>
+        <div style="font-size: 20px; font-weight: 800; color: {getColors().text};">{customer.name || "Customer"}</div>
+        <div style="font-size: 15px; color: {getColors().text}; margin-top: 4px;">{customer.contact || "Contact Info"}</div>
       </div>
 
       <table style="width: 100%; border-collapse: collapse; margin-bottom: 40px; table-layout: fixed;">
         <thead>
-          <tr style="border-bottom: 2px solid #E5E7EB;">
-            <th style="text-align: left; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #6B7280; width: 40%;">Item</th>
-            <th style="text-align: center; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #6B7280; width: 15%;">Unit</th>
-            <th style="text-align: center; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #6B7280; width: 10%;">Qty</th>
-            <th style="text-align: right; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #6B7280; width: 15%;">Price</th>
-            <th style="text-align: right; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #6B7280; width: 20%;">Total</th>
+          <tr style="border-bottom: 2px solid {getColors().header};">
+            <th style="text-align: left; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: {getColors().header}; width: 40%;">Item</th>
+            <th style="text-align: center; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: {getColors().header}; width: 15%;">Unit</th>
+            <th style="text-align: center; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: {getColors().header}; width: 10%;">Qty</th>
+            <th style="text-align: right; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: {getColors().header}; width: 15%;">Price</th>
+            <th style="text-align: right; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: {getColors().header}; width: 20%;">Total</th>
           </tr>
         </thead>
         <tbody>
           {#each quoteItems as item}
             <tr style="border-bottom: 1px solid #F3F4F6;">
-              <td style="padding: 20px 0; font-size: 16px; font-weight: 600; line-height: 1.5; word-wrap: break-word;">{item.name}</td>
-              <td style="padding: 20px 0; text-align: center; font-size: 15px; font-weight: 500;">{item.unit}</td>
-              <td style="padding: 20px 0; text-align: center; font-size: 15px; font-weight: 500;">{item.qty}</td>
-              <td style="padding: 20px 0; text-align: right; font-size: 15px;">{formatCurrency(item.price)}</td>
-              <td style="padding: 20px 0; text-align: right; font-size: 16px; font-weight: 700;">{formatCurrency(item.price * item.qty)}</td>
+              <td style="padding: 20px 0; font-size: 16px; font-weight: 600; line-height: 1.5; word-wrap: break-word; color: {getColors().text};">{item.name}</td>
+              <td style="padding: 20px 0; text-align: center; font-size: 15px; font-weight: 500; color: {getColors().text};">{item.unit}</td>
+              <td style="padding: 20px 0; text-align: center; font-size: 15px; font-weight: 500; color: {getColors().text};">{item.qty}</td>
+              <td style="padding: 20px 0; text-align: right; font-size: 15px; color: {getColors().text};">{formatCurrency(item.price)}</td>
+              <td style="padding: 20px 0; text-align: right; font-size: 16px; font-weight: 700; color: {getColors().text};">{formatCurrency(item.price * item.qty)}</td>
             </tr>
           {/each}
         </tbody>
@@ -437,7 +446,7 @@
 
       <div style="display: flex; justify-content: flex-end; margin-bottom: 40px;">
         <div style="width: 320px;">
-          <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: #4B5563;">
+          <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: {getColors().text};">
             <span>Subtotal:</span>
             <span>{formatCurrency(subtotal)}</span>
           </div>
@@ -448,18 +457,18 @@
             </div>
           {/if}
           {#if includeDelivery && deliveryFee > 0}
-            <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: #4B5563;">
+            <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: {getColors().text};">
               <span>Delivery:</span>
               <span>{formatCurrency(deliveryFee)}</span>
             </div>
           {/if}
           {#if includeVAT}
-            <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: #4B5563;">
+            <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: {getColors().text};">
               <span>VAT (7.5%):</span>
               <span>{formatCurrency(vatAmount)}</span>
             </div>
           {/if}
-          <div style="display: flex; justify-content: space-between; padding: 20px 0 10px 0; font-size: 24px; font-weight: 800; color: #24503C; border-top: 3px solid #E5E7EB; margin-top: 10px;">
+          <div style="display: flex; justify-content: space-between; padding: 20px 0 10px 0; font-size: 24px; font-weight: 800; color: {getColors().accent}; border-top: 3px solid #E5E7EB; margin-top: 10px;">
             <span>TOTAL:</span>
             <span>{formatCurrency(total)}</span>
           </div>
@@ -467,7 +476,7 @@
       </div>
 
       <div style="border-top: 1px solid #F3F4F6; padding-top: 30px; text-align: center;">
-        <p style="font-size: 13px; color: #9CA3AF; margin: 0;">Thank you for your business. If you have any questions, please contact us.</p>
+        <p style="font-size: 13px; color: {getColors().text}; margin: 0;">Thank you for your business. If you have any questions, please contact us.</p>
       </div>
 
     </div>
