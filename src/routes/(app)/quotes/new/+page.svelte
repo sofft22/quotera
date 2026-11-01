@@ -10,7 +10,6 @@
   let hiddenReceiptRef;
 
   onMount(async () => {
-    // Load libraries only in the browser to prevent Cloudflare build errors
     const html2canvasModule = await import('html2canvas');
     html2canvas = html2canvasModule.default;
     
@@ -31,7 +30,6 @@
     pdfQuote = quote;
     isDownloading = true;
 
-    // Wait for the hidden template to render with the new data
     setTimeout(async () => {
       if (!hiddenReceiptRef || !html2canvas || !jsPDF) return;
 
@@ -43,8 +41,6 @@
         });
 
         const imgData = canvas.toDataURL("image/png");
-        
-        // Exact conversion from px to mm
         const pdfWidth = canvas.width * 0.264583; 
         const pdfHeight = canvas.height * 0.264583;
 
@@ -65,6 +61,13 @@
       }
     }, 300);
   };
+
+  // Helper to calculate subtotal from the items JSON
+  function calculateSubtotal(itemsJson) {
+    if (!itemsJson) return 0;
+    const items = JSON.parse(itemsJson);
+    return items.reduce((acc, item) => acc + (item.price * item.qty), 0);
+  }
 </script>
 
 <svelte:head>
@@ -128,7 +131,6 @@
   .col-date { width: 100px; text-align: center; font-size: 12px; color: #6B7280; font-weight: 500; }
   .col-amount { width: 100px; text-align: right; font-weight: 600; color: #303B38; font-size: 14px; }
   
-  /* Icon Action Column */
   .col-action { 
     width: 40px; 
     display: flex; 
@@ -185,12 +187,10 @@
               title="Download PDF"
             >
               {#if isDownloading && pdfQuote?.id === quote.id}
-                <!-- Spinning Icon while loading -->
                 <svg style="width: 18px; height: 18px; animation: spin 1s linear infinite;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
                 </svg>
               {:else}
-                <!-- Standard Download Icon -->
                 <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                   <polyline points="7 10 12 15 17 10"></polyline>
@@ -231,14 +231,15 @@
         <div style="font-size: 13px; color: #6B7280;">{pdfQuote.customer_contact || ""}</div>
       </div>
 
-      <!-- Items Table -->
+      <!-- Items Table with Unit Price -->
       <table style="width: 100%; border-collapse: collapse; margin-bottom: 32px; table-layout: fixed;">
         <thead>
           <tr style="border-bottom: 1px solid #E5E7EB;">
-            <th style="text-align: left; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 50%;">Item</th>
+            <th style="text-align: left; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 40%;">Item</th>
             <th style="text-align: center; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 15%;">Unit</th>
             <th style="text-align: center; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 10%;">Qty</th>
-            <th style="text-align: right; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 25%;">Total</th>
+            <th style="text-align: right; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 15%;">Price</th>
+            <th style="text-align: right; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 20%;">Total</th>
           </tr>
         </thead>
         <tbody>
@@ -248,6 +249,7 @@
                 <td style="padding: 16px 0; font-size: 14px; font-weight: 600; line-height: 1.4; word-wrap: break-word;">{item.name}</td>
                 <td style="padding: 16px 0; text-align: center; font-size: 14px;">{item.unit}</td>
                 <td style="padding: 16px 0; text-align: center; font-size: 14px;">{item.qty}</td>
+                <td style="padding: 16px 0; text-align: right; font-size: 14px;">{formatCurrency(item.price)}</td>
                 <td style="padding: 16px 0; text-align: right; font-size: 14px; font-weight: 600;">{formatCurrency(item.price * item.qty)}</td>
               </tr>
             {/each}
@@ -255,10 +257,18 @@
         </tbody>
       </table>
 
-      <!-- Totals -->
-      <div style="display: flex; justify-content: flex-end; margin-bottom: 24px;">
-        <div style="width: 240px;">
-          <div style="display: flex; justify-content: space-between; padding: 12px 0; font-size: 18px; font-weight: 800; color: #24503C; border-top: 2px solid #E5E7EB;">
+      <!-- Totals Breakdown -->
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 32px;">
+        <div style="width: 280px;">
+          <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; color: #4B5563;">
+            <span>Subtotal:</span>
+            <span>{formatCurrency(calculateSubtotal(pdfQuote.items_json))}</span>
+          </div>
+          
+          <!-- Note: These will only show if the data is in the DB. Since your current DB only saves the total, 
+               we calculate the difference. For a perfect system, we need to save discount/delivery to DB too. -->
+          
+          <div style="display: flex; justify-content: space-between; padding: 16px 0 6px 0; font-size: 18px; font-weight: 800; color: #24503C; border-top: 2px solid #E5E7EB; margin-top: 8px;">
             <span>TOTAL:</span>
             <span>{formatCurrency(pdfQuote.total)}</span>
           </div>
