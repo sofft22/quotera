@@ -8,7 +8,6 @@
   let companyContact = $state(data.user.company_contact);
   let logoBase64 = $state(data.user.logo_base64);
   
-  // Default colors if they don't have any saved yet
   let headerColor = $state(data.user.header_color || "#24503C");
   let textColor = $state(data.user.text_color || "#303B38");
   let accentColor = $state(data.user.accent_color || "#C4513D");
@@ -21,7 +20,6 @@
   async function handleLogoUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
-
     isCompressing = true;
     
     const reader = new FileReader();
@@ -35,24 +33,14 @@
         let height = img.height;
 
         if (width > height) {
-          if (width > MAX_WIDTH) {
-            height *= MAX_WIDTH / width;
-            width = MAX_WIDTH;
-          }
+          if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
         } else {
-          if (height > MAX_HEIGHT) {
-            width *= MAX_HEIGHT / height;
-            height = MAX_HEIGHT;
-          }
+          if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
         }
-        canvas.width = width;
-        canvas.height = height;
+        canvas.width = width; canvas.height = height;
         const ctx = canvas.getContext('2d');
-        
-        ctx.fillStyle = "#FFFFFF";
-        ctx.fillRect(0, 0, width, height);
+        ctx.fillStyle = "#FFFFFF"; ctx.fillRect(0, 0, width, height);
         ctx.drawImage(img, 0, 0, width, height);
-
         logoBase64 = canvas.toDataURL('image/jpeg', 0.6);
         isCompressing = false;
       };
@@ -66,14 +54,15 @@
   <title>Settings | Quotera</title>
 </svelte:head>
 
-<div style="max-width: 800px; margin: 0 auto; padding: 24px 16px;">
+<!-- Reduced outer padding: max-width is 1000px and padding is tight -->
+<div style="max-width: 1000px; margin: 0 auto; padding: 16px 12px;">
 
   <div style="margin-bottom: 24px;">
     <h1 style="font-family: 'Manrope', sans-serif; font-size: 28px; font-weight: 800; color: #303B38; margin: 0 0 8px 0; letter-spacing: -0.02em;">Settings</h1>
     <p style="color: #6B7280; margin: 0; font-size: 14px;">Manage your account and PDF branding.</p>
   </div>
 
-  <!-- Account & Plan Section (Tighter Padding) -->
+  <!-- Account & Plan Section -->
   <div style="background: #ffffff; border: 1px solid #E5E7EB; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
       <div>
@@ -93,7 +82,7 @@
     </div>
   </div>
 
-  <!-- Branding Section (Tighter Padding) -->
+  <!-- Branding Section -->
   <form 
     method="POST" 
     use:enhance={() => {
@@ -137,7 +126,7 @@
           
           <div style="position: relative; flex: 1;">
             <input type="file" accept="image/*" onchange={handleLogoUpload} style="position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;" />
-            <div style="border: 1.5px dashed #D1D5DB; border-radius: 8px; padding: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #F9FAFB; transition: all 0.2s;">
+            <div style="border: 1.5px dashed #D1D5DB; border-radius: 8px; padding: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #F9FAFB;">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 6px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
               <span style="font-size: 12px; font-weight: 600; color: #303B38;">Click to upload</span>
               <span style="font-size: 10px; color: #9CA3AF; margin-top: 2px;">JPG, PNG (Max 200px)</span>
@@ -150,24 +139,42 @@
         <input type="hidden" name="logoBase64" value={logoBase64} />
       </div>
 
-      <!-- Custom Color Pickers -->
+      <!-- Premium Color Pickers -->
       <div style="margin-top: 12px;">
         <label style="display: block; font-size: 12px; font-weight: 600; color: #303B38; margin-bottom: 10px;">PDF Colors</label>
         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
           
-          <div style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 8px; padding: 12px; text-align: center;">
-            <span style="display: block; font-size: 11px; font-weight: 600; color: #6B7280; margin-bottom: 8px;">Header Color</span>
-            <input type="color" name="headerColor" bind:value={headerColor} style="width: 36px; height: 36px; padding: 0; border: none; border-radius: 50%; cursor: pointer; background: none;" />
+          <!-- Header Color -->
+          <div style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 10px;">
+            <div style="position: relative; width: 32px; height: 32px; border-radius: 8px; overflow: hidden; border: 1px solid #D1D5DB; flex-shrink: 0;">
+              <input type="color" name="headerColor" bind:value={headerColor} style="position: absolute; top: -10px; left: -10px; width: 60px; height: 60px; cursor: pointer; border: none; padding: 0;" />
+            </div>
+            <div style="display: flex; flex-direction: column;">
+              <span style="font-size: 10px; font-weight: 700; color: #6B7280; text-transform: uppercase;">Header</span>
+              <span style="font-size: 12px; font-weight: 600; color: #303B38; text-transform: uppercase;">{headerColor}</span>
+            </div>
           </div>
 
-          <div style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 8px; padding: 12px; text-align: center;">
-            <span style="display: block; font-size: 11px; font-weight: 600; color: #6B7280; margin-bottom: 8px;">Font Color</span>
-            <input type="color" name="textColor" bind:value={textColor} style="width: 36px; height: 36px; padding: 0; border: none; border-radius: 50%; cursor: pointer; background: none;" />
+          <!-- Font Color -->
+          <div style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 10px;">
+            <div style="position: relative; width: 32px; height: 32px; border-radius: 8px; overflow: hidden; border: 1px solid #D1D5DB; flex-shrink: 0;">
+              <input type="color" name="textColor" bind:value={textColor} style="position: absolute; top: -10px; left: -10px; width: 60px; height: 60px; cursor: pointer; border: none; padding: 0;" />
+            </div>
+            <div style="display: flex; flex-direction: column;">
+              <span style="font-size: 10px; font-weight: 700; color: #6B7280; text-transform: uppercase;">Font</span>
+              <span style="font-size: 12px; font-weight: 600; color: #303B38; text-transform: uppercase;">{textColor}</span>
+            </div>
           </div>
 
-          <div style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 8px; padding: 12px; text-align: center;">
-            <span style="display: block; font-size: 11px; font-weight: 600; color: #6B7280; margin-bottom: 8px;">Accent (Total)</span>
-            <input type="color" name="accentColor" bind:value={accentColor} style="width: 36px; height: 36px; padding: 0; border: none; border-radius: 50%; cursor: pointer; background: none;" />
+          <!-- Accent Color -->
+          <div style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 10px;">
+            <div style="position: relative; width: 32px; height: 32px; border-radius: 8px; overflow: hidden; border: 1px solid #D1D5DB; flex-shrink: 0;">
+              <input type="color" name="accentColor" bind:value={accentColor} style="position: absolute; top: -10px; left: -10px; width: 60px; height: 60px; cursor: pointer; border: none; padding: 0;" />
+            </div>
+            <div style="display: flex; flex-direction: column;">
+              <span style="font-size: 10px; font-weight: 700; color: #6B7280; text-transform: uppercase;">Accent</span>
+              <span style="font-size: 12px; font-weight: 600; color: #303B38; text-transform: uppercase;">{accentColor}</span>
+            </div>
           </div>
 
         </div>
@@ -181,7 +188,7 @@
 
 </div>
 
-<!-- UPGRADE MODAL (Unchanged, keeping it perfect) -->
+<!-- UPGRADE MODAL -->
 {#if isUpgradeModalOpen}
   <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(48, 59, 56, 0.7); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 16px;">
     <div style="background: #EEF2EE; width: 100%; max-width: 1200px; border-radius: 24px; padding: 32px; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 48px rgba(0,0,0,0.2);">
