@@ -16,8 +16,7 @@ export const actions = {
     const data = await request.formData();
     const db = platform.env.DB;
     try {
-      await db.prepare("INSERT INTO quotes (user_id, customer_name, customer_contact, total) VALUES (?, ?, ?, ?)").bind(Number(session), data.get('customerName'), data.get('customerContact'), data.get('total')).run();
-      return { success: true };
+      await db.prepare("INSERT INTO quotes (user_id, customer_name, customer_contact, total, items_json) VALUES (?, ?, ?, ?, ?)").bind(Number(session), data.get('customerName'), data.get('customerContact'), data.get('total'), data.get('itemsJson')).run();
     } catch (err) { return fail(500, { error: 'Failed to save quote.' }); }
   },
 
