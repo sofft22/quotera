@@ -295,7 +295,8 @@
       </div>
       
       <div class="mobile-nav-header">
-        <a href="/login" style="font-size: 13px; font-weight: 600; color: var(--ink); text-decoration: none; margin-right: 4px;" class="hide-mobile">Sign In</a>
+        <a href="/login" style="font-size: 13px; font-weight: 600; color: var(--ink); text-decoration
+: none; margin-right: 4px;" class="hide-mobile">Sign In</a>
         <a href="/register" class="nav-cta">Start free</a>
       </div>
     </div>
@@ -351,7 +352,13 @@
       </div>
     </section>
 
-            <div class="step" use:Reveal={{ direction: 'up', delay: 0.1 }}>
+                <!-- HOW IT WORKS -->
+    <section class="section" id="how">
+      <div class="sec-head" use:Reveal={{ direction: 'up' }}>
+        <h2 class="h-section">Three steps to close.</h2>
+      </div>
+      <div class="steps">
+        <div class="step" use:Reveal={{ direction: 'up', delay: 0.1 }}>
           <div class="step-num">01</div>
           <h3>Paste the request</h3>
           <p>Copy the exact text your customer sent you on WhatsApp or email.</p>
