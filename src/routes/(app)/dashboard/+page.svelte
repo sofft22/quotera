@@ -1,4 +1,4 @@
-             <script>
+            <script>
   import { enhance } from '$app/forms';
   import { onMount } from 'svelte';
 
@@ -64,11 +64,9 @@
       subtotal = 0; discountAmount = 0; vatAmount = 0; total = 0; return;
     }
     subtotal = quoteItems.reduce((acc, item) => acc + (item.price * item.qty), 0);
-    
     if (includeDiscount) {
       discountAmount = discountType === 'percentage' ? subtotal * (discountValue / 100) : discountValue;
     } else { discountAmount = 0; }
-    
     let taxable = subtotal - discountAmount;
     vatAmount = includeVAT ? taxable * 0.075 : 0;
     total = taxable + vatAmount + (includeDelivery ? deliveryFee : 0);
@@ -93,7 +91,6 @@
   async function generateQuote() {
     if (!rawText.trim() || isLoading) return;
     isLoading = true; aiError = ""; quoteItems = []; 
-
     try {
       const response = await fetch('/api/generate', {
         method: 'POST',
@@ -102,7 +99,6 @@
       });
       if (!response.ok) throw new Error("Failed to generate");
       const result = await response.json();
-      
       if (result.items && Array.isArray(result.items)) {
         quoteItems = result.items.map(item => ({
           ...item,
@@ -121,7 +117,6 @@
   const handleDownload = async () => {
     if (!hiddenPdfRef || !html2canvas || !jsPDF) return;
     isDownloading = true;
-
     try {
       const canvas = await html2canvas(hiddenPdfRef, { scale: 2, backgroundColor: "#FFFFFF", useCORS: true });
       const imgData = canvas.toDataURL("image/png");
@@ -153,7 +148,7 @@
   </style>
 </svelte:head>
 
-<!-- Reduced the outer padding and set box-sizing so it never overflows -->
+<!-- FIRM OUTER WRAPPER -->
 <div style="max-width: 1000px; margin: 0 auto; padding: 8px; width: 100%; box-sizing: border-box; overflow-x: hidden;">
   {#if pageView === 'input'}
     <div style="margin-bottom: 24px; padding-left: 4px; padding-top: 16px;">
@@ -278,19 +273,19 @@
       </div>
     </div>
 
-    <!-- ON-SCREEN PREVIEW -->
+    <!-- ON-SCREEN PREVIEW (FIRM) -->
     <div class="print-area" style="background: #ffffff; border-radius: 16px; border: 1px solid #E5E7EB; padding: 20px; font-family: 'Inter', sans-serif; color: #303B38; box-shadow: 0 4px 12px rgba(0,0,0,0.02); width: 100%; box-sizing: border-box; overflow: hidden;">
       
-      <!-- HEADER BANNER ON SCREEN -->
-      <div style="background-color: {getColors().header}; padding: 20px; border-radius: 8px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-start; color: white;">
+      <!-- HEADER BANNER -->
+      <div style="background-color: {getColors().header}; padding: 20px; border-radius: 8px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-start; color: white; box-sizing: border-box; width: 100%;">
         <div style="max-width: 50%;">
           <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
             {#if getColors().logo}
               <img src={getColors().logo} alt="Logo" style="height: 36px; width: auto; max-width: 100px; object-fit: contain; background: white; border-radius: 4px; padding: 4px;" />
             {/if}
-            <div style="font-family: 'Manrope'; font-size: 18px; font-weight: 900; letter-spacing: -0.03em; color: #ffffff; line-height: 1.2;">{getColors().companyName}</div>
+            <div style="font-family: 'Manrope'; font-size: 18px; font-weight: 900; letter-spacing: -0.03em; color: #ffffff; line-height: 1.2; word-break: break-word;">{getColors().companyName}</div>
           </div>
-          <div style="font-size: 11px; color: rgba(255,255,255,0.8); margin-top: 4px; line-height: 1.5;">{getColors().companyAddress}<br/>{getColors().companyContact}</div>
+          <div style="font-size: 11px; color: rgba(255,255,255,0.8); margin-top: 4px; line-height: 1.5; word-break: break-word;">{getColors().companyAddress}<br/>{getColors().companyContact}</div>
         </div>
         <div style="text-align: right; max-width: 50%;">
           <h1 style="font-family: 'Manrope'; font-size: 16px; margin: 0 0 4px 0; color: #ffffff; text-transform: uppercase;">Quotation</h1>
@@ -300,33 +295,36 @@
 
       <div style="margin-bottom: 24px;">
         <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: {getColors().header}; margin-bottom: 4px;">Prepared For</div>
-        <div style="font-size: 14px; font-weight: 700; color: #303B38;">{toTitleCase(customer.name)}</div>
-        <div style="font-size: 12px; color: #6B7280;">{customer.contact}</div>
+        <div style="font-size: 14px; font-weight: 700; color: #303B38; word-break: break-word;">{toTitleCase(customer.name)}</div>
+        <div style="font-size: 12px; color: #6B7280; word-break: break-word;">{customer.contact}</div>
       </div>
 
-      <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; table-layout: fixed;">
-        <thead>
-          <tr style="border-bottom: 1px solid #E5E7EB;">
-            <th style="text-align: left; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 50%;">Item</th>
-            <th style="text-align: center; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 15%;">Unit</th>
-            <th style="text-align: center; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 10%;">Qty</th>
-            <th style="text-align: right; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 25%;">Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {#each quoteItems as item}
-            <tr style="border-bottom: 1px solid #F3F4F6;">
-              <td style="padding: 16px 0; font-size: 14px; font-weight: 600; line-height: 1.4; word-wrap: break-word; color: #303B38;">{toTitleCase(item.name)}</td>
-              <td style="padding: 16px 0; text-align: center; font-size: 14px; color: #6B7280;">{toTitleCase(item.unit)}</td>
-              <td style="padding: 16px 0; text-align: center; font-size: 14px; color: #6B7280;">{item.qty}</td>
-              <td style="padding: 16px 0; text-align: right; font-size: 14px; font-weight: 600; color: #303B38;">{formatCurrency(item.price * item.qty)}</td>
+      <!-- TABLE WRAPPER (FIRM) -->
+      <div style="width: 100%; overflow-x: auto; margin-bottom: 24px;">
+        <table style="width: 100%; border-collapse: collapse; table-layout: fixed; min-width: 320px;">
+          <thead>
+            <tr style="border-bottom: 1px solid #E5E7EB;">
+              <th style="text-align: left; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 50%;">Item</th>
+              <th style="text-align: center; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 15%;">Unit</th>
+              <th style="text-align: center; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 10%;">Qty</th>
+              <th style="text-align: right; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 25%;">Total</th>
             </tr>
-          {/each}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {#each quoteItems as item}
+              <tr style="border-bottom: 1px solid #F3F4F6;">
+                <td style="padding: 16px 0; font-size: 14px; font-weight: 600; line-height: 1.4; word-wrap: break-word; color: #303B38;">{toTitleCase(item.name)}</td>
+                <td style="padding: 16px 0; text-align: center; font-size: 14px; color: #6B7280;">{toTitleCase(item.unit)}</td>
+                <td style="padding: 16px 0; text-align: center; font-size: 14px; color: #6B7280;">{item.qty}</td>
+                <td style="padding: 16px 0; text-align: right; font-size: 14px; font-weight: 600; color: #303B38;">{formatCurrency(item.price * item.qty)}</td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
 
       <div style="display: flex; justify-content: flex-end; margin-bottom: 24px;">
-        <div style="width: 220px;">
+        <div style="width: 220px; max-width: 100%;">
           <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; color: #4B5563;">
             <span>Subtotal:</span>
             <span>{formatCurrency(subtotal)}</span>
@@ -368,7 +366,6 @@
           Quote saved successfully!
         </div>
       {/if}
-
       {#if form?.error}
         <div style="background: #FEE2E2; color: #DC2626; padding: 16px; border-radius: 8px; margin-bottom: 16px; font-weight: 600; text-align: center;">
           {form.error}
@@ -381,9 +378,7 @@
         use:enhance={() => {
           return async ({ result, update }) => {
             await update(); 
-            if (result.type === 'success') {
-              handleDownload(); 
-            }
+            if (result.type === 'success') { handleDownload(); }
           };
         }}
       >
@@ -404,12 +399,11 @@
   {/if}
 </div>
 
-<!-- HIDDEN PDF TEMPLATE (For direct download) -->
-<div style="position: absolute; top: 0; left: 0; z-index: -1; opacity: 0; pointer-events: none;">
+<!-- HIDDEN PDF TEMPLATE -->
+<div style="position: absolute; top: 0; left: 0; z-index: -1; opacity: 0; pointer-events: none; overflow: hidden;">
   {#if pageView === 'builder'}
     <div bind:this={hiddenPdfRef} style="width: 800px; background: white; font-family: 'Inter', sans-serif; color: #303B38;">
       
-      <!-- HEADER BANNER -->
       <div style="padding: 40px 50px 0 50px;">
         <div style="background-color: {getColors().header}; padding: 40px; border-radius: 16px; display: flex; justify-content: space-between; align-items: flex-start;">
           <div>
@@ -419,7 +413,6 @@
               {/if}
               <div style="font-family: 'Manrope', sans-serif; font-size: 32px; font-weight: 900; letter-spacing: -0.03em; color: #ffffff;">{getColors().companyName}</div>
             </div>
-            
             <div style="font-size: 14px; color: rgba(255,255,255,0.9); margin-top: 6px; line-height: 1.6;">
               {getColors().companyAddress}<br/>{getColors().companyContact}
             </div>
@@ -431,7 +424,6 @@
         </div>
       </div>
 
-      <!-- BODY CONTENT -->
       <div style="padding: 40px 50px;">
         <div style="margin-bottom: 40px;">
           <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: {getColors().header}; margin-bottom: 6px; letter-spacing: 0.05em;">Prepared For</div>
@@ -469,6 +461,7 @@
               <span>{formatCurrency(subtotal)}</span>
             </div>
             {#if includeDiscount}
+              <div style="display: flex; justify-content: space-between; padding: 10px 0{#if includeDiscount}
               <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: #DC2626; font-weight: 500;">
                 <span>Discount:</span>
                 <span>-{formatCurrency(discountAmount)}</span>
