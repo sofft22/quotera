@@ -451,7 +451,7 @@
                 <td style="padding: 20px 0; font-size: 16px; font-weight: 600; line-height: 1.5; word-wrap: break-word; color: #303B38;">{toTitleCase(item.name)}</td>
                 <td style="padding: 20px 0; text-align: center; font-size: 15px; font-weight: 500; color: #6B7280;">{toTitleCase(item.unit)}</td>
                 <td style="padding: 20px 0; text-align: center; font-size: 15px; font-weight: 500; color: #6B7280;">{item.qty}</td>
-                <td style="padding: 20px 0; text<td style="padding: 20px 0; text-align: right; font-size: 15px; color: #6B7280;">{formatCurrency(item.price)}</td>
+                <td style="padding: 20px 0; text-align: right; font-size: 15px; color: #6B7280;">{formatCurrency(item.price)}</td>
                 <td style="padding: 20px 0; text-align: right; font-size: 16px; font-weight: 700; color: #303B38;">{formatCurrency(item.price * item.qty)}</td>
               </tr>
             {/each}
