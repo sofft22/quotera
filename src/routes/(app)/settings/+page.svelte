@@ -8,7 +8,6 @@
   let companyContact = $state(data.user.company_contact || "");
   let logoBase64 = $state(data.user.logo_base64 || "");
   
-  // Fallback prevents black flicker if database is empty
   let headerColor = $state(data.user.header_color && data.user.header_color !== "" ? data.user.header_color : "#24503C");
   let accentColor = $state(data.user.accent_color && data.user.accent_color !== "" ? data.user.accent_color : "#C4513D");
 
@@ -58,35 +57,34 @@
   <title>Settings | Quotera</title>
 </svelte:head>
 
-<!-- 👈 FIXED: Increased max-width to 1200px and reduced outer padding -->
-<div style="max-width: 1200px; margin: 0 auto; padding: 8px; width: 100%; box-sizing: border-box;">
+<!-- 👈 FIXED: Almost zero outer padding to let it stretch wide -->
+<div style="max-width: 1200px; margin: 0 auto; padding: 4px; width: 100%; box-sizing: border-box;">
 
-  <div style="margin-bottom: 24px; padding-left: 8px;">
-    <h1 style="font-family: 'Manrope', sans-serif; font-size: 32px; font-weight: 800; color: #303B38; margin: 0 0 8px 0; letter-spacing: -0.03em;">Settings</h1>
-    <p style="color: #6B7280; margin: 0; font-size: 15px;">Manage your account and PDF branding.</p>
+  <div style="margin-bottom: 16px; padding-left: 4px; padding-top: 8px;">
+    <h1 style="font-family: 'Manrope', sans-serif; font-size: 28px; font-weight: 800; color: #303B38; margin: 0 0 4px 0; letter-spacing: -0.03em;">Settings</h1>
+    <p style="color: #6B7280; margin: 0; font-size: 14px;">Manage your account and PDF branding.</p>
   </div>
 
-  <!-- 👈 FIXED: Reduced vertical padding, kept horizontal padding wide for the rectangular look -->
-  <div style="background: #ffffff; border: 1px solid #E5E7EB; border-radius: 16px; padding: 24px 32px; margin-bottom: 20px; box-shadow: 0 8px 24px rgba(48, 59, 56, 0.04); box-sizing: border-box;">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+  <!-- 👈 FIXED: Slim vertical padding, wide horizontal padding for the rectangular look -->
+  <div style="background: #ffffff; border: 1px solid #E5E7EB; border-radius: 12px; padding: 16px 24px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(48, 59, 56, 0.03); box-sizing: border-box;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
       <div>
         <p style="font-size: 14px; font-weight: 600; color: #303B38; margin: 0;">Email Address</p>
         <p style="font-size: 15px; color: #6B7280; margin: 4px 0 0 0;">{data.user.email}</p>
       </div>
       
-      <div style="background: #F0FDF4; border: 1px solid #DCFCE7; border-radius: 12px; padding: 12px 20px; display: flex; align-items: center; gap: 20px;">
+      <div style="background: #F0FDF4; border: 1px solid #DCFCE7; border-radius: 10px; padding: 8px 16px; display: flex; align-items: center; gap: 16px;">
         <div>
-          <p style="font-size: 11px; font-weight: 700; color: #166534; margin: 0; text-transform: uppercase; letter-spacing: 0.05em;">Current Plan</p>
-          <p style="font-size: 16px; font-weight: 800; color: #14532D; margin: 2px 0 0 0;">{data.user.plan}</p>
+          <p style="font-size: 10px; font-weight: 700; color: #166534; margin: 0; text-transform: uppercase; letter-spacing: 0.05em;">Current Plan</p>
+          <p style="font-size: 15px; font-weight: 800; color: #14532D; margin: 2px 0 0 0;">{data.user.plan}</p>
         </div>
-        <button onclick={() => isUpgradeModalOpen = true} style="background: #24503C; color: white; padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; font-size: 14px; cursor: pointer; box-shadow: 0 4px 6px -1px rgba(36,80,60,0.2); transition: all 0.2s;">
+        <button onclick={() => isUpgradeModalOpen = true} style="background: #24503C; color: white; padding: 8px 16px; border-radius: 6px; border: none; font-weight: 600; font-size: 13px; cursor: pointer; box-shadow: 0 2px 4px rgba(36,80,60,0.2); transition: all 0.2s;">
           Upgrade
         </button>
       </div>
     </div>
   </div>
 
-  <!-- MAGIC HAPPENS HERE: reset: false stops the black flicker -->
   <form 
     method="POST" 
     use:enhance={() => {
@@ -94,73 +92,72 @@
         await update({ reset: false }); 
       };
     }} 
-    style="background: #ffffff; border: 1px solid #E5E7EB; border-radius: 16px; padding: 24px 32px; margin-bottom: 24px; box-shadow: 0 8px 24px rgba(48, 59, 56, 0.04); box-sizing: border-box;"
+    style="background: #ffffff; border: 1px solid #E5E7EB; border-radius: 12px; padding: 16px 24px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(48, 59, 56, 0.03); box-sizing: border-box;"
   >
     
-    <h2 style="font-family: 'Manrope', sans-serif; font-size: 22px; font-weight: 800; color: #303B38; margin: 0 0 24px 0; letter-spacing: -0.02em;">PDF Branding</h2>
+    <h2 style="font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 800; color: #303B38; margin: 0 0 16px 0; letter-spacing: -0.02em;">PDF Branding</h2>
 
     {#if form?.success}
-      <div style="background: #DCFCE7; color: #166534; padding: 14px 16px; border-radius: 8px; margin-bottom: 20px; font-weight: 600; font-size: 15px;">
+      <div style="background: #DCFCE7; color: #166534; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-weight: 600; font-size: 14px;">
         Settings saved successfully!
       </div>
     {/if}
 
     {#if form?.error}
-      <div style="background: #FEE2E2; color: #DC2626; padding: 14px 16px; border-radius: 8px; margin-bottom: 20px; font-weight: 600; font-size: 15px;">
+      <div style="background: #FEE2E2; color: #DC2626; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-weight: 600; font-size: 14px;">
         {form.error}
       </div>
     {/if}
 
-    <div style="display: flex; flex-direction: column; gap: 20px;">
+    <div style="display: flex; flex-direction: column; gap: 16px;">
       
       <div>
-        <label style="display: block; font-size: 14px; font-weight: 600; color: #303B38; margin-bottom: 8px;">Company Name</label>
-        <input type="text" name="companyName" bind:value={companyName} placeholder="e.g. Acme Hardware Ltd" style="width: 100%; padding: 14px 16px; border: 1px solid #E5E7EB; border-radius: 10px; font-size: 16px; box-sizing: border-box; transition: border-color 0.2s; outline: none; color: #303B38;" />
+        <label style="display: block; font-size: 13px; font-weight: 600; color: #303B38; margin-bottom: 6px;">Company Name</label>
+        <input type="text" name="companyName" bind:value={companyName} placeholder="e.g. Acme Hardware Ltd" style="width: 100%; padding: 12px 14px; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 15px; box-sizing: border-box; transition: border-color 0.2s; outline: none; color: #303B38;" />
       </div>
 
       <div>
-        <label style="display: block; font-size: 14px; font-weight: 600; color: #303B38; margin-bottom: 8px;">Business Address</label>
-        <input type="text" name="companyAddress" bind:value={companyAddress} placeholder="e.g. 12 Marina Road, Lagos" style="width: 100%; padding: 14px 16px; border: 1px solid #E5E7EB; border-radius: 10px; font-size: 16px; box-sizing: border-box; transition: border-color 0.2s; outline: none; color: #303B38;" />
+        <label style="display: block; font-size: 13px; font-weight: 600; color: #303B38; margin-bottom: 6px;">Business Address</label>
+        <input type="text" name="companyAddress" bind:value={companyAddress} placeholder="e.g. 12 Marina Road, Lagos" style="width: 100%; padding: 12px 14px; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 15px; box-sizing: border-box; transition: border-color 0.2s; outline: none; color: #303B38;" />
       </div>
 
       <div>
-        <label style="display: block; font-size: 14px; font-weight: 600; color: #303B38; margin-bottom: 8px;">Contact Info</label>
-        <input type="text" name="companyContact" bind:value={companyContact} placeholder="e.g. sales@acme.com" style="width: 100%; padding: 14px 16px; border: 1px solid #E5E7EB; border-radius: 10px; font-size: 16px; box-sizing: border-box; transition: border-color 0.2s; outline: none; color: #303B38;" />
+        <label style="display: block; font-size: 13px; font-weight: 600; color: #303B38; margin-bottom: 6px;">Contact Info</label>
+        <input type="text" name="companyContact" bind:value={companyContact} placeholder="e.g. sales@acme.com" style="width: 100%; padding: 12px 14px; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 15px; box-sizing: border-box; transition: border-color 0.2s; outline: none; color: #303B38;" />
       </div>
 
-      <div style="margin-top: 8px;">
-        <label style="display: block; font-size: 14px; font-weight: 600; color: #303B38; margin-bottom: 8px;">Company Logo</label>
+      <div style="margin-top: 4px;">
+        <label style="display: block; font-size: 13px; font-weight: 600; color: #303B38; margin-bottom: 6px;">Company Logo</label>
         <div style="display: flex; align-items: center; gap: 16px;">
           {#if logoBase64}
             <div style="position: relative; display: inline-flex;">
-              <img src={logoBase64} alt="Logo Preview" style="height: 64px; width: auto; max-width: 160px; object-fit: contain; border: 1px solid #E5E7EB; border-radius: 10px; padding: 6px; background: #F9FAFB;" />
-              <button type="button" onclick={removeLogo} style="position: absolute; top: -8px; right: -8px; background: #DC2626; color: white; border: 2px solid white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; padding: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">✕</button>
+              <img src={logoBase64} alt="Logo Preview" style="height: 56px; width: auto; max-width: 140px; object-fit: contain; border: 1px solid #E5E7EB; border-radius: 8px; padding: 4px; background: #F9FAFB;" />
+              <button type="button" onclick={removeLogo} style="position: absolute; top: -6px; right: -6px; background: #DC2626; color: white; border: 2px solid white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 10px; cursor: pointer; padding: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">✕</button>
             </div>
           {/if}
           
           <div style="position: relative; flex: 1;">
             <input type="file" accept="image/*" onchange={handleLogoUpload} style="position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;" />
-            <div style="border: 2px dashed #D1D5DB; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #F9FAFB; transition: border-color 0.2s;">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-              <span style="font-size: 14px; font-weight: 600; color: #303B38;">Click to upload</span>
-              <span style="font-size: 12px; color: #9CA3AF; margin-top: 4px;">JPG, PNG (Max 200px)</span>
+            <div style="border: 2px dashed #D1D5DB; border-radius: 10px; padding: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #F9FAFB; transition: border-color 0.2s;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 6px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+              <span style="font-size: 13px; font-weight: 600; color: #303B38;">Click to upload</span>
+              <span style="font-size: 11px; color: #9CA3AF; margin-top: 2px;">JPG, PNG (Max 200px)</span>
             </div>
           </div>
         </div>
         {#if isCompressing}
-          <p style="font-size: 13px; color: #24503C; margin-top: 8px; font-weight: 600;">Compressing image...</p>
+          <p style="font-size: 12px; color: #24503C; margin-top: 6px; font-weight: 600;">Compressing image...</p>
         {/if}
         <input type="hidden" name="logoBase64" value={logoBase64} />
       </div>
 
-      <!-- ONLY 2 COLOR PICKERS NOW -->
-      <div style="margin-top: 16px;">
-        <label style="display: block; font-size: 14px; font-weight: 600; color: #303B38; margin-bottom: 12px;">PDF Colors</label>
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+      <div style="margin-top: 12px;">
+        <label style="display: block; font-size: 13px; font-weight: 600; color: #303B38; margin-bottom: 10px;">PDF Colors</label>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
           
-          <div style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 12px; padding: 16px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-            <span style="display: block; font-size: 12px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px;">Header Banner</span>
-            <div style="position: relative; width: 100%; height: 44px; border-radius: 8px; overflow: hidden; border: 1px solid #D1D5DB;">
+          <div style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 10px; padding: 12px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+            <span style="display: block; font-size: 11px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">Header Banner</span>
+            <div style="position: relative; width: 100%; height: 40px; border-radius: 6px; overflow: hidden; border: 1px solid #D1D5DB;">
               <input 
                 type="color" 
                 name="headerColor" 
@@ -171,9 +168,9 @@
             </div>
           </div>
 
-          <div style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 12px; padding: 16px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-            <span style="display: block; font-size: 12px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px;">Accent Color</span>
-            <div style="position: relative; width: 100%; height: 44px; border-radius: 8px; overflow: hidden; border: 1px solid #D1D5DB;">
+          <div style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 10px; padding: 12px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+            <span style="display: block; font-size: 11px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">Accent Color</span>
+            <div style="position: relative; width: 100%; height: 40px; border-radius: 6px; overflow: hidden; border: 1px solid #D1D5DB;">
               <input 
                 type="color" 
                 name="accentColor" 
@@ -188,7 +185,7 @@
       </div>
     </div>
 
-    <button type="submit" style="width: 100%; background: #24503C; color: white; padding: 16px; border-radius: 10px; border: none; font-weight: 700; font-size: 16px; cursor: pointer; margin-top: 28px; box-shadow: 0 4px 6px -1px rgba(36,80,60,0.2); transition: transform 0.1s;">
+    <button type="submit" style="width: 100%; background: #24503C; color: white; padding: 14px; border-radius: 8px; border: none; font-weight: 700; font-size: 15px; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 6px -1px rgba(36,80,60,0.2); transition: transform 0.1s;">
       Save Settings
     </button>
   </form>
