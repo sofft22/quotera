@@ -18,11 +18,21 @@
     return () => window.removeEventListener('scroll', handleScroll);
   });
 
-  // REBUILT SVG: Hardcoded colors, tight viewBox, no invisible padding.
   const perfectSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="15 10 190 160" width="30" height="30"><path fill="#24503C" d="M86.5 64.2L86.5 74.8C82.5 75.5 69.5 77.5 62.8 79.3C56 81.2 51.6 82.9 46.2 86C40.9 89.2 34.3 95.1 30.9 98.3C27.5 101.4 27.1 102.8 25.8 105C24.6 107.2 23.7 110.2 23.2 111.2L39.5 102.5C40.8 105.1 44.9 113.8 47.4 118C49.9 122.2 51.6 124.4 54.4 127.5C57.3 130.6 60.8 133.9 64.5 136.5C68.2 139.2 72.4 141.7 76.8 143.5C81.1 145.3 86 146.6 90.8 147.4C95.5 148.1 100.4 148.4 105.2 148C110.1 147.7 115.6 146.6 119.8 145.2C123.9 143.9 128.5 140.9 130.2 140L114 120.8C111.4 121.1 103.3 122.9 98.5 122.6C93.7 122.2 89.3 121.1 85 118.7C80.7 116.3 75.2 111.1 72.4 108.2C69.7 105.4 69.4 103.8 68.5 101.8C67.6 99.7 67.2 97 67 96C69 95.7 76 94.4 79.2 94.3C82.5 94.2 85.5 95.3 86.8 95.5L86.2 106.5L117.5 85C116.4 84.1 116.2 83 111 79.5C105.8 76.1 90.6 66.8 86.5 64.2Z"/><path fill="#24503C" d="M39 84.2C43.3 82.5 58.3 79.3 64.9 73.5C71.6 67.8 74.9 55.1 78.7 49.8C82.5 44.4 84.6 43.9 87.8 41.6C90.9 39.2 94.2 37.3 97.8 35.9C101.3 34.4 105.2 33.4 109 32.9C112.8 32.4 116.8 32.2 120.8 32.7C124.8 33.2 129 34.4 133 35.8C137 37.3 143 40.6 145 41.5C144.1 40.6 142 37.9 139.7 36.1C137.5 34.3 135.7 32.5 131.5 30.5C127.3 28.5 120.8 25.4 114.8 24.1C108.7 22.9 101.4 22.4 95.2 22.9C89.1 23.4 83.3 24.7 77.8 27C72.2 29.3 66.5 32.7 61.8 36.5C57 40.3 52.7 44.7 49.3 49.8C45.9 54.8 42.9 62.4 41.2 67C39.4 71.6 39.3 74.6 39 77.5C38.6 80.4 39 83.1 39 84.2Z"/><path fill="#C4513D" d="M72 61C73.9 59.7 80.2 54.9 83.5 53C86.8 51.1 88.7 50.4 91.8 49.6C94.8 48.8 98.7 48.2 102 48.3C105.3 48.4 108.3 49 111.5 50C114.7 51.1 118.1 52.6 121 54.5C123.9 56.5 126.8 59.2 128.9 61.8C131.1 64.3 132.4 66.5 133.9 69.8C135.4 73 137.3 79.5 138 81.5L158 62C157.2 60.2 155.4 54.3 153.2 51C151.1 47.7 148.7 44.9 145.2 42.3C141.8 39.8 137.5 37.3 132.8 35.7C128 34 122 32.7 117 32.5C112 32.3 107 33.1 102.5 34.3C98 35.5 94.3 37.1 90.2 39.7C86.2 42.3 81.5 46.2 78.4 49.8C75.4 53.3 73.1 59.1 72 61Z"/><path fill="#C4513D" d="M104.8 100.8L121.8 88.8L131 96.8C148 75 182 47 212.5 31C168 70 158 100 153 121L173.5 147.5L143.8 147.5Z"/></svg>`;
 </script>
 
 <style>
+  /* 👈 THE SILVER BULLET: Forces every element to include its padding in its width */
+  :global(*), :global(*::before), :global(*::after) {
+    box-sizing: border-box;
+  }
+  :global(html), :global(body) {
+    overflow-x: hidden;
+    max-width: 100vw;
+    margin: 0;
+    padding: 0;
+  }
+
   .logo-container {
     display: flex;
     align-items: center;
@@ -82,10 +92,11 @@
   @media (min-width: 769px) {
     .main-wrapper {
       margin-left: 260px;
-      width: auto; /* 👈 FIXED: Let margin handle the width */
+      width: auto;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      overflow-x: hidden;
     }
     .app-header {
       display: flex; justify-content: flex-end; align-items: center;
@@ -94,23 +105,18 @@
     }
     .mobile-brand { display: none; }
     .mobile-logout { display: none; }
-    .main-content { 
-      flex: 1; 
-      padding: 32px; 
-      width: 100%; 
-      max-width: 100%; 
-      box-sizing: border-box; /* 👈 FIXED: Stops padding from adding to width */
-      overflow-x: hidden; 
-    }
+    .main-content { flex: 1; padding: 32px; width: 100%; overflow-x: hidden; }
   }
   
   /* MOBILE LAYOUT */
   @media (max-width: 768px) {
     .desktop-sidebar { display: none; }
     .desktop-links { display: none; }
+    
+    /* 👈 Forces the wrapper to exactly match the phone screen */
     .main-wrapper { 
-      width: 100vw; /* 👈 FIXED: Hard lock to screen width */
-      max-width: 100%; 
+      width: 100vw; 
+      max-width: 100vw; 
       overflow-x: hidden; 
     }
     
@@ -122,12 +128,12 @@
     .mobile-brand { display: block; }
     .mobile-logout { display: block; }
 
+    /* 👈 Forces the main content to exactly match the phone screen */
     .main-content { 
-      padding: 16px 8px; 
+      padding: 16px; 
       padding-bottom: 88px; 
-      width: 100vw; /* 👈 FIXED: Hard lock to screen width */
-      max-width: 100%; 
-      box-sizing: border-box; /* 👈 FIXED: Stops padding from adding to width */
+      width: 100vw; 
+      max-width: 100vw; 
       overflow-x: hidden; 
     }
     
@@ -136,7 +142,7 @@
       height: 64px; background: #ffffff; border-top: 1px solid #E5E7EB;
       justify-content: space-around; align-items: center; z-index: 100;
       padding-bottom: env(safe-area-inset-bottom);
-      width: 100vw; max-width: 100%; box-sizing: border-box;
+      width: 100vw; max-width: 100vw; overflow: hidden;
     }
     .mobile-nav-item {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -147,10 +153,8 @@
   }
 </style>
 
-<!-- MAIN WRAPPER -->
-<div style="display: flex; min-height: 100vh; background-color: #EEF2EE; font-family: 'Inter', system-ui, sans-serif; width: 100vw; max-width: 100%; overflow-x: hidden;">
+<div style="display: flex; min-height: 100vh; background-color: #EEF2EE; font-family: 'Inter', system-ui, sans-serif; width: 100vw; max-width: 100vw; overflow-x: hidden;">
   
-  <!-- DESKTOP SIDEBAR -->
   <aside class="desktop-sidebar">
     <div style="padding: 32px 24px;">
       <a href="/dashboard" class="logo-container">
@@ -168,12 +172,8 @@
     </nav>
   </aside>
 
-  <!-- MAIN CONTENT WRAPPER -->
   <div class="main-wrapper">
-    
-    <!-- SMART HEADER -->
     <header class="app-header" class:header-hidden={headerHidden}>
-      <!-- Mobile Brand -->
       <div class="mobile-brand">
         <a href="/dashboard" class="logo-container">
           <div class="logo-svg">{@html perfectSVG}</div>
@@ -181,7 +181,6 @@
         </a>
       </div>
 
-      <!-- Desktop Links -->
       <div class="desktop-links">
         <a href="/pricing" style="font-size: 13px; font-weight: 600; color: #6B7280; text-decoration: none;">Upgrade Plan</a>
         <div style="display: flex; align-items: center; gap: 12px; margin-left: 24px;">
@@ -194,7 +193,6 @@
         </div>
       </div>
 
-      <!-- Mobile Logout -->
       <div class="mobile-logout">
         <a href="/logout" style="color: #6B7280; display: flex; align-items: center;">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
@@ -202,13 +200,11 @@
       </div>
     </header>
 
-    <!-- PAGE CONTENT -->
     <main class="main-content">
       <slot />
     </main>
   </div>
 
-  <!-- MOBILE BOTTOM NAV -->
   <nav class="mobile-nav">
     <a href="/dashboard" class="mobile-nav-item" class:active={page.url.pathname.startsWith('/dashboard')}>
       <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
