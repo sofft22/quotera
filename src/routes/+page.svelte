@@ -1,19 +1,15 @@
 <script>
   import { onMount } from 'svelte';
-  import { redirect } from '@sveltejs/kit'; // Add this
-  export let data; // Add this
+  import { redirect } from '@sveltejs/kit';
+  export let data;
 
-  // Redirect to dashboard if they are already logged in
   if (data.isLoggedIn) {
     throw redirect(303, '/dashboard');
   }
   
-  // ... rest of your code
-
   let navHidden = false;
   const WHATSAPP = "2347072789513";
 
-  // CountUp Action
   function CountUp(node, { to, suffix = "", duration = 1500 }) {
     let observer;
     const update = (val) => {
@@ -39,7 +35,6 @@
     return { destroy() { io.disconnect(); } };
   }
 
-  // Advanced Reveal Action
   function Reveal(node, { direction = 'up', delay = 0 }) {
     node.style.opacity = '0';
     node.style.transition = `opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s`;
@@ -103,7 +98,6 @@
       --serif: 'Manrope', sans-serif;
     }
 
-    /* ─── RESTORED TYPING ANIMATION ─── */
     .typewriter h1 {
       display: inline-block;
       clip-path: inset(0 100% 0 0);
@@ -167,17 +161,17 @@
     .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; font-weight: 600; padding: 14px 24px; border-radius: 8px; text-decoration: none; background: var(--green); color: #fff; transition: all 0.2s; width: 100%; max-width: 320px; border: none; cursor: pointer; }
     .btn:hover { background: #1a3a2b; }
 
-    /* ─── GLOBAL SECTIONS (Internal Spacing Only) ─── */
+    /* ─── GLOBAL SECTIONS ─── */
     .section { padding: 80px 20px; max-width: 1200px; margin: 0 auto; }
     @media (min-width: 900px) { .section { padding: 100px 24px; } }
     .sec-head { text-align: center; margin-bottom: 48px; }
     .h-section { font-family: 'Manrope', sans-serif; font-size: clamp(28px, 6vw, 42px); font-weight: 800; letter-spacing: -0.03em; color: var(--ink); }
 
-    /* ─── STATS ─── */
-    .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; padding: 60px 20px; border-top: 1px solid rgba(48,59,56,0.1); border-bottom: 1px solid rgba(48,59,56,0.1); text-align: center; max-width: 1200px; margin: 0 auto; }
+    /* ─── STATS (Hierarchy Fixed) ─── */
+    .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px 16px; padding: 60px 20px; border-top: 1px solid rgba(48,59,56,0.1); border-bottom: 1px solid rgba(48,59,56,0.1); text-align: center; max-width: 1200px; margin: 0 auto; }
     @media (min-width: 700px) { .stats { grid-template-columns: repeat(4, 1fr); gap: 48px; padding: 64px 24px; } }
-    .stat-num { font-family: 'Manrope', sans-serif; font-size: 32px; font-weight: 800; color: var(--ink); }
-    .stat-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-top: 6px; letter-spacing: 0.05em; }
+    .stat-num { font-family: 'Manrope', sans-serif; font-size: 26px; font-weight: 700; color: var(--ink); line-height: 1.2; }
+    .stat-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; margin-top: 8px; letter-spacing: 0.08em; }
 
     /* ─── WHY ─── */
     .ba { display: grid; grid-template-columns: 1fr; gap: 24px; }
@@ -192,8 +186,8 @@
     .ba-card.yes li { color: rgba(255,255,255,0.9); }
     .ba-card.yes svg { stroke: #fff; }
 
-    /* ─── STEPS ─── */
-    .steps { display: grid; grid-template-columns: 1fr; gap: 40px; }
+    /* ─── STEPS (Spacing Fixed) ─── */
+    .steps { display: grid; grid-template-columns: 1fr; gap: 56px; } /* Increased from 40px */
     @media (min-width: 900px) { .steps { grid-template-columns: repeat(3, 1fr); gap: 48px; } }
     .step { border-top: 1px solid var(--line); padding-top: 32px; position: relative; }
     .step::before { content: ""; position: absolute; top: -1px; left: 0; width: 40px; height: 2px; background: var(--terra); }
@@ -201,7 +195,7 @@
     .step h3 { font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 800; margin-bottom: 12px; color: var(--ink); }
     .step p { font-size: 14px; color: var(--muted); line-height: 1.6; }
 
-    /* ─── PRICING (Untouched) ─── */
+    /* ─── PRICING ─── */
     .plans { display: grid; grid-template-columns: 1fr; gap: 20px; align-items: start; }
     @media (min-width: 900px) { .plans { grid-template-columns: repeat(4, 1fr); gap: 24px; } }
     .plan { padding: 28px 20px; border: 1px solid var(--line); border-radius: 16px; background: #fff; display: flex; flex-direction: column; height: fit-content; }
@@ -220,27 +214,17 @@
     .plan .btn { margin-top: auto; width: 100%; background: var(--bg); color: var(--ink); justify-content: center; padding: 10px; font-size: 13px; }
     .plan.pop .btn { background: #fff; color: var(--green); }
 
-    /* ─── SHORT REVIEWS (Untouched) ─── */
+    /* ─── SHORT REVIEWS ─── */
     .reviews-grid { display: grid; grid-template-columns: 1fr; gap: 24px; text-align: center; }
     @media (min-width: 900px) { .reviews-grid { grid-template-columns: repeat(3, 1fr); gap: 32px; } }
-    
-    .review-card { 
-      display: flex; 
-      flex-direction: column; 
-      position: relative; 
-      padding: 16px; 
-    }
-    
-    .review-card:not(:last-child)::after {
-      content: ""; position: absolute; bottom: -12px; left: 20%; width: 60%; height: 1px; background-color: rgba(48, 59, 56, 0.08);
-    }
+    .review-card { display: flex; flex-direction: column; position: relative; padding: 16px; }
+    .review-card:not(:last-child)::after { content: ""; position: absolute; bottom: -12px; left: 20%; width: 60%; height: 1px; background-color: rgba(48, 59, 56, 0.08); }
     @media (min-width: 900px) { .review-card::after { display: none; } }
-
     .review-text { font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.6; color: var(--ink); font-weight: 400; margin-bottom: 16px; }
     .review-author { font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink); margin: 0; }
     .review-role { font-size: 11px; color: var(--muted); margin: 4px 0 0; }
 
-    /* ─── FAQ (Untouched) ─── */
+    /* ─── FAQ ─── */
     .faq { display: flex; flex-direction: column; gap: 12px; max-width: 800px; margin: 0 auto; }
     .faq details { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 20px; }
     .faq summary { font-family: 'Manrope', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
@@ -255,7 +239,7 @@
     .final-cta .btn { background: var(--terra); font-size: 16px; padding: 16px 32px; color: #fff; margin: 0 auto; }
     .final-cta .btn:hover { background: #a83a29; }
 
-    /* ─── FOOTER (Cleaned up) ─── */
+    /* ─── FOOTER (Hierarchy Fixed) ─── */
     footer { background: var(--ink); color: #fff; padding: 64px 20px 32px; }
     .fgrid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 40px 20px; text-align: left; }
     .fgrid > div:first-child { grid-column: 1 / -1; text-align: center; margin-bottom: 24px; }
@@ -273,15 +257,18 @@
 
     footer .brand { display: inline-flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 16px; font-size: 24px; color: #fff; }
     footer .brand span { color: var(--terra); }
-    footer p { color: rgba(255,255,255,0.6); font-size: 14px; line-height: 1.6; max-width: 300px; margin: 0 auto; }
+    
+    /* Shortened the paragraph text and reduced width */
+    footer p { color: rgba(255,255,255,0.6); font-size: 14px; line-height: 1.6; max-width: 260px; margin: 0 auto; }
     @media (min-width: 900px) { footer p { margin: 0; } }
 
-    footer h4 { font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(255,255,255,0.4); }
-    footer ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    /* Fixed Footer Header Hierarchy */
+    footer h4 { font-family: 'Manrope', sans-serif; font-size: 11px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.4); }
+    
+    footer ul { list-style: none; display: flex; flex-direction: column; gap: 14px; }
     footer a { color: #fff; text-decoration: none; font-size: 14px; transition: color 0.2s; }
     footer a:hover { color: var(--terra); }
     
-    /* Single divider line at the very end */
     .fbot { max-width: 1200px; margin: 48px auto 0; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; display: flex; flex-direction: column; gap: 12px; align-items: center; justify-content: center; font-size: 13px; color: rgba(255,255,255,0.4); text-align: center; }
     @media (min-width: 700px) { .fbot { flex-direction: row; justify-content: space-between; text-align: left; } }
     .status { display: flex; align-items: center; gap: 8px; }
@@ -304,8 +291,7 @@
       </div>
       
       <div class="mobile-nav-header">
-        <a href="/login" style="font-size: 13px; font-weight: 600; color: var(--ink); text-decoration
-: none; margin-right: 4px;" class="hide-mobile">Sign In</a>
+        <a href="/login" style="font-size: 13px; font-weight: 600; color: var(--ink); text-decoration: none; margin-right: 4px;" class="hide-mobile">Sign In</a>
         <a href="/register" class="nav-cta">Start free</a>
       </div>
     </div>
@@ -361,7 +347,7 @@
       </div>
     </section>
 
-                <!-- HOW IT WORKS -->
+    <!-- HOW IT WORKS -->
     <section class="section" id="how">
       <div class="sec-head" use:Reveal={{ direction: 'up' }}>
         <h2 class="h-section">Three steps to close.</h2>
@@ -371,8 +357,7 @@
           <div class="step-num">01</div>
           <h3>Paste the request</h3>
           <p>Copy the exact text your customer sent you on WhatsApp or email.</p>
-        </div>
-        <div class="step" use:Reveal={{ direction: 'up', delay: 0.2 }}>
+                <div class="step" use:Reveal={{ direction: 'up', delay: 0.2 }}>
           <div class="step-num">02</div>
           <h3>Quotera does the math</h3>
           <p>It extracts items, matches your prices, and calculates totals perfectly.</p>
@@ -518,7 +503,7 @@
         <a href="#top" class="brand">
           {@html I.logo} Quotera<span>.</span>
         </a>
-        <p>Quote smarter, close faster. The automated quoting engine for modern business.</p>
+        <p>Quote smarter, close faster.</p>
       </div>
       <div use:Reveal={{ direction: 'up', delay: 0.1 }}>
         <h4>Product</h4>
