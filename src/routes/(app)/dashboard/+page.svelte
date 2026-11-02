@@ -1,4 +1,4 @@
-            <script>
+                <script>
   import { enhance } from '$app/forms';
   import { onMount } from 'svelte';
 
@@ -136,6 +136,10 @@
 <svelte:head>
   <title>Dashboard | Quotera</title>
   <style>
+    :global(html), :global(body) {
+      overflow-x: hidden;
+      max-width: 100vw;
+    }
     @media print {
       body * { visibility: hidden; }
       .print-area, .print-area * { visibility: visible; }
@@ -211,7 +215,7 @@
   {/if}
 
   {#if pageView === 'builder'}
-    <div class="no-print" style="background: #ffffff; border-radius: 12px; border: 1px solid #E5E7EB; padding: 20px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); margin-top: 16px;">
+    <div class="no-print" style="background: #ffffff; border-radius: 12px; border: 1px solid #E5E7EB; padding: 20px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); margin-top: 16px; box-sizing: border-box; width: 100%;">
       
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
         <h2 style="font-family: 'Manrope'; font-size: 18px; font-weight: 800; color: #303B38; margin: 0;">Edit Quote</h2>
@@ -229,13 +233,13 @@
           <p style="font-size: 13px; color: #6B7280;">No items matched.</p>
         {:else}
           {#each quoteItems as item (item.id)}
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid #F3F4F6;">
-              <div style="flex: 1; padding-right: 12px;">
-                <div style="font-size: 14px; font-weight: 600; color: #303B38; line-height: 1.3;">{toTitleCase(item.name)}</div>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid #F3F4F6; gap: 8px; flex-wrap: wrap;">
+              <div style="flex: 1; min-width: 140px;">
+                <div style="font-size: 14px; font-weight: 600; color: #303B38; line-height: 1.3; word-break: break-word;">{toTitleCase(item.name)}</div>
                 <div style="font-size: 12px; color: #6B7280; margin-top: 4px;">Unit: {toTitleCase(item.unit)} | Price: {formatCurrency(item.price)}</div>
               </div>
-              <div style="display: flex; align-items: center; gap: 12px;">
-                <input type="number" value={item.qty} oninput={(e) => updateQty(item.id, e.target.value)} style="width: 60px; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; text-align: center; font-size: 14px; outline: none;" min="1" />
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <input type="number" value={item.qty} oninput={(e) => updateQty(item.id, e.target.value)} style="width: 56px; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; text-align: center; font-size: 14px; outline: none;" min="1" />
                 <div style="font-weight: 600; font-size: 14px; color: #303B38; width: 80px; text-align: right;">{formatCurrency(item.price * item.qty)}</div>
                 <button onclick={() => removeItem(item.id)} style="background: none; border: none; color: #DC2626; cursor: pointer; font-size: 14px; padding: 0;">✕</button>
               </div>
@@ -245,25 +249,25 @@
       </div>
 
       <div style="display: flex; flex-direction: column; gap: 12px;">
-        <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
           <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #303B38; width: 100px;">
             <input type="checkbox" bind:checked={includeDiscount} style="width: 16px; height: 16px; accent-color: #24503C;" /> Discount
           </label>
-          <select bind:value={discountType} style="flex: 1; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 13px; color: #6B7280; outline: none;">
+          <select bind:value={discountType} style="flex: 1; min-width: 60px; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 13px; color: #6B7280; outline: none;">
             <option value="percentage">%</option>
             <option value="flat">₦</option>
           </select>
           <input type="number" bind:value={discountValue} placeholder="0" style="width: 70px; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 13px; text-align: center; outline: none;" />
         </div>
         
-        <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
           <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #303B38; width: 100px;">
             <input type="checkbox" bind:checked={includeDelivery} style="width: 16px; height: 16px; accent-color: #24503C;" /> Delivery
           </label>
-          <input type="number" bind:value={deliveryFee} placeholder="Amount" style="flex: 1; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 13px; outline: none;" />
+          <input type="number" bind:value={deliveryFee} placeholder="Amount" style="flex: 1; min-width: 80px; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 13px; outline: none;" />
         </div>
 
-        <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
           <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #303B38; width: 100px;">
             <input type="checkbox" bind:checked={includeVAT} style="width: 16px; height: 16px; accent-color: #24503C;" /> VAT
           </label>
@@ -274,57 +278,57 @@
     </div>
 
     <!-- ON-SCREEN PREVIEW (FIRM) -->
-    <div class="print-area" style="background: #ffffff; border-radius: 16px; border: 1px solid #E5E7EB; padding: 20px; font-family: 'Inter', sans-serif; color: #303B38; box-shadow: 0 4px 12px rgba(0,0,0,0.02); width: 100%; box-sizing: border-box; overflow: hidden;">
+    <div class="print-area" style="background: #ffffff; border-radius: 16px; border: 1px solid #E5E7EB; padding: 16px; font-family: 'Inter', sans-serif; color: #303B38; box-shadow: 0 4px 12px rgba(0,0,0,0.02); width: 100%; max-width: 100%; box-sizing: border-box; overflow: hidden;">
       
       <!-- HEADER BANNER -->
-      <div style="background-color: {getColors().header}; padding: 20px; border-radius: 8px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-start; color: white; box-sizing: border-box; width: 100%;">
-        <div style="max-width: 50%;">
-          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+      <div style="background-color: {getColors().header}; padding: 16px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-start; color: white; box-sizing: border-box; width: 100%; max-width: 100%; flex-wrap: wrap; gap: 8px;">
+        <div style="max-width: 50%; min-width: 140px;">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap;">
             {#if getColors().logo}
-              <img src={getColors().logo} alt="Logo" style="height: 36px; width: auto; max-width: 100px; object-fit: contain; background: white; border-radius: 4px; padding: 4px;" />
+              <img src={getColors().logo} alt="Logo" style="height: 32px; width: auto; max-width: 90px; object-fit: contain; background: white; border-radius: 4px; padding: 4px;" />
             {/if}
-            <div style="font-family: 'Manrope'; font-size: 18px; font-weight: 900; letter-spacing: -0.03em; color: #ffffff; line-height: 1.2; word-break: break-word;">{getColors().companyName}</div>
+            <div style="font-family: 'Manrope'; font-size: 16px; font-weight: 900; letter-spacing: -0.03em; color: #ffffff; line-height: 1.2; word-break: break-word;">{getColors().companyName}</div>
           </div>
           <div style="font-size: 11px; color: rgba(255,255,255,0.8); margin-top: 4px; line-height: 1.5; word-break: break-word;">{getColors().companyAddress}<br/>{getColors().companyContact}</div>
         </div>
-        <div style="text-align: right; max-width: 50%;">
-          <h1 style="font-family: 'Manrope'; font-size: 16px; margin: 0 0 4px 0; color: #ffffff; text-transform: uppercase;">Quotation</h1>
+        <div style="text-align: right; max-width: 50%; min-width: 100px;">
+          <h1 style="font-family: 'Manrope'; font-size: 15px; margin: 0 0 4px 0; color: #ffffff; text-transform: uppercase;">Quotation</h1>
           <div style="font-size: 11px; color: rgba(255,255,255,0.8);">Date: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
         </div>
       </div>
 
-      <div style="margin-bottom: 24px;">
+      <div style="margin-bottom: 20px;">
         <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: {getColors().header}; margin-bottom: 4px;">Prepared For</div>
         <div style="font-size: 14px; font-weight: 700; color: #303B38; word-break: break-word;">{toTitleCase(customer.name)}</div>
         <div style="font-size: 12px; color: #6B7280; word-break: break-word;">{customer.contact}</div>
       </div>
 
       <!-- TABLE WRAPPER (FIRM) -->
-      <div style="width: 100%; overflow-x: auto; margin-bottom: 24px;">
-        <table style="width: 100%; border-collapse: collapse; table-layout: fixed; min-width: 320px;">
+      <div style="width: 100%; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 20px;">
+        <table style="width: 100%; border-collapse: collapse; table-layout: fixed; min-width: 0;">
           <thead>
             <tr style="border-bottom: 1px solid #E5E7EB;">
-              <th style="text-align: left; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 50%;">Item</th>
-              <th style="text-align: center; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 15%;">Unit</th>
-              <th style="text-align: center; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 10%;">Qty</th>
-              <th style="text-align: right; padding: 12px 0; font-size: 11px; text-transform: uppercase; color: #6B7280; width: 25%;">Total</th>
+              <th style="text-align: left; padding: 10px 4px; font-size: 10px; text-transform: uppercase; color: #6B7280; width: 50%;">Item</th>
+              <th style="text-align: center; padding: 10px 4px; font-size: 10px; text-transform: uppercase; color: #6B7280; width: 15%;">Unit</th>
+              <th style="text-align: center; padding: 10px 4px; font-size: 10px; text-transform: uppercase; color: #6B7280; width: 10%;">Qty</th>
+              <th style="text-align: right; padding: 10px 4px; font-size: 10px; text-transform: uppercase; color: #6B7280; width: 25%;">Total</th>
             </tr>
           </thead>
           <tbody>
             {#each quoteItems as item}
               <tr style="border-bottom: 1px solid #F3F4F6;">
-                <td style="padding: 16px 0; font-size: 14px; font-weight: 600; line-height: 1.4; word-wrap: break-word; color: #303B38;">{toTitleCase(item.name)}</td>
-                <td style="padding: 16px 0; text-align: center; font-size: 14px; color: #6B7280;">{toTitleCase(item.unit)}</td>
-                <td style="padding: 16px 0; text-align: center; font-size: 14px; color: #6B7280;">{item.qty}</td>
-                <td style="padding: 16px 0; text-align: right; font-size: 14px; font-weight: 600; color: #303B38;">{formatCurrency(item.price * item.qty)}</td>
+                <td style="padding: 12px 4px; font-size: 13px; font-weight: 600; line-height: 1.4; word-wrap: break-word; color: #303B38;">{toTitleCase(item.name)}</td>
+                <td style="padding: 12px 4px; text-align: center; font-size: 13px; color: #6B7280;">{toTitleCase(item.unit)}</td>
+                <td style="padding: 12px 4px; text-align: center; font-size: 13px; color: #6B7280;">{item.qty}</td>
+                <td style="padding: 12px 4px; text-align: right; font-size: 13px; font-weight: 600; color: #303B38;">{formatCurrency(item.price * item.qty)}</td>
               </tr>
             {/each}
           </tbody>
         </table>
       </div>
 
-      <div style="display: flex; justify-content: flex-end; margin-bottom: 24px;">
-        <div style="width: 220px; max-width: 100%;">
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+        <div style="width: 100%; max-width: 220px;">
           <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; color: #4B5563;">
             <span>Subtotal:</span>
             <span>{formatCurrency(subtotal)}</span>
@@ -354,7 +358,7 @@
         </div>
       </div>
       
-      <div style="border-top: 1px solid #F3F4F6; padding-top: 24px; text-align: center;">
+      <div style="border-top: 1px solid #F3F4F6; padding-top: 20px; text-align: center;">
         <p style="font-size: 12px; color: #6B7280; margin: 0;">Thank you for your business. If you have any questions, please contact us.</p>
       </div>
     </div>
@@ -447,7 +451,7 @@
                 <td style="padding: 20px 0; font-size: 16px; font-weight: 600; line-height: 1.5; word-wrap: break-word; color: #303B38;">{toTitleCase(item.name)}</td>
                 <td style="padding: 20px 0; text-align: center; font-size: 15px; font-weight: 500; color: #6B7280;">{toTitleCase(item.unit)}</td>
                 <td style="padding: 20px 0; text-align: center; font-size: 15px; font-weight: 500; color: #6B7280;">{item.qty}</td>
-                <td style="padding: 20px 0; text-align: right; font-size: 15px; color: #6B7280;">{formatCurrency(item.price)}</td>
+                <td style="padding: 20px 0; text<td style="padding: 20px 0; text-align: right; font-size: 15px; color: #6B7280;">{formatCurrency(item.price)}</td>
                 <td style="padding: 20px 0; text-align: right; font-size: 16px; font-weight: 700; color: #303B38;">{formatCurrency(item.price * item.qty)}</td>
               </tr>
             {/each}
@@ -459,13 +463,13 @@
             <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: #4B5563;">
               <span>Subtotal:</span>
               <span>{formatCurrency(subtotal)}</span>
-                          </div>
-              {#if includeDiscount}
-                <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: #DC2626; font-weight: 500;">
-                  <span>Discount:</span>
-                  <span>-{formatCurrency(discountAmount)}</span>
-                </div>
-              {/if}
+            </div>
+            {#if includeDiscount}
+              <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: #DC2626; font-weight: 500;">
+                <span>Discount:</span>
+                <span>-{formatCurrency(discountAmount)}</span>
+              </div>
+            {/if}
             {#if includeDelivery && deliveryFee > 0}
               <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: #4B5563;">
                 <span>Delivery:</span>
