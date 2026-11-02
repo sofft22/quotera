@@ -22,39 +22,22 @@
 </script>
 
 <style>
-  /* 👈 THE SILVER BULLET: Forces every element to include its padding in its width */
-  :global(*), :global(*::before), :global(*::after) {
-    box-sizing: border-box;
-  }
+  /* 👈 THE GLOBAL STRAITJACKET */
   :global(html), :global(body) {
-    overflow-x: hidden;
-    max-width: 100vw;
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+    width: 100vw !important;
     margin: 0;
     padding: 0;
   }
 
-  .logo-container {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    text-decoration: none;
-  }
-  
-  .logo-svg {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  :global(*) {
+    box-sizing: border-box;
   }
 
-  .logo-text {
-    font-family: 'Nunito', sans-serif; 
-    font-weight: 900; 
-    color: #303B38; 
-    letter-spacing: -0.03em;
-    line-height: 1;
-    font-size: 24px;
-    margin-top: -2px;
-  }
+  .logo-container { display: flex; align-items: center; gap: 4px; text-decoration: none; }
+  .logo-svg { display: flex; align-items: center; justify-content: center; }
+  .logo-text { font-family: 'Nunito', sans-serif; font-weight: 900; color: #303B38; letter-spacing: -0.03em; line-height: 1; font-size: 24px; margin-top: -2px; }
   .logo-text span { color: #C4513D; }
 
   @media (max-width: 768px) {
@@ -62,41 +45,23 @@
     .logo-svg svg { width: 26px; height: 26px; }
   }
 
-  /* DESKTOP SIDEBAR */
   .desktop-sidebar {
     width: 260px; height: 100vh; position: fixed; top: 0; left: 0;
     background-color: #ffffff; border-right: 1px solid #E5E7EB;
     display: flex; flex-direction: column; z-index: 50;
   }
 
-  .nav-link {
-    display: block; padding: 12px 16px; color: #6B7280; 
-    text-decoration: none; border-radius: 8px; font-size: 14px; 
-    font-weight: 500; transition: all 0.2s;
-  }
+  .nav-link { display: block; padding: 12px 16px; color: #6B7280; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 500; transition: all 0.2s; }
   .nav-link:hover { background-color: #F9FAFB; color: #303B38; }
   .nav-link.active { background-color: #F0FDF4; color: #24503C; font-weight: 600; }
-  
   .mobile-nav { display: none; }
+  .app-header { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); will-change: transform; }
+  .header-hidden { transform: translateY(-100%); }
 
-  /* SMART HEADER TRANSITIONS */
-  .app-header {
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: transform;
-  }
-  .header-hidden {
-    transform: translateY(-100%);
-  }
-
-  /* DESKTOP LAYOUT */
   @media (min-width: 769px) {
     .main-wrapper {
-      margin-left: 260px;
-      width: auto;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      overflow-x: hidden;
+      margin-left: 260px; width: auto; display: flex; flex-direction: column;
+      min-height: 100vh; overflow-x: hidden; max-width: calc(100vw - 260px);
     }
     .app-header {
       display: flex; justify-content: flex-end; align-items: center;
@@ -105,19 +70,20 @@
     }
     .mobile-brand { display: none; }
     .mobile-logout { display: none; }
-    .main-content { flex: 1; padding: 32px; width: 100%; overflow-x: hidden; }
+    .main-content { flex: 1; padding: 32px; width: 100%; max-width: 100%; overflow-x: hidden; }
   }
   
-  /* MOBILE LAYOUT */
   @media (max-width: 768px) {
     .desktop-sidebar { display: none; }
     .desktop-links { display: none; }
     
-    /* 👈 Forces the wrapper to exactly match the phone screen */
+    /* 👈 LOCKS THE WRAPPER TO THE EXACT SCREEN SIZE */
     .main-wrapper { 
-      width: 100vw; 
-      max-width: 100vw; 
-      overflow-x: hidden; 
+      width: 100vw !important; 
+      max-width: 100vw !important; 
+      overflow-x: hidden !important; 
+      margin: 0 !important;
+      padding: 0 !important;
     }
     
     .app-header {
@@ -128,13 +94,13 @@
     .mobile-brand { display: block; }
     .mobile-logout { display: block; }
 
-    /* 👈 Forces the main content to exactly match the phone screen */
+    /* 👈 LOCKS THE CONTENT TO THE EXACT SCREEN SIZE */
     .main-content { 
-      padding: 16px; 
-      padding-bottom: 88px; 
-      width: 100vw; 
-      max-width: 100vw; 
-      overflow-x: hidden; 
+      padding: 16px !important; 
+      padding-bottom: 88px !important; 
+      width: 100vw !important; 
+      max-width: 100vw !important; 
+      overflow-x: hidden !important; 
     }
     
     .mobile-nav {
@@ -142,7 +108,7 @@
       height: 64px; background: #ffffff; border-top: 1px solid #E5E7EB;
       justify-content: space-around; align-items: center; z-index: 100;
       padding-bottom: env(safe-area-inset-bottom);
-      width: 100vw; max-width: 100vw; overflow: hidden;
+      width: 100vw !important; max-width: 100vw !important; overflow: hidden !important;
     }
     .mobile-nav-item {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -153,6 +119,7 @@
   }
 </style>
 
+<!-- Added max-width to the root div just in case -->
 <div style="display: flex; min-height: 100vh; background-color: #EEF2EE; font-family: 'Inter', system-ui, sans-serif; width: 100vw; max-width: 100vw; overflow-x: hidden;">
   
   <aside class="desktop-sidebar">
