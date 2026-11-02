@@ -26,7 +26,7 @@
   .logo-container {
     display: flex;
     align-items: center;
-    gap: 4px; /* Tight spacing */
+    gap: 4px;
     text-decoration: none;
   }
   
@@ -42,14 +42,14 @@
     color: #303B38; 
     letter-spacing: -0.03em;
     line-height: 1;
-    font-size: 24px; /* Desktop size */
-    margin-top: -2px; /* Vertically aligns text with icon */
+    font-size: 24px;
+    margin-top: -2px;
   }
   .logo-text span { color: #C4513D; }
 
   @media (max-width: 768px) {
-    .logo-text { font-size: 22px; } /* Mobile size */
-    .logo-svg svg { width: 26px; height: 26px; } /* Mobile icon size */
+    .logo-text { font-size: 22px; }
+    .logo-svg svg { width: 26px; height: 26px; }
   }
 
   /* DESKTOP SIDEBAR */
@@ -82,11 +82,10 @@
   @media (min-width: 769px) {
     .main-wrapper {
       margin-left: 260px;
-      width: calc(100vw - 260px); /* 👈 FIXED: Changed 100% to 100vw to prevent overflow */
+      width: auto; /* 👈 FIXED: Let margin handle the width */
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-      overflow-x: hidden; /* 👈 FIXED: Locks horizontal scroll */
     }
     .app-header {
       display: flex; justify-content: flex-end; align-items: center;
@@ -95,14 +94,25 @@
     }
     .mobile-brand { display: none; }
     .mobile-logout { display: none; }
-    .main-content { flex: 1; padding: 32px; width: 100%; box-sizing: border-box; }
+    .main-content { 
+      flex: 1; 
+      padding: 32px; 
+      width: 100%; 
+      max-width: 100%; 
+      box-sizing: border-box; /* 👈 FIXED: Stops padding from adding to width */
+      overflow-x: hidden; 
+    }
   }
   
   /* MOBILE LAYOUT */
   @media (max-width: 768px) {
     .desktop-sidebar { display: none; }
     .desktop-links { display: none; }
-    .main-wrapper { width: 100%; overflow-x: hidden; }
+    .main-wrapper { 
+      width: 100vw; /* 👈 FIXED: Hard lock to screen width */
+      max-width: 100%; 
+      overflow-x: hidden; 
+    }
     
     .app-header {
       display: flex; justify-content: space-between; align-items: center;
@@ -112,13 +122,21 @@
     .mobile-brand { display: block; }
     .mobile-logout { display: block; }
 
-    .main-content { padding: 16px 8px; padding-bottom: 88px; width: 100%; box-sizing: border-box; }
+    .main-content { 
+      padding: 16px 8px; 
+      padding-bottom: 88px; 
+      width: 100vw; /* 👈 FIXED: Hard lock to screen width */
+      max-width: 100%; 
+      box-sizing: border-box; /* 👈 FIXED: Stops padding from adding to width */
+      overflow-x: hidden; 
+    }
     
     .mobile-nav {
       display: flex; position: fixed; bottom: 0; left: 0; right: 0;
       height: 64px; background: #ffffff; border-top: 1px solid #E5E7EB;
       justify-content: space-around; align-items: center; z-index: 100;
       padding-bottom: env(safe-area-inset-bottom);
+      width: 100vw; max-width: 100%; box-sizing: border-box;
     }
     .mobile-nav-item {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -129,7 +147,8 @@
   }
 </style>
 
-<div style="display: flex; min-height: 100vh; background-color: #EEF2EE; font-family: 'Inter', system-ui, sans-serif; width: 100%; overflow-x: hidden;">
+<!-- MAIN WRAPPER -->
+<div style="display: flex; min-height: 100vh; background-color: #EEF2EE; font-family: 'Inter', system-ui, sans-serif; width: 100vw; max-width: 100%; overflow-x: hidden;">
   
   <!-- DESKTOP SIDEBAR -->
   <aside class="desktop-sidebar">
@@ -149,7 +168,7 @@
     </nav>
   </aside>
 
-  <!-- MAIN WRAPPER -->
+  <!-- MAIN CONTENT WRAPPER -->
   <div class="main-wrapper">
     
     <!-- SMART HEADER -->
