@@ -148,16 +148,16 @@
   </style>
 </svelte:head>
 
-<!-- 👈 FIXED: Hard locked the outer wrapper to 100vw so it physically cannot scroll -->
-<div style="max-width: 1000px; margin: 0 auto; padding: 8px; width: 100vw; max-width: 100%; box-sizing: border-box; overflow-x: hidden;">
+<!-- 👈 THE SILVER BULLET: Locked to 100vw and hidden overflow -->
+<div style="max-width: 100%; width: 100vw; margin: 0 auto; padding: 8px; box-sizing: border-box; overflow-x: hidden;">
   {#if pageView === 'input'}
-    <div style="margin-bottom: 24px; padding-left: 4px; padding-top: 16px;">
-      <h1 style="font-family: 'Manrope', sans-serif; font-size: clamp(28px, 8vw, 40px); font-weight: 800; margin: 0; color: #303B38; letter-spacing: -0.03em;">
+    <div style="margin-bottom: 24px; padding-left: 4px; padding-top: 16px; width: 100%; box-sizing: border-box;">
+      <h1 style="font-family: 'Manrope', sans-serif; font-size: clamp(28px, 8vw, 40px); font-weight: 800; margin: 0; color: #303B38; letter-spacing: -0.03em; word-break: break-word;">
         {greeting}, <span style="color: #C4513D;">{data?.user?.fullname || 'User'}</span>.
       </h1>
     </div>
 
-    <div class="stats-grid">
+    <div class="stats-grid" style="width: 100%; max-width: 100%; box-sizing: border-box;">
       <div style="background: linear-gradient(135deg, #24503C 0%, #1a3a2b 100%); border-radius: 16px; padding: 24px; box-shadow: 0 8px 16px -4px rgba(36, 80, 60, 0.3); display: flex; flex-direction: column; justify-content: center; width: 100%; box-sizing: border-box; position: relative; overflow: hidden;">
         <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background: rgba(255,255,255,0.05); border-radius: 50%; pointer-events: none;"></div>
         <p style="font-size: 11px; font-weight: 700; color: #A7F3D0; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 0.08em;">Total Quotes Generated</p>
@@ -166,7 +166,7 @@
         </h2>
       </div>
 
-      <div style="background: #ffffff; border: 1px solid #E5E7EB; border-radius: 16px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: center; box-sizing: border-box;">
+      <div style="background: #ffffff; border: 1px solid #E5E7EB; border-radius: 16px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: center; box-sizing: border-box; width: 100%;">
         <p style="font-size: 11px; font-weight: 700; color: #9CA3AF; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 0.05em;">Current Plan</p>
         <div style="display: flex; align-items: center; justify-content: space-between;">
           <h2 style="font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 800; color: #303B38; margin: 0;">Free</h2>
@@ -175,18 +175,18 @@
       </div>
     </div>
 
-    <div style="margin-bottom: 32px;">
+    <div style="margin-bottom: 32px; width: 100%; box-sizing: border-box;">
       <h2 style="font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 800; color: #303B38; margin: 0 0 16px 0; padding-left: 4px;">
         Create New <span style="color: #C4513D;">Quote</span>
       </h2>
       
       {#if aiError}
-        <div style="background: #FEE2E2; color: #DC2626; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-weight: 500; font-size: 14px; border: 1px solid #FCA5A5;">
+        <div style="background: #FEE2E2; color: #DC2626; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-weight: 500; font-size: 14px; border: 1px solid #FCA5A5; width: 100%; box-sizing: border-box; word-break: break-word;">
           {aiError}
         </div>
       {/if}
 
-      <div style="display: flex; flex-direction: column; background-color: #ffffff; border: 1px solid #E5E7EB; border-radius: 16px; box-shadow: 0 8px 24px rgba(48, 59, 56, 0.06); overflow: hidden;">
+      <div style="display: flex; flex-direction: column; background-color: #ffffff; border: 1px solid #E5E7EB; border-radius: 16px; box-shadow: 0 8px 24px rgba(48, 59, 56, 0.06); overflow: hidden; width: 100%; box-sizing: border-box;">
         <textarea 
           bind:value={rawText}
           placeholder="Paste that messy message here..."
@@ -194,8 +194,8 @@
           style="width: 100%; min-height: 180px; padding: 20px; border: none; font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.6; color: #303B38; background: transparent; resize: vertical; outline: none; box-sizing: border-box;"
         ></textarea>
         
-        <div style="padding: 12px 16px; background-color: #F9FAFB; border-top: 1px solid #F3F4F6; display: flex;">
-          <button onclick={generateQuote} disabled={isLoading} style="background-color: #24503C; color: white; padding: 14px; border-radius: 8px; border: none; font-weight: 600; font-size: 15px; cursor: {isLoading ? 'not-allowed' : 'pointer'}; display: flex; align-items: center; justify-content: center; width: 100%; opacity: {isLoading ? 0.8 : 1}; transition: opacity 0.2s;">
+        <div style="padding: 12px 16px; background-color: #F9FAFB; border-top: 1px solid #F3F4F6; display: flex; width: 100%; box-sizing: border-box;">
+          <button onclick={generateQuote} disabled={isLoading} style="background-color: #24503C; color: white; padding: 14px; border-radius: 8px; border: none; font-weight: 600; font-size: 15px; cursor: {isLoading ? 'not-allowed' : 'pointer'}; display: flex; align-items: center; justify-content: center; width: 100%; opacity: {isLoading ? 0.8 : 1}; transition: opacity 0.2s; box-sizing: border-box;">
             {#if isLoading}
               <svg style="width: 18px; height: 18px; margin-right: 8px; animation: spin 1s linear infinite;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
@@ -213,72 +213,76 @@
   {#if pageView === 'builder'}
     <div class="no-print" style="background: #ffffff; border-radius: 12px; border: 1px solid #E5E7EB; padding: 20px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); margin-top: 16px; box-sizing: border-box; width: 100%;">
       
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; width: 100%; box-sizing: border-box;">
         <h2 style="font-family: 'Manrope'; font-size: 18px; font-weight: 800; color: #303B38; margin: 0;">Edit Quote</h2>
         <button onclick={() => pageView = 'input'} style="background: none; border: none; color: #6B7280; font-weight: 600; font-size: 14px; cursor: pointer;">← Back</button>
       </div>
 
-      <div style="margin-bottom: 24px;">
+      <div style="margin-bottom: 24px; width: 100%; box-sizing: border-box;">
         <input type="text" bind:value={customer.name} placeholder="Customer Name" style="width: 100%; padding: 12px; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 14px; margin-bottom: 10px; box-sizing: border-box;" />
         <input type="text" bind:value={customer.contact} placeholder="Phone or Email" style="width: 100%; padding: 12px; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 14px; box-sizing: border-box;" />
       </div>
 
-      <div style="margin-bottom: 24px;">
+      <div style="margin-bottom: 24px; width: 100%; box-sizing: border-box;">
         <h3 style="font-family: 'Manrope'; font-size: 14px; font-weight: 800; color: #303B38; margin: 0 0 12px 0;">Matched Items</h3>
         {#if quoteItems.length === 0}
           <p style="font-size: 13px; color: #6B7280;">No items matched.</p>
         {:else}
           {#each quoteItems as item (item.id)}
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid #F3F4F6; gap: 8px; flex-wrap: wrap;">
-              <div style="flex: 1; min-width: 140px;">
-                <div style="font-size: 14px; font-weight: 600; color: #303B38; line-height: 1.3; word-break: break-word;">{toTitleCase(item.name)}</div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-direction: column; padding: 16px 0; border-bottom: 1px solid #F3F4F6; gap: 12px; width: 100%; box-sizing: border-box;">
+              <div style="width: 100%; word-break: break-word;">
+                <div style="font-size: 14px; font-weight: 600; color: #303B38; line-height: 1.3;">{toTitleCase(item.name)}</div>
                 <div style="font-size: 12px; color: #6B7280; margin-top: 4px;">Unit: {toTitleCase(item.unit)} | Price: {formatCurrency(item.price)}</div>
               </div>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <input type="number" value={item.qty} oninput={(e) => updateQty(item.id, e.target.value)} style="width: 56px; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; text-align: center; font-size: 14px; outline: none;" min="1" />
-                <div style="font-weight: 600; font-size: 14px; color: #303B38; width: 80px; text-align: right;">{formatCurrency(item.price * item.qty)}</div>
-                <button onclick={() => removeItem(item.id)} style="background: none; border: none; color: #DC2626; cursor: pointer; font-size: 14px; padding: 0;">✕</button>
+              <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <input type="number" value={item.qty} oninput={(e) => updateQty(item.id, e.target.value)} style="width: 60px; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; text-align: center; font-size: 14px; outline: none; box-sizing: border-box;" min="1" />
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <div style="font-weight: 600; font-size: 14px; color: #303B38; text-align: right;">{formatCurrency(item.price * item.qty)}</div>
+                  <button onclick={() => removeItem(item.id)} style="background: none; border: none; color: #DC2626; cursor: pointer; font-size: 14px; padding: 0;">✕</button>
+                </div>
               </div>
             </div>
           {/each}
         {/if}
       </div>
 
-      <div style="display: flex; flex-direction: column; gap: 12px;">
-        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-          <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #303B38; width: 100px;">
-            <input type="checkbox" bind:checked={includeDiscount} style="width: 16px; height: 16px; accent-color: #24503C;" /> Discount
+      <div style="display: flex; flex-direction: column; gap: 16px; width: 100%; box-sizing: border-box;">
+        <div style="display: flex; align-items: center; gap: 8px; width: 100%; box-sizing: border-box;">
+          <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #303B38; width: 90px; flex-shrink: 0;">
+            <input type="checkbox" bind:checked={includeDiscount} style="width: 16px; height: 16px; accent-color: #24503C; flex-shrink: 0;" /> Discount
           </label>
-          <select bind:value={discountType} style="flex: 1; min-width: 60px; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 13px; color: #6B7280; outline: none;">
+          <select bind:value={discountType} style="flex: 1; min-width: 0; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 13px; color: #6B7280; outline: none; box-sizing: border-box;">
             <option value="percentage">%</option>
             <option value="flat">₦</option>
           </select>
-          <input type="number" bind:value={discountValue} placeholder="0" style="width: 70px; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 13px; text-align: center; outline: none;" />
+          <input type="number" bind:value={discountValue} placeholder="0" style="width: 60px; flex-shrink: 0; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 13px; text-align: center; outline: none; box-sizing: border-box;" />
         </div>
         
-        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-          <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #303B38; width: 100px;">
-            <input type="checkbox" bind:checked={includeDelivery} style="width: 16px; height: 16px; accent-color: #24503C;" /> Delivery
+        <div style="display: flex; align-items: center; gap: 8px; width: 100%; box-sizing: border-box;">
+          <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #303B38; width: 90px; flex-shrink: 0;">
+            <input type="checkbox" bind:checked={includeDelivery} style="width: 16px; height: 16px; accent-color: #24503C; flex-shrink: 0;" /> Delivery
           </label>
-          <input type="number" bind:value={deliveryFee} placeholder="Amount" style="flex: 1; min-width: 80px; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 13px; outline: none;" />
+          <input type="number" bind:value={deliveryFee} placeholder="Amount" style="flex: 1; min-width: 0; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 13px; outline: none; box-sizing: border-box;" />
         </div>
 
-        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-          <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #303B38; width: 100px;">
-            <input type="checkbox" bind:checked={includeVAT} style="width: 16px; height: 16px; accent-color: #24503C;" /> VAT
+        <div style="display: flex; align-items: center; gap: 8px; width: 100%; box-sizing: border-box;">
+          <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #303B38; width: 90px; flex-shrink: 0;">
+            <input type="checkbox" bind:checked={includeVAT} style="width: 16px; height: 16px; accent-color: #24503C; flex-shrink: 0;" /> VAT
           </label>
-          <input type="number" placeholder="7.5" value="7.5" style="width: 70px; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 13px; text-align: center; outline: none;" disabled />
+          <input type="number" placeholder="7.5" value="7.5" style="width: 60px; flex-shrink: 0; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 13px; text-align: center; outline: none; box-sizing: border-box;" disabled />
           <span style="font-size: 13px; color: #6B7280;">%</span>
         </div>
       </div>
     </div>
 
-    <!-- 👈 FIXED: Locked the preview card to 100% max-width -->
+    <!-- ON-SCREEN PREVIEW (FIRM) -->
     <div class="print-area" style="background: #ffffff; border-radius: 16px; border: 1px solid #E5E7EB; padding: 16px; font-family: 'Inter', sans-serif; color: #303B38; box-shadow: 0 4px 12px rgba(0,0,0,0.02); width: 100%; max-width: 100%; box-sizing: border-box; overflow: hidden;">
       
       <!-- HEADER BANNER -->
       <div style="background-color: {getColors().header}; padding: 16px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-start; color: white; box-sizing: border-box; width: 100%; max-width: 100%; flex-wrap: wrap; gap: 8px;">
-        <div style="max-width: 50%; min-width: 140px;">
+        <div style="width: 100%; max-width: 100%; box-sizing: border-box;">
           <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap;">
             {#if getColors().logo}
               <img src={getColors().logo} alt="Logo" style="height: 32px; width: auto; max-width: 90px; object-fit: contain; background: white; border-radius: 4px; padding: 4px;" />
@@ -287,21 +291,21 @@
           </div>
           <div style="font-size: 11px; color: rgba(255,255,255,0.8); margin-top: 4px; line-height: 1.5; word-break: break-word;">{getColors().companyAddress}<br/>{getColors().companyContact}</div>
         </div>
-        <div style="text-align: right; max-width: 50%; min-width: 100px;">
+        <div style="text-align: left; width: 100%; box-sizing: border-box; margin-top: 8px;">
           <h1 style="font-family: 'Manrope'; font-size: 15px; margin: 0 0 4px 0; color: #ffffff; text-transform: uppercase;">Quotation</h1>
           <div style="font-size: 11px; color: rgba(255,255,255,0.8);">Date: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
         </div>
       </div>
 
-      <div style="margin-bottom: 20px;">
+      <div style="margin-bottom: 20px; width: 100%; box-sizing: border-box;">
         <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: {getColors().header}; margin-bottom: 4px;">Prepared For</div>
         <div style="font-size: 14px; font-weight: 700; color: #303B38; word-break: break-word;">{toTitleCase(customer.name)}</div>
         <div style="font-size: 12px; color: #6B7280; word-break: break-word;">{customer.contact}</div>
       </div>
 
-      <!-- 👈 FIXED: Table wrapper physically cannot scroll the page -->
-      <div style="width: 100%; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 20px;">
-        <table style="width: 100%; border-collapse: collapse; table-layout: fixed; min-width: 0;">
+      <!-- TABLE WRAPPER -->
+      <div style="width: 100%; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 20px; box-sizing: border-box;">
+        <table style="width: 100%; border-collapse: collapse; table-layout: fixed; min-width: 100%; box-sizing: border-box;">
           <thead>
             <tr style="border-bottom: 1px solid #E5E7EB;">
               <th style="text-align: left; padding: 10px 4px; font-size: 10px; text-transform: uppercase; color: #6B7280; width: 50%;">Item</th>
@@ -323,7 +327,7 @@
         </table>
       </div>
 
-      <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 20px; width: 100%; box-sizing: border-box;">
         <div style="width: 100%; max-width: 220px;">
           <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; color: #4B5563;">
             <span>Subtotal:</span>
@@ -354,28 +358,28 @@
         </div>
       </div>
       
-      <div style="border-top: 1px solid #F3F4F6; padding-top: 20px; text-align: center;">
-        <p style="font-size: 12px; color: #6B7280; margin: 0;">Thank you for your business. If you have any questions, please contact us.</p>
+      <div style="border-top: 1px solid #F3F4F6; padding-top: 20px; text-align: center; width: 100%; box-sizing: border-box;">
+        <p style="font-size: 12px; color: #6B7280; margin: 0; word-break: break-word;">Thank you for your business. If you have any questions, please contact us.</p>
       </div>
     </div>
 
     <!-- BOTTOM BUTTON -->
-    <div class="no-print" style="margin-top: 16px;">
+    <div class="no-print" style="margin-top: 16px; width: 100%; box-sizing: border-box;">
       {#if form?.success}
-        <div style="background: #DCFCE7; color: #166534; padding: 16px; border-radius: 8px; margin-bottom: 16px; font-weight: 600; text-align: center;">
+        <div style="background: #DCFCE7; color: #166534; padding: 16px; border-radius: 8px; margin-bottom: 16px; font-weight: 600; text-align: center; width: 100%; box-sizing: border-box;">
           Quote saved successfully!
         </div>
       {/if}
       {#if form?.error}
-        <div style="background: #FEE2E2; color: #DC2626; padding: 16px; border-radius: 8px; margin-bottom: 16px; font-weight: 600; text-align: center;">
+        <div style="background: #FEE2E2; color: #DC2626; padding: 16px; border-radius: 8px; margin-bottom: 16px; font-weight: 600; text-align: center; width: 100%; box-sizing: border-box;">
           {form.error}
         </div>
       {/if}
 
-            <form 
+      <form 
         method="POST" 
         action="?/saveQuote" 
-        style="width: 100%; max-width: 100%; box-sizing: border-box; overflow: hidden;"
+        style="width: 100%; max-width: 100%; box-sizing: border-box;"
         use:enhance={() => {
           return async ({ result, update }) => {
             await update(); 
@@ -392,7 +396,7 @@
         <input type="hidden" name="delivery" value={includeDelivery ? deliveryFee : 0} />
         <input type="hidden" name="vat" value={vatAmount} />
 
-        <button type="submit" disabled={isDownloading} style="width: 100%; background: #24503C; color: white; padding: 16px; border-radius: 8px; border: none; font-weight: 600; font-size: 16px; cursor: {isDownloading ? 'not-allowed' : 'pointer'}; opacity: {isDownloading ? 0.7 : 1};">
+        <button type="submit" disabled={isDownloading} style="width: 100%; background: #24503C; color: white; padding: 16px; border-radius: 8px; border: none; font-weight: 600; font-size: 16px; cursor: {isDownloading ? 'not-allowed' : 'pointer'}; opacity: {isDownloading ? 0.7 : 1}; box-sizing: border-box;">
           {isDownloading ? 'Generating PDF...' : 'Download PDF & Save'}
         </button>
       </form>
@@ -400,8 +404,8 @@
   {/if}
 </div>
 
-<!-- HIDDEN PDF TEMPLATE (For direct download) -->
-<div style="position: absolute; top: 0; left: 0; z-index: -1; opacity: 0; pointer-events: none; overflow: hidden;">
+<!-- HIDDEN PDF TEMPLATE -->
+<div style="position: absolute; top: 0; left: 0; z-index: -1; opacity: 0; pointer-events: none; overflow: hidden; width: 0; height: 0;">
   {#if pageView === 'builder'}
     <div bind:this={hiddenPdfRef} style="width: 800px; background: white; font-family: 'Inter', sans-serif; color: #303B38;">
       
@@ -435,7 +439,7 @@
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 40px; table-layout: fixed;">
           <thead>
             <tr style="border-bottom: 2px solid {getColors().header};">
-              <th style="text-align: left; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: {getColors().header}; width: 40%;">Item</th>
+                            <th style="text-align: left; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: {getColors().header}; width: 40%;">Item</th>
               <th style="text-align: center; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: {getColors().header}; width: 15%;">Unit</th>
               <th style="text-align: center; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: {getColors().header}; width: 10%;">Qty</th>
               <th style="text-align: right; padding: 16px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: {getColors().header}; width: 15%;">Price</th>
@@ -446,7 +450,7 @@
             {#each quoteItems as item}
               <tr style="border-bottom: 1px solid #F3F4F6;">
                 <td style="padding: 20px 0; font-size: 16px; font-weight: 600; line-height: 1.5; word-wrap: break-word; color: #303B38;">{toTitleCase(item.name)}</td>
-                                <td style="padding: 20px 0; text-align: center; font-size: 15px; font-weight: 500; color: #6B7280;">{toTitleCase(item.unit)}</td>
+                <td style="padding: 20px 0; text-align: center; font-size: 15px; font-weight: 500; color: #6B7280;">{toTitleCase(item.unit)}</td>
                 <td style="padding: 20px 0; text-align: center; font-size: 15px; font-weight: 500; color: #6B7280;">{item.qty}</td>
                 <td style="padding: 20px 0; text-align: right; font-size: 15px; color: #6B7280;">{formatCurrency(item.price)}</td>
                 <td style="padding: 20px 0; text-align: right; font-size: 16px; font-weight: 700; color: #303B38;">{formatCurrency(item.price * item.qty)}</td>
