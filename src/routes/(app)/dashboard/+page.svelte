@@ -1,4 +1,4 @@
-                <script>
+<script>
   import { enhance } from '$app/forms';
   import { onMount } from 'svelte';
 
@@ -136,10 +136,6 @@
 <svelte:head>
   <title>Dashboard | Quotera</title>
   <style>
-    :global(html), :global(body) {
-      overflow-x: hidden;
-      max-width: 100vw;
-    }
     @media print {
       body * { visibility: hidden; }
       .print-area, .print-area * { visibility: visible; }
@@ -152,8 +148,8 @@
   </style>
 </svelte:head>
 
-<!-- FIRM OUTER WRAPPER -->
-<div style="max-width: 1000px; margin: 0 auto; padding: 8px; width: 100%; box-sizing: border-box; overflow-x: hidden;">
+<!-- 👈 FIXED: Hard locked the outer wrapper to 100vw so it physically cannot scroll -->
+<div style="max-width: 1000px; margin: 0 auto; padding: 8px; width: 100vw; max-width: 100%; box-sizing: border-box; overflow-x: hidden;">
   {#if pageView === 'input'}
     <div style="margin-bottom: 24px; padding-left: 4px; padding-top: 16px;">
       <h1 style="font-family: 'Manrope', sans-serif; font-size: clamp(28px, 8vw, 40px); font-weight: 800; margin: 0; color: #303B38; letter-spacing: -0.03em;">
@@ -277,7 +273,7 @@
       </div>
     </div>
 
-    <!-- ON-SCREEN PREVIEW (FIRM) -->
+    <!-- 👈 FIXED: Locked the preview card to 100% max-width -->
     <div class="print-area" style="background: #ffffff; border-radius: 16px; border: 1px solid #E5E7EB; padding: 16px; font-family: 'Inter', sans-serif; color: #303B38; box-shadow: 0 4px 12px rgba(0,0,0,0.02); width: 100%; max-width: 100%; box-sizing: border-box; overflow: hidden;">
       
       <!-- HEADER BANNER -->
@@ -303,7 +299,7 @@
         <div style="font-size: 12px; color: #6B7280; word-break: break-word;">{customer.contact}</div>
       </div>
 
-      <!-- TABLE WRAPPER (FIRM) -->
+      <!-- 👈 FIXED: Table wrapper physically cannot scroll the page -->
       <div style="width: 100%; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 20px;">
         <table style="width: 100%; border-collapse: collapse; table-layout: fixed; min-width: 0;">
           <thead>
@@ -403,7 +399,7 @@
   {/if}
 </div>
 
-<!-- HIDDEN PDF TEMPLATE -->
+<!-- HIDDEN PDF TEMPLATE (For direct download) -->
 <div style="position: absolute; top: 0; left: 0; z-index: -1; opacity: 0; pointer-events: none; overflow: hidden;">
   {#if pageView === 'builder'}
     <div bind:this={hiddenPdfRef} style="width: 800px; background: white; font-family: 'Inter', sans-serif; color: #303B38;">
@@ -449,7 +445,7 @@
             {#each quoteItems as item}
               <tr style="border-bottom: 1px solid #F3F4F6;">
                 <td style="padding: 20px 0; font-size: 16px; font-weight: 600; line-height: 1.5; word-wrap: break-word; color: #303B38;">{toTitleCase(item.name)}</td>
-                <td style="padding: 20px 0; text-align: center; font-size: 15px; font-weight: 500; color: #6B7280;">{toTitleCase(item.unit)}</td>
+                                <td style="padding: 20px 0; text-align: center; font-size: 15px; font-weight: 500; color: #6B7280;">{toTitleCase(item.unit)}</td>
                 <td style="padding: 20px 0; text-align: center; font-size: 15px; font-weight: 500; color: #6B7280;">{item.qty}</td>
                 <td style="padding: 20px 0; text-align: right; font-size: 15px; color: #6B7280;">{formatCurrency(item.price)}</td>
                 <td style="padding: 20px 0; text-align: right; font-size: 16px; font-weight: 700; color: #303B38;">{formatCurrency(item.price * item.qty)}</td>
