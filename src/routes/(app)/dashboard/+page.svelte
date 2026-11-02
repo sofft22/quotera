@@ -372,9 +372,10 @@
         </div>
       {/if}
 
-      <form 
+            <form 
         method="POST" 
         action="?/saveQuote" 
+        style="width: 100%; max-width: 100%; box-sizing: border-box; overflow: hidden;"
         use:enhance={() => {
           return async ({ result, update }) => {
             await update(); 
