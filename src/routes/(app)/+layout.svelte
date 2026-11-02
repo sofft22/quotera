@@ -82,10 +82,11 @@
   @media (min-width: 769px) {
     .main-wrapper {
       margin-left: 260px;
-      width: calc(100% - 260px);
+      width: calc(100vw - 260px); /* 👈 FIXED: Changed 100% to 100vw to prevent overflow */
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      overflow-x: hidden; /* 👈 FIXED: Locks horizontal scroll */
     }
     .app-header {
       display: flex; justify-content: flex-end; align-items: center;
@@ -94,14 +95,14 @@
     }
     .mobile-brand { display: none; }
     .mobile-logout { display: none; }
-    .main-content { flex: 1; padding: 32px; }
+    .main-content { flex: 1; padding: 32px; width: 100%; box-sizing: border-box; }
   }
   
   /* MOBILE LAYOUT */
   @media (max-width: 768px) {
     .desktop-sidebar { display: none; }
     .desktop-links { display: none; }
-    .main-wrapper { width: 100%; }
+    .main-wrapper { width: 100%; overflow-x: hidden; }
     
     .app-header {
       display: flex; justify-content: space-between; align-items: center;
@@ -111,7 +112,7 @@
     .mobile-brand { display: block; }
     .mobile-logout { display: block; }
 
-    .main-content { padding: 16px 8px; padding-bottom: 88px; }
+    .main-content { padding: 16px 8px; padding-bottom: 88px; width: 100%; box-sizing: border-box; }
     
     .mobile-nav {
       display: flex; position: fixed; bottom: 0; left: 0; right: 0;
@@ -128,7 +129,7 @@
   }
 </style>
 
-<div style="display: flex; min-height: 100vh; background-color: #EEF2EE; font-family: 'Inter', system-ui, sans-serif;">
+<div style="display: flex; min-height: 100vh; background-color: #EEF2EE; font-family: 'Inter', system-ui, sans-serif; width: 100%; overflow-x: hidden;">
   
   <!-- DESKTOP SIDEBAR -->
   <aside class="desktop-sidebar">
@@ -168,7 +169,7 @@
           <div style="width: 32px; height: 32px; border-radius: 50%; background-color: #24503C; color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px;">
             JD
           </div>
-          <a href="/logout" style="color: #9CA3AF; hover: color: #DC2626; transition: color 0.2s; display: flex; align-items: center;">
+          <a href="/logout" style="color: #9CA3AF; transition: color 0.2s; display: flex; align-items: center;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
           </a>
         </div>
