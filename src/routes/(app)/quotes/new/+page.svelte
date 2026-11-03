@@ -68,74 +68,31 @@
 </svelte:head>
 
 <style>
-  .page-wrapper {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 16px 8px; 
-    width: 100%;
-    box-sizing: border-box;
-  }
+  .page-wrapper { max-width: 100%; margin: 0 auto; padding: 4px; width: 100%; box-sizing: border-box; }
+  .header-row { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
 
-  @media (min-width: 769px) {
-    .page-wrapper {
-      padding: 32px 24px;
-    }
-  }
-
-  .header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin-bottom: 24px;
-  }
-
-  .table-container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .table-header {
-    display: flex;
-    padding: 12px 8px;
-    border-bottom: 1px solid #E5E7EB;
-    font-size: 11px;
-    font-weight: 600;
-    color: #9CA3AF;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .list-row {
-    display: flex;
-    align-items: center;
-    padding: 16px 8px; 
-    border-bottom: 1px solid #F3F4F6;
-    transition: background-color 0.2s;
-  }
+  .table-container { width: 100%; display: flex; flex-direction: column; background: #ffffff; border: 1px solid #E5E7EB; border-radius: 12px; padding: 8px 16px; box-shadow: 0 4px 12px rgba(48, 59, 56, 0.03); box-sizing: border-box; }
+  .table-header { display: flex; padding: 12px 8px; border-bottom: 1px solid #E5E7EB; font-size: 11px; font-weight: 600; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.05em; }
+  .list-row { display: flex; align-items: center; padding: 16px 8px; border-bottom: 1px solid #F3F4F6; transition: background-color 0.2s; }
+  .list-row:hover { background-color: #F9FAFB; }
   
-  .list-row:hover {
-    background-color: rgba(255, 255, 255, 0.5);
-  }
-
   .col-name { flex: 1; padding-right: 12px; font-weight: 500; color: #303B38; font-size: 14px; line-height: 1.4; }
   .col-date { width: 100px; text-align: center; font-size: 12px; color: #6B7280; font-weight: 500; }
   .col-amount { width: 100px; text-align: right; font-weight: 600; color: #303B38; font-size: 14px; }
-  
-  .col-action { 
-    width: 40px; 
-    display: flex; 
-    justify-content: flex-end; 
-    align-items: center; 
-  }
+  .col-action { width: 40px; display: flex; justify-content: flex-end; align-items: center; }
 
+  /* Mobile specific */
   @media (max-width: 480px) {
     .col-date { width: 70px; font-size: 11px; }
     .col-amount { width: 90px; font-size: 13px; }
     .col-name { font-size: 13px; }
     .col-action { width: 32px; }
+  }
+
+  /* Desktop specific */
+  @media (min-width: 769px) {
+    .page-wrapper { padding: 32px; max-width: 1200px; }
+    .table-container { padding: 16px 24px; border-radius: 16px; }
   }
 </style>
 
@@ -199,7 +156,7 @@
   </div>
 </div>
 
-<!-- HIDDEN PDF TEMPLATE (Bolder & Larger) -->
+<!-- HIDDEN PDF TEMPLATE (Unchanged) -->
 <div style="position: absolute; top: 0; left: 0; z-index: -1; opacity: 0; pointer-events: none;">
   {#if pdfQuote}
     <div bind:this={hiddenReceiptRef} style="width: 800px; background: white; padding: 50px; font-family: 'Inter', sans-serif; color: #303B38;">
