@@ -55,25 +55,52 @@
 
 <svelte:head>
   <title>Settings | Quotera</title>
+  <style>
+    /* Default mobile styles */
+    .page-wrap { max-width: 100%; margin: 0 auto; padding: 4px; width: 100%; box-sizing: border-box; }
+    .card { background: #ffffff; border: 1px solid #E5E7EB; border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(48, 59, 56, 0.03); box-sizing: border-box; }
+    .page-title { font-family: 'Manrope', sans-serif; font-size: 28px; font-weight: 800; color: #303B38; margin: 0 0 4px 0; letter-spacing: -0.03em; }
+    .page-desc { color: #6B7280; margin: 0; font-size: 14px; }
+    .header-flex { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .plan-box { background: #F0FDF4; border: 1px solid #DCFCE7; border-radius: 10px; padding: 8px 16px; display: flex; align-items: center; gap: 16px; }
+    .form-title { font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 800; color: #303B38; margin: 0 0 16px 0; letter-spacing: -0.02em; }
+    .input-group { display: flex; flex-direction: column; gap: 16px; }
+    .input-label { display: block; font-size: 13px; font-weight: 600; color: #303B38; margin-bottom: 6px; }
+    .text-input { width: 100%; padding: 12px 14px; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 15px; box-sizing: border-box; transition: border-color 0.2s; outline: none; color: #303B38; }
+    .color-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .color-card { background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 10px; padding: 12px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+    .color-label { display: block; font-size: 11px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+    .save-btn { width: 100%; background: #24503C; color: white; padding: 14px; border-radius: 8px; border: none; font-weight: 700; font-size: 15px; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 6px -1px rgba(36,80,60,0.2); transition: transform 0.1s; }
+
+    /* Desktop styles: Makes it stretch wide and rectangular */
+    @media (min-width: 769px) {
+      .page-wrap { padding: 32px; max-width: 1200px; }
+      .card { padding: 24px 32px; margin-bottom: 24px; }
+      .page-title { font-size: 32px; margin-bottom: 8px; }
+      .page-desc { font-size: 15px; }
+      .form-title { font-size: 22px; margin-bottom: 24px; }
+      .input-group { gap: 20px; }
+      .text-input { padding: 14px 16px; font-size: 16px; }
+      .save-btn { padding: 16px; font-size: 16px; margin-top: 28px; }
+    }
+  </style>
 </svelte:head>
 
-<!-- 👈 FIXED: Almost zero outer padding to let it stretch wide -->
-<div style="max-width: 1200px; margin: 0 auto; padding: 4px; width: 100%; box-sizing: border-box;">
+<div class="page-wrap">
 
-  <div style="margin-bottom: 16px; padding-left: 4px; padding-top: 8px;">
-    <h1 style="font-family: 'Manrope', sans-serif; font-size: 28px; font-weight: 800; color: #303B38; margin: 0 0 4px 0; letter-spacing: -0.03em;">Settings</h1>
-    <p style="color: #6B7280; margin: 0; font-size: 14px;">Manage your account and PDF branding.</p>
+  <div style="margin-bottom: 24px; padding-left: 4px;">
+    <h1 class="page-title">Settings</h1>
+    <p class="page-desc">Manage your account and PDF branding.</p>
   </div>
 
-  <!-- 👈 FIXED: Slim vertical padding, wide horizontal padding for the rectangular look -->
-  <div style="background: #ffffff; border: 1px solid #E5E7EB; border-radius: 12px; padding: 16px 24px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(48, 59, 56, 0.03); box-sizing: border-box;">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+  <div class="card">
+    <div class="header-flex">
       <div>
         <p style="font-size: 14px; font-weight: 600; color: #303B38; margin: 0;">Email Address</p>
         <p style="font-size: 15px; color: #6B7280; margin: 4px 0 0 0;">{data.user.email}</p>
       </div>
       
-      <div style="background: #F0FDF4; border: 1px solid #DCFCE7; border-radius: 10px; padding: 8px 16px; display: flex; align-items: center; gap: 16px;">
+      <div class="plan-box">
         <div>
           <p style="font-size: 10px; font-weight: 700; color: #166534; margin: 0; text-transform: uppercase; letter-spacing: 0.05em;">Current Plan</p>
           <p style="font-size: 15px; font-weight: 800; color: #14532D; margin: 2px 0 0 0;">{data.user.plan}</p>
@@ -92,10 +119,10 @@
         await update({ reset: false }); 
       };
     }} 
-    style="background: #ffffff; border: 1px solid #E5E7EB; border-radius: 12px; padding: 16px 24px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(48, 59, 56, 0.03); box-sizing: border-box;"
+    class="card"
   >
     
-    <h2 style="font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 800; color: #303B38; margin: 0 0 16px 0; letter-spacing: -0.02em;">PDF Branding</h2>
+    <h2 class="form-title">PDF Branding</h2>
 
     {#if form?.success}
       <div style="background: #DCFCE7; color: #166534; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-weight: 600; font-size: 14px;">
@@ -109,25 +136,25 @@
       </div>
     {/if}
 
-    <div style="display: flex; flex-direction: column; gap: 16px;">
+    <div class="input-group">
       
       <div>
-        <label style="display: block; font-size: 13px; font-weight: 600; color: #303B38; margin-bottom: 6px;">Company Name</label>
-        <input type="text" name="companyName" bind:value={companyName} placeholder="e.g. Acme Hardware Ltd" style="width: 100%; padding: 12px 14px; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 15px; box-sizing: border-box; transition: border-color 0.2s; outline: none; color: #303B38;" />
+        <label class="input-label">Company Name</label>
+        <input type="text" name="companyName" bind:value={companyName} placeholder="e.g. Acme Hardware Ltd" class="text-input" />
       </div>
 
       <div>
-        <label style="display: block; font-size: 13px; font-weight: 600; color: #303B38; margin-bottom: 6px;">Business Address</label>
-        <input type="text" name="companyAddress" bind:value={companyAddress} placeholder="e.g. 12 Marina Road, Lagos" style="width: 100%; padding: 12px 14px; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 15px; box-sizing: border-box; transition: border-color 0.2s; outline: none; color: #303B38;" />
+        <label class="input-label">Business Address</label>
+        <input type="text" name="companyAddress" bind:value={companyAddress} placeholder="e.g. 12 Marina Road, Lagos" class="text-input" />
       </div>
 
       <div>
-        <label style="display: block; font-size: 13px; font-weight: 600; color: #303B38; margin-bottom: 6px;">Contact Info</label>
-        <input type="text" name="companyContact" bind:value={companyContact} placeholder="e.g. sales@acme.com" style="width: 100%; padding: 12px 14px; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 15px; box-sizing: border-box; transition: border-color 0.2s; outline: none; color: #303B38;" />
+        <label class="input-label">Contact Info</label>
+        <input type="text" name="companyContact" bind:value={companyContact} placeholder="e.g. sales@acme.com" class="text-input" />
       </div>
 
       <div style="margin-top: 4px;">
-        <label style="display: block; font-size: 13px; font-weight: 600; color: #303B38; margin-bottom: 6px;">Company Logo</label>
+        <label class="input-label">Company Logo</label>
         <div style="display: flex; align-items: center; gap: 16px;">
           {#if logoBase64}
             <div style="position: relative; display: inline-flex;">
@@ -152,11 +179,11 @@
       </div>
 
       <div style="margin-top: 12px;">
-        <label style="display: block; font-size: 13px; font-weight: 600; color: #303B38; margin-bottom: 10px;">PDF Colors</label>
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+        <label class="input-label" style="margin-bottom: 10px;">PDF Colors</label>
+        <div class="color-grid">
           
-          <div style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 10px; padding: 12px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-            <span style="display: block; font-size: 11px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">Header Banner</span>
+          <div class="color-card">
+            <span class="color-label">Header Banner</span>
             <div style="position: relative; width: 100%; height: 40px; border-radius: 6px; overflow: hidden; border: 1px solid #D1D5DB;">
               <input 
                 type="color" 
@@ -168,8 +195,8 @@
             </div>
           </div>
 
-          <div style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 10px; padding: 12px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-            <span style="display: block; font-size: 11px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">Accent Color</span>
+          <div class="color-card">
+            <span class="color-label">Accent Color</span>
             <div style="position: relative; width: 100%; height: 40px; border-radius: 6px; overflow: hidden; border: 1px solid #D1D5DB;">
               <input 
                 type="color" 
@@ -185,14 +212,14 @@
       </div>
     </div>
 
-    <button type="submit" style="width: 100%; background: #24503C; color: white; padding: 14px; border-radius: 8px; border: none; font-weight: 700; font-size: 15px; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 6px -1px rgba(36,80,60,0.2); transition: transform 0.1s;">
+    <button type="submit" class="save-btn">
       Save Settings
     </button>
   </form>
 
 </div>
 
-<!-- UPGRADE MODAL (Unchanged) -->
+<!-- UPGRADE MODAL -->
 {#if isUpgradeModalOpen}
   <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(48, 59, 56, 0.7); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 16px;">
     <div style="background: #EEF2EE; width: 100%; max-width: 1200px; border-radius: 24px; padding: 32px; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 48px rgba(0,0,0,0.2);">
